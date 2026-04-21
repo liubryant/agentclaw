@@ -24,10 +24,10 @@ class SplashActivity : AppCompatActivity() {
         lifecycle.addObserver(viewModel)
 
         lifecycleScope.launch {
-            if (DeviceInfo.sn.isBlank()) {
-                showSnEmptyDialog()
-                return@launch
-            }
+//            if (DeviceInfo.sn.isBlank()) {
+//                showSnEmptyDialog()
+//                return@launch
+//            }
 
             ChatMarkdownProvider.get(this@SplashActivity)
 
