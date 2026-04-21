@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_ideas_title_01">热点资讯自动汇总</string>
+    <string name="fancy_ideas_title_02">创业点子可行性验证</string>
+    <string name="fancy_ideas_title_03">痛点自动挖掘分析</string>
+    <string name="fancy_ideas_title_04">明日运动计划</string>
+    <string name="fancy_ideas_title_05">每日吃什么推荐</string>
+    <string name="fancy_ideas_title_06">锻炼任务调整</string>
+    <string name="fancy_ideas_title_07">目标拆解与打卡</string>
+    <string name="fancy_ideas_title_08">自律习惯管理</string>
+    <string name="fancy_ideas_title_09">实时天气查询与出行穿搭建议</string>
+    <string name="fancy_ideas_title_10">制定轻量学习规划</string>
+    <string name="fancy_ideas_title_11">深度内容讲解</string>
+    <string name="fancy_ideas_title_12">每日研究简报</string>
+    <string name="fancy_ideas_title_13">科技资讯精选</string>
+    <string name="fancy_ideas_title_14">懒人出游规划</string>
+    <string name="fancy_ideas_title_15">趣味塔罗小指引</string>
+    <string name="fancy_ideas_title_16">生辰趣味解读</string>
+    <string name="fancy_ideas_title_17">MBTI 配对分析</string>
+    <string name="fancy_ideas_title_18">影视推荐小助手</string>
+    <string name="fancy_ideas_title_19">经济数据查询</string>
+    <string name="fancy_ideas_title_20">量化策略模拟回测</string>
+
+    <string name="fancy_ideas_subtitle_01">还在一条条刷资讯？每日自动整理，不用费心查找，快速看懂当天重点</string>
+    <string name="fancy_ideas_subtitle_02">有想法不敢下手？帮你快速验证可行性，零成本少踩坑</string>
+    <string name="fancy_ideas_subtitle_03">立项没方向？自动深挖市场痛点，一份报告帮你稳过评审</string>
+    <string name="fancy_ideas_subtitle_04">想运动又怕坚持不下来？每天帮你排好计划，到点喊你动起来</string>
+    <string name="fancy_ideas_subtitle_05">饭点不知道吃啥？报口味定位，健康餐单连店带路喂到嘴边</string>
+    <string name="fancy_ideas_subtitle_06">锻炼计划乱了？帮你重新安排锻炼节奏</string>
+    <string name="fancy_ideas_subtitle_07">立的flag总倒？把大目标拆成小步骤，每天打卡追踪进度</string>
+    <string name="fancy_ideas_subtitle_08">好习惯总坚持不了？21天打卡+数据追踪帮你养成好习惯</string>
+    <string name="fancy_ideas_subtitle_09">支持实时温度、湿度、风力、空气质量查询，未来 7 天天气预报，智能穿衣建议及极端天气预警</string>
+    <string name="fancy_ideas_subtitle_10">一到备考就头大？把你的学习计划烂摊子全甩给我吧</string>
+    <string name="fancy_ideas_subtitle_11">遇到难题卡壳想放弃？帮你拆解卡点，找到破局思路</string>
+    <string name="fancy_ideas_subtitle_12">漏掉重要论文和行业报告？每天帮你盯着，关键信息一条不漏</string>
+    <string name="fancy_ideas_subtitle_13">信息爆炸跟不上？每日精选科技热点，一文掌握行业动态</string>
+    <string name="fancy_ideas_subtitle_14">周末不知道去哪玩？直接喂到你嘴边</string>
+    <string name="fancy_ideas_subtitle_15">心中有小纠结？塔罗趣味抽牌，给你轻松小参考</string>
+    <string name="fancy_ideas_subtitle_16">输入生辰，解锁传统命理文化趣味解读</string>
+    <string name="fancy_ideas_subtitle_17">想知道合不合？帮你分析性格契合度</string>
+    <string name="fancy_ideas_subtitle_18">周末不知道看啥？按口味精准推荐，片源直接给到</string>
+    <string name="fancy_ideas_subtitle_19">读懂 GDP、利率、CPI，把握市场关键参考</string>
+    <string name="fancy_ideas_subtitle_20">策略靠不靠谱？用历史数据回测验证你的交易策略</string>
+
+    <string name="fancy_ideas_usecase_01">🚗早高峰通勤：出门前设置好，路上通过INMO Air3快速浏览当日热点，不耽误行程；\n
+        💼会议准备：快速获取行业核心动态，避免会议中对热点信息一无所知；\n
+        📖高效办公：过滤无效碎片化信息，精准捕捉关键政策、行业风向，助力决策。</string>
+    <string name="fancy_ideas_usecase_02">💡创业初期：有初步创业想法，想快速了解可行性，避免盲目投入；\n
+        📈项目评估：对现有创业项目，补充多维度分析，优化落地思路；\n
+        🤝合作洽谈：向合作伙伴展示点子可行性，提供数据支撑。</string>
+    <string name="fancy_ideas_usecase_03">📊产品立项：新产品立项前，快速掌握行业痛点，明确产品方向；\n
+        🔍竞品分析：了解竞品用户反馈，挖掘其不足，找到自身优势；\n
+        📝方案优化：根据行业痛点，优化现有产品/方案，提升竞争力。</string>
+    <string name="fancy_ideas_usecase_04">💪健身计划：制定减肥、增肌等运动目标，生成合理计划，逐步落地；\n
+        🏃日常锻炼：想养成运动习惯，每日有明确计划，避免盲目锻炼；\n
+        ⏰时间管理：合理分配运动时间，兼顾工作、学习与锻炼。</string>
+    <string name="fancy_ideas_usecase_05">🍳日常做饭：不知道做什么饭，输入偏好，快速获取餐单与做法；\n
+        🥗健康饮食：想保持健康饮食，推荐低脂、清淡餐单，贴合健康需求；\n
+        😋口味适配：根据“不辣、清淡”等偏好，推荐贴合口味的餐品，避免踩雷。</string>
+    <string name="fancy_ideas_usecase_06">💪计划适配：原运动计划太累，调整为更温和的节奏，避免放弃；\n
+        ⏰时间适配：工作繁忙，时间不够，调整运动时长，适配日常时间；\n
+        📈循序渐进：根据自身状态，逐步调整运动强度，稳步提升体能。</string>
+    <string name="fancy_ideas_usecase_07">🎯减肥目标：“减肥10斤”大目标，拆解为每日小任务，逐步实现；\n
+        📝考证目标：备考证书，拆解每日学习任务，避免拖延，稳步推进；\n
+        🌿习惯目标：“坚持每天读书”，拆解为每日小任务，养成自律习惯。</string>
+    <string name="fancy_ideas_usecase_08">📖阅读习惯：想养成每天读书30分钟的习惯，通过打卡坚持；\n
+        💧健康习惯：养成每天喝8杯水、早睡早起的习惯，提升身体素质；\n
+        💼办公习惯：养成每天整理工作文档、复盘当日工作的习惯，提升效率。</string>
+    <string name="fancy_ideas_usecase_09">🚗日常出行：出门前查询天气，获取穿衣建议，避免着凉、淋雨；\n
+        ✈️短途旅行：查询目的地天气，提前准备衣物、出行用品；\n
+        ⚠️极端预警：收到暴雨、高温等极端天气预警，提前做好防护。</string>
+    <string name="fancy_ideas_usecase_10">📚备考冲刺：雅思、考研等备考，制定合理学习计划，避免盲目复习；\n
+        💻技能提升：学习Python、AI等技能，拆分学习内容，循序渐进；\n
+        📖日常积累：培养阅读、外语等习惯，制定轻量计划，易坚持不费力。</string>
+    <string name="fancy_ideas_usecase_11">📝难题攻克：学习中遇到的难点、疑点，快速获取通俗讲解，突破学习瓶颈；\n
+        💡知识延伸：掌握基础知识点后，延伸拓展相关内容，丰富知识储备；\n
+        🎓答疑解惑：备考、工作中遇到的专业问题，及时获取清晰解答。</string>
+    <string name="fancy_ideas_usecase_12">📊科研学习：每日获取相关领域论文、报告，及时掌握行业研究动态；\n
+        💼职场提升：关注行业前沿报告，补充专业知识，助力工作开展；\n
+        🎓学术积累：收集相关领域研究成果，为论文、汇报积累素材。</string>
+    <string name="fancy_ideas_usecase_13">📱碎片时间：通勤、休息时，快速查看科技资讯，丰富知识储备；\n
+        💼职场适配：关注科技领域动态，助力工作中把握技术趋势；\n
+        🎓学习补充：了解科技前沿，为学习、科研提供新思路。</string>
+    <string name="fancy_ideas_usecase_14">🚗周末出游：周末想出行，无需手动查攻略，一键获取完整规划；\n
+        👨‍👩‍👧‍👦亲子出行：输入“亲子游”偏好，生成适合孩子的出游路线，兼顾趣味与便捷；\n
+        ✈️短途旅行：短途出行前，快速获取精准规划，节省攻略时间。</string>
+    <string name="fancy_ideas_usecase_15">🤔纠结选择：面临小选择时，获取趣味指引，缓解选择焦虑；\n
+        😜休闲消遣：闲暇时抽牌，增添生活乐趣，打发碎片时间；\n
+        ✨心情调节：通过趣味指引，获得积极心理暗示，调节心情。</string>
+    <string name="fancy_ideas_usecase_16">😜休闲娱乐：和朋友闲聊时，解读生辰，增添互动乐趣；\n
+        ✨自我消遣：闲暇时了解生辰趣味解读，打发时间，调节心情；\n
+        🤝人际互动：通过生辰解读，找到与他人的趣味共鸣点，拉近关系。</string>
+    <string name="fancy_ideas_usecase_17">🤝人际交往：了解与朋友、同事的MBTI契合度，获取相处小建议；\n
+        💞情感互动：分析与伴侣的MBTI配对情况，增进彼此理解；\n
+        😜休闲趣味：和朋友一起分析MBTI配对，增添互动乐趣。</string>
+    <string name="fancy_ideas_usecase_18">📺休闲放松：周末、休息时，想追剧/看电影，快速获取贴合偏好的推荐；\n
+        🎬口味匹配：输入“悬疑、豆瓣8分以上”等偏好，精准推荐，避免踩雷；\n
+        ✨发现新片：获取小众优质影视推荐，拓宽影视观看范围。</string>
+    <string name="fancy_ideas_usecase_19">📊职场参考：从事金融、商务相关工作，查询经济数据，为工作决策提供支撑；\n
+        💡投资参考：了解利率、CPI等数据，为个人投资提供参考；\n
+        🎓学习了解：学习经济相关知识，查询最新数据，加深理解。</string>
+    <string name="fancy_ideas_usecase_20">💹个人投资：输入自定义交易策略，通过历史数据回测，提前判断策略盈利潜力，避免实际操作亏损；\n
+        📊策略优化：根据回测报告中的风险点、收益率数据，调整交易策略细节，提升实战成功率；\n
+        🎓学习实践：学习量化交易知识时，通过模拟回测实操演练，加深对交易策略的理解与应用。</string>
+
+    <string name="fancy_ideas_prompt_01">创建每日「8:00」定时任务，自动抓取当日「AI科技」领域全网热点、重要资讯及要闻摘要，整理成简洁的内容，准时推送至我的眼前。</string>
+    <string name="fancy_ideas_prompt_02">验证“AR眼镜办公场景自动化助手”这个创业点子，从市场需求、竞争格局、成本投入、盈利模式四个维度分析，生成简易可行性报告。</string>
+    <string name="fancy_ideas_prompt_03">挖掘“AR眼镜办公场景”的核心用户痛点，抓取相关社交平台用户评论和行业数据，分类整理并生成调研简报，支持导出。</string>
+    <string name="fancy_ideas_prompt_04">我的运动目标是“每天跑步30分钟、每周3次”，生成明日运动计划，设置「18:30」提醒，支持语音打卡，计划可根据反馈调整。</string>
+    <string name="fancy_ideas_prompt_05">推荐今日午餐和晚餐，偏好清淡、不辣、低脂，适合日常居家做法，提供每道菜的简易做法指引，兼顾营养均衡。</string>
+    <string name="fancy_ideas_prompt_06">我觉得当前的运动计划太累，时间也不够，调整明日运动计划，将跑步30分钟改为快走20分钟，调整提醒时间为「19:00」。</string>
+    <string name="fancy_ideas_prompt_07">我的大目标是“3个月减肥10斤”，将其拆解为每日小目标（控制饮食、适量运动），支持语音打卡，每周生成减肥进度报表。</string>
+    <string name="fancy_ideas_prompt_08">我想养成“每天读书30分钟”的习惯，发起21天打卡挑战，设置「21:00」提醒，支持语音打卡，每日给出鼓励建议，生成打卡数据报表。</string>
+    <string name="fancy_ideas_prompt_09">查询北京今日实时天气、未来7天天气预报，结合今日天气给出穿衣建议，若有极端天气及时预警，语音播报结果。</string>
+    <string name="fancy_ideas_prompt_10">制定“备考雅思”的每周学习规划，每日学习1.5小时，重点覆盖听力和阅读，每周日进行一次复盘，计划可灵活调整。</string>
+    <string name="fancy_ideas_prompt_11">深度讲解“AR眼镜的光学显示原理”，拆解核心卡点，用通俗语言说明，举2个实际应用例子，延伸相关技术发展趋势。</string>
+    <string name="fancy_ideas_prompt_12">设置每日「9:00」的自动定时任务，自动抓取“AR/VR领域”的最新论文和行业报告，提炼核心观点生成研究简报，推送到我的眼前。</string>
+    <string name="fancy_ideas_prompt_13">每日推送“AI、AR/VR领域”的精选科技资讯，简洁提炼核心内容，支持语音朗读，每日更新10条。</string>
+    <string name="fancy_ideas_prompt_14">规划“周末2天北京亲子游”，偏好亲子景点、清淡餐饮，交通优先选择地铁，生成详细路线。</string>
+    <string name="fancy_ideas_prompt_15">我纠结“周末要不要去短途旅行”，触发塔罗抽牌，生成1张塔罗牌，给出趣味指引，语气轻松，不涉及封建迷信。</string>
+    <string name="fancy_ideas_prompt_16">输入我的生辰信息（1998年5月10日），给出趣味解读，内容轻松有趣，规避封建迷信表述，保护我的隐私。</string>
+    <string name="fancy_ideas_prompt_17">我是INFJ，对方是ESTP，分析我们的性格契合度，给出客观温和的相处建议，仅作娱乐参考，不绝对化。</string>
+    <string name="fancy_ideas_prompt_18">推荐“豆瓣8分以上、悬疑类型”的影视，优先选择近两年上映的，提供合规观看指引，推荐10部并简要介绍剧情。</string>
+    <string name="fancy_ideas_prompt_19">查询中国最新GDP数据、1年期LPR利率，给出通俗解读，对比上月数据，说明变化趋势，语音播报结果。</string>
+    <string name="fancy_ideas_prompt_20">启动量化策略模拟回测，输入“均线交叉交易策略”（5日均线金叉买入、死叉卖出），用近1年的股票历史数据进行回测，生成简洁适配AR镜片的回测报告，重点展示收益率、风险系数，完成后推送至我的AR镜片。</string>
+
+    <string-array name="fancy_ideas_titles">
+        <item>@string/fancy_ideas_title_01</item>
+        <item>@string/fancy_ideas_title_02</item>
+        <item>@string/fancy_ideas_title_03</item>
+        <item>@string/fancy_ideas_title_04</item>
+        <item>@string/fancy_ideas_title_05</item>
+        <item>@string/fancy_ideas_title_06</item>
+        <item>@string/fancy_ideas_title_07</item>
+        <item>@string/fancy_ideas_title_08</item>
+        <item>@string/fancy_ideas_title_09</item>
+        <item>@string/fancy_ideas_title_10</item>
+        <item>@string/fancy_ideas_title_11</item>
+        <item>@string/fancy_ideas_title_12</item>
+        <item>@string/fancy_ideas_title_13</item>
+        <item>@string/fancy_ideas_title_14</item>
+        <item>@string/fancy_ideas_title_15</item>
+        <item>@string/fancy_ideas_title_16</item>
+        <item>@string/fancy_ideas_title_17</item>
+        <item>@string/fancy_ideas_title_18</item>
+        <item>@string/fancy_ideas_title_19</item>
+        <item>@string/fancy_ideas_title_20</item>
+    </string-array>
+
+    <string-array name="fancy_ideas_subtitles">
+        <item>@string/fancy_ideas_subtitle_01</item>
+        <item>@string/fancy_ideas_subtitle_02</item>
+        <item>@string/fancy_ideas_subtitle_03</item>
+        <item>@string/fancy_ideas_subtitle_04</item>
+        <item>@string/fancy_ideas_subtitle_05</item>
+        <item>@string/fancy_ideas_subtitle_06</item>
+        <item>@string/fancy_ideas_subtitle_07</item>
+        <item>@string/fancy_ideas_subtitle_08</item>
+        <item>@string/fancy_ideas_subtitle_09</item>
+        <item>@string/fancy_ideas_subtitle_10</item>
+        <item>@string/fancy_ideas_subtitle_11</item>
+        <item>@string/fancy_ideas_subtitle_12</item>
+        <item>@string/fancy_ideas_subtitle_13</item>
+        <item>@string/fancy_ideas_subtitle_14</item>
+        <item>@string/fancy_ideas_subtitle_15</item>
+        <item>@string/fancy_ideas_subtitle_16</item>
+        <item>@string/fancy_ideas_subtitle_17</item>
+        <item>@string/fancy_ideas_subtitle_18</item>
+        <item>@string/fancy_ideas_subtitle_19</item>
+        <item>@string/fancy_ideas_subtitle_20</item>
+    </string-array>
+
+    <string-array name="fancy_ideas_usecases">
+        <item>@string/fancy_ideas_usecase_01</item>
+        <item>@string/fancy_ideas_usecase_02</item>
+        <item>@string/fancy_ideas_usecase_03</item>
+        <item>@string/fancy_ideas_usecase_04</item>
+        <item>@string/fancy_ideas_usecase_05</item>
+        <item>@string/fancy_ideas_usecase_06</item>
+        <item>@string/fancy_ideas_usecase_07</item>
+        <item>@string/fancy_ideas_usecase_08</item>
+        <item>@string/fancy_ideas_usecase_09</item>
+        <item>@string/fancy_ideas_usecase_10</item>
+        <item>@string/fancy_ideas_usecase_11</item>
+        <item>@string/fancy_ideas_usecase_12</item>
+        <item>@string/fancy_ideas_usecase_13</item>
+        <item>@string/fancy_ideas_usecase_14</item>
+        <item>@string/fancy_ideas_usecase_15</item>
+        <item>@string/fancy_ideas_usecase_16</item>
+        <item>@string/fancy_ideas_usecase_17</item>
+        <item>@string/fancy_ideas_usecase_18</item>
+        <item>@string/fancy_ideas_usecase_19</item>
+        <item>@string/fancy_ideas_usecase_20</item>
+    </string-array>
+
+    <string-array name="fancy_ideas_prompts">
+        <item>@string/fancy_ideas_prompt_01</item>
+        <item>@string/fancy_ideas_prompt_02</item>
+        <item>@string/fancy_ideas_prompt_03</item>
+        <item>@string/fancy_ideas_prompt_04</item>
+        <item>@string/fancy_ideas_prompt_05</item>
+        <item>@string/fancy_ideas_prompt_06</item>
+        <item>@string/fancy_ideas_prompt_07</item>
+        <item>@string/fancy_ideas_prompt_08</item>
+        <item>@string/fancy_ideas_prompt_09</item>
+        <item>@string/fancy_ideas_prompt_10</item>
+        <item>@string/fancy_ideas_prompt_11</item>
+        <item>@string/fancy_ideas_prompt_12</item>
+        <item>@string/fancy_ideas_prompt_13</item>
+        <item>@string/fancy_ideas_prompt_14</item>
+        <item>@string/fancy_ideas_prompt_15</item>
+        <item>@string/fancy_ideas_prompt_16</item>
+        <item>@string/fancy_ideas_prompt_17</item>
+        <item>@string/fancy_ideas_prompt_18</item>
+        <item>@string/fancy_ideas_prompt_19</item>
+        <item>@string/fancy_ideas_prompt_20</item>
+    </string-array>
+</resources>

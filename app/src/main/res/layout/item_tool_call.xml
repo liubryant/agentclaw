@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:gravity="top"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="12dp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/topLineView"
+            android:layout_width="2dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/gallery" />
+
+        <View
+            android:id="@+id/nodeView"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:background="@drawable/bg_tool_call_node" />
+
+        <View
+            android:id="@+id/bottomLineView"
+            android:layout_width="2dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/gallery" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iconView"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="5dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_tool_exe"
+        android:tint="@color/sidebar_muted" />
+
+    <TextView
+        android:id="@+id/contentView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="1dp"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="18sp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/statusView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="6dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/chat_tool_running"
+        android:textColor="@color/brand_primary"
+        android:textSize="12sp"
+        android:visibility="gone" />
+</LinearLayout>
+

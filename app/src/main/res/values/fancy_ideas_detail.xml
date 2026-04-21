@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_idea_detail_whatcando">What Can It Do For Me?</string>
+    <string name="fancy_idea_detail_scenario">Use Cases</string>
+    <string name="fancy_idea_detail_prompt">Prompt</string>
+    <string name="fancy_idea_detail_use_now">Use Now</string>
+    <string name="fancy_idea_type_gxbg">Efficient Work</string>
+    <string name="fancy_idea_type_glsh">Organized Life</string>
+    <string name="fancy_idea_type_qxzz">Study Support</string>
+    <string name="fancy_idea_type_xqbl">Fun Companion</string>
+    <string name="fancy_idea_type_czdc">Insight Analysis</string>
+</resources>

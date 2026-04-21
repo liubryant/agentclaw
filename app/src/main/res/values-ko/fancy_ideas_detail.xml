@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_idea_detail_whatcando">무엇을 해줄 수 있나요?</string>
+    <string name="fancy_idea_detail_scenario">활용 장면</string>
+    <string name="fancy_idea_detail_prompt">프롬프트</string>
+    <string name="fancy_idea_detail_use_now">지금 사용</string>
+    <string name="fancy_idea_type_gxbg">효율적인 업무</string>
+    <string name="fancy_idea_type_glsh">정돈된 생활</string>
+    <string name="fancy_idea_type_qxzz">학습 지원</string>
+    <string name="fancy_idea_type_xqbl">재미있는 동반자</string>
+    <string name="fancy_idea_type_czdc">인사이트 분석</string>
+</resources>
+

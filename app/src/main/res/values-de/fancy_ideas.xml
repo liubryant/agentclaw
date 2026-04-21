@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_ideas_title_01">Automatische News-Zusammenfassung</string>
+    <string name="fancy_ideas_title_02">Machbarkeitscheck für Start-up-Ideen</string>
+    <string name="fancy_ideas_title_03">Analyse zur Erkennung von Pain Points</string>
+    <string name="fancy_ideas_title_04">Trainingsplan für morgen</string>
+    <string name="fancy_ideas_title_05">Tägliche Essensempfehlung</string>
+    <string name="fancy_ideas_title_06">Anpassung des Trainingsplans</string>
+    <string name="fancy_ideas_title_07">Zielaufteilung und Check-ins</string>
+    <string name="fancy_ideas_title_08">Tracker für Selbstdisziplin-Gewohnheiten</string>
+    <string name="fancy_ideas_title_09">Live-Wetter und Outfit-Tipps</string>
+    <string name="fancy_ideas_title_10">Leichter Lernplan</string>
+    <string name="fancy_ideas_title_11">Detaillierter Themen-Erklärer</string>
+    <string name="fancy_ideas_title_12">Tägliches Research-Briefing</string>
+    <string name="fancy_ideas_title_13">Ausgewählte Tech-News</string>
+    <string name="fancy_ideas_title_14">Reiseplanung für Faule</string>
+    <string name="fancy_ideas_title_15">Spielerische Tarot-Hinweise</string>
+    <string name="fancy_ideas_title_16">Unterhaltsame Horoskop-Deutung</string>
+    <string name="fancy_ideas_title_17">MBTI-Kompatibilitätsanalyse</string>
+    <string name="fancy_ideas_title_18">Film- und Serienempfehlungen</string>
+    <string name="fancy_ideas_title_19">Abfrage von Wirtschaftsdaten</string>
+    <string name="fancy_ideas_title_20">Backtest für Quant-Strategien</string>
+
+    <string name="fancy_ideas_subtitle_01">Du scrollst Nachrichten noch einzeln durch? Hol dir eine tägliche Zusammenfassung der wichtigsten Updates ohne manuelle Suche.</string>
+    <string name="fancy_ideas_subtitle_02">Du hast eine Idee, zögerst aber mit dem Start? Prüfe schnell die Machbarkeit und senke die Kosten für Fehlversuche.</string>
+    <string name="fancy_ideas_subtitle_03">Kein klarer Ansatz für ein neues Projekt? Ermittele automatisch Marktprobleme und erhalte einen Bericht zur Auswertung.</string>
+    <string name="fancy_ideas_subtitle_04">Du willst trainieren, aber dir fehlt die Konstanz? Erhalte einen Tagesplan, der dich zur richtigen Zeit in Bewegung bringt.</string>
+    <string name="fancy_ideas_subtitle_05">Keine Ahnung, was du heute essen sollst? Erhalte passende Essensvorschläge nach Geschmack und Standort.</string>
+    <string name="fancy_ideas_subtitle_06">Dein Trainingsrhythmus ist durcheinander? Strukturiere ihn mit einem klareren Plan neu.</string>
+    <string name="fancy_ideas_subtitle_07">Deine Vorsätze kippen ständig um? Teile große Ziele in kleine Schritte und verfolge täglich den Fortschritt.</string>
+    <string name="fancy_ideas_subtitle_08">Du bleibst nicht bei guten Gewohnheiten? Nutze 21-Tage-Serien und Daten-Tracking für mehr Beständigkeit.</string>
+    <string name="fancy_ideas_subtitle_09">Prüfe Temperatur, Luftfeuchtigkeit, Wind und Luftqualität in Echtzeit sowie eine 7-Tage-Prognose, Outfit-Tipps und Unwetterwarnungen.</string>
+    <string name="fancy_ideas_subtitle_10">Prüfungsvorbereitung überfordert dich? Gib den chaotischen Lernplan ab und mach ihn umsetzbar.</string>
+    <string name="fancy_ideas_subtitle_11">Du hängst an einem schwierigen Problem fest? Zerlege den Blocker und finde einen Weg nach vorn.</string>
+    <string name="fancy_ideas_subtitle_12">Wichtige Papers und Branchenberichte gehen unter? Halte relevante Updates jeden Tag im Blick.</string>
+    <string name="fancy_ideas_subtitle_13">Du kommst bei der Informationsflut nicht mehr mit? Erhalte täglich eine kompakte Auswahl technischer Highlights.</string>
+    <string name="fancy_ideas_subtitle_14">Keine Idee fürs Wochenende? Hol dir schnell einen Reiseplan mit wenig Aufwand.</string>
+    <string name="fancy_ideas_subtitle_15">Du bist etwas hin- und hergerissen? Zieh eine Tarotkarte als leichte, spielerische Orientierung.</string>
+    <string name="fancy_ideas_subtitle_16">Gib deine Geburtsdaten ein und erhalte eine spielerische Deutung mit Anklängen an traditionelle Metaphysik.</string>
+    <string name="fancy_ideas_subtitle_17">Willst du wissen, ob zwei Menschen zusammenpassen? Analysiere die Persönlichkeitskompatibilität.</string>
+    <string name="fancy_ideas_subtitle_18">Unsicher, was du am Wochenende schauen sollst? Erhalte präzise Empfehlungen nach deinem Geschmack.</string>
+    <string name="fancy_ideas_subtitle_19">Verstehe GDP, Zinsen und CPI und erkenne die Signale, die wirklich wichtig sind.</string>
+    <string name="fancy_ideas_subtitle_20">Unsicher, ob eine Strategie funktioniert? Prüfe sie mit historischem Backtesting.</string>
+
+    <string name="fancy_ideas_usecase_01">🚗 Pendeln: Vor dem Verlassen des Hauses einstellen und unterwegs auf der INMO Air3 schnell die Tageshighlights überfliegen.\nMeeting-Vorbereitung: Zentrale Branchenentwicklungen nachholen, damit du im Meeting nicht überrascht wirst.\nEffizientes Arbeiten: Fragmentiertes Rauschen filtern, wichtige Markt- und Politiksignale erfassen und Entscheidungen besser stützen.</string>
+    <string name="fancy_ideas_usecase_02">💡 Start-up-Erkundung: Eine frühe Geschäftsidee schnell bewerten, bevor du blind investierst.\nProjektbewertung: Einer bestehenden Idee mehrdimensionale Analyse hinzufügen und den Umsetzungsplan verbessern.\nPartnergespräche: Die Machbarkeit der Idee mit klareren Belegen darstellen.</string>
+    <string name="fancy_ideas_usecase_03">📊 Produktstart: Vor einem neuen Produktvorhaben Branchenprobleme verstehen und die Richtung klären.\nWettbewerbsanalyse: Feedback von Wettbewerbern auswerten, Schwächen erkennen und eigene Chancen finden.\nKonzeptverfeinerung: Produkt oder Lösung an realen Marktproblemen ausrichten.</string>
+    <string name="fancy_ideas_usecase_04">💪 Fitnessplanung: Ziele wie Abnehmen oder Muskelaufbau setzen und einen praktikablen Plan erstellen.\nTägliches Training: Mit einer klaren Tagesstruktur eine Trainingsgewohnheit aufbauen statt planlos zu trainieren.\nZeitmanagement: Training besser mit Arbeit und Lernen ausbalancieren.</string>
+    <string name="fancy_ideas_usecase_05">🍳 Tägliches Kochen: Vorlieben eingeben und schnell Essensideen sowie Kochschritte erhalten.\nGesunde Ernährung: Leichte, fettarme Vorschläge passend zu deinen Gesundheitszielen bekommen.\nGeschmackstreffer: Gerichte nach Kriterien wie mild oder nicht scharf empfehlen lassen, um Fehlgriffe zu vermeiden.</string>
+    <string name="fancy_ideas_usecase_06">💪 Plananpassung: Einen zu intensiven Trainingsplan entschärfen, damit du eher dranbleibst.\nZeitliche Anpassung: Workouts verkürzen, wenn die Arbeit stressig ist und wenig Zeit bleibt.\nSchrittweise Fortschritte: Intensität nach Verfassung anpassen und Schritt für Schritt verbessern.</string>
+    <string name="fancy_ideas_usecase_07">🎯 Abnehmziel: Ein großes Ziel wie 10 Pfund weniger in tägliche Handlungen zerlegen.\nLernziel: Lernstoff in tägliche Aufgaben aufteilen, um Aufschieben zu vermeiden.\nGewohnheitsziel: Ziele wie tägliches Lesen in kleine wiederholbare Schritte verwandeln.</string>
+    <string name="fancy_ideas_usecase_08">📖 Lesegewohnheit: Mit Check-ins täglich 30 Minuten Lesen etablieren.\nGesundheitsgewohnheit: Routinen wie genug Wasser trinken und früh schlafen beibehalten.\nArbeitsgewohnheit: Gewohnheiten wie Dateien ordnen und den Arbeitstag reflektieren aufbauen.</string>
+    <string name="fancy_ideas_usecase_09">🚗 Alltägliche Wege: Vor dem Rausgehen das Wetter prüfen und Outfit-Tipps erhalten.\nKurzreisen: Das Wetter am Ziel im Voraus ansehen und Kleidung sowie Zubehör vorbereiten.\nExtreme Warnungen: Frühzeitig Hinweise auf starken Regen, Hitze und andere extreme Bedingungen bekommen.</string>
+    <string name="fancy_ideas_usecase_10">📚 Prüfungsspurt: Einen Lernplan für IELTS, Aufnahmeprüfungen und ähnliche Ziele aufbauen, ohne blind zu büffeln.\nKompetenzaufbau: Themen wie Python oder KI in handhabbare Teile zerlegen.\nTägliches Wachstum: Leichte Lese- oder Sprachlern-Routinen pflegen, die sich eher durchhalten lassen.</string>
+    <string name="fancy_ideas_usecase_11">📝 Schwierige Themen zerlegen: Komplexe Konzepte einfach erklärt bekommen und Lernblockaden überwinden.\nWissensausbau: Von Grundlagen zu verwandten Themen weitergehen und das Verständnis vertiefen.\nSchnelle Antworten: Zeitnahe, klare Erklärungen für Fachfragen aus Studium oder Beruf erhalten.</string>
+    <string name="fancy_ideas_usecase_12">📊 Research verfolgen: Täglich Papers und Berichte deines Fachgebiets erhalten und aktuell bleiben.\nKarrierewachstum: Branchenberichte an der Spitze verfolgen und Fachwissen stärken.\nAkademische Vorbereitung: Forschungsergebnisse für Papers, Präsentationen und Berichte sammeln.</string>
+    <string name="fancy_ideas_usecase_13">📱 Freie Minuten: Während Pendeln oder Pausen schnell Tech-Updates überfliegen.\nArbeitsrelevanz: Technologiewandel verfolgen, der deine beruflichen Entscheidungen beeinflussen kann.\nLernhilfe: Trends an der Spitze kennenlernen, die Forschung und Lernen inspirieren.</string>
+    <string name="fancy_ideas_usecase_14">🚗 Wochenendausflug: In einem Schritt einen vollständigen Plan erhalten statt Reiseführer manuell zu durchsuchen.\nFamilienreise: Routen erstellen, die für Kinder geeignet und zugleich bequem sind.\nKurztrip: Vor einem spontanen Ausflug Planungszeit sparen.</string>
+    <string name="fancy_ideas_usecase_15">🤔 Kleine Dilemmata: Spielerische Hinweise erhalten, wenn du bei einer kleinen Entscheidung festhängst.\nLockere Unterhaltung: In einer Pause zum Spaß eine Karte ziehen.\nStimmungsunterstützung: Leichte Hinweise als positiven emotionalen Impuls nutzen.</string>
+    <string name="fancy_ideas_usecase_16">😜 Lockerer Spaß: Mit Freunden zur Unterhaltung über Geburtsdaten-Deutungen sprechen.\nPersönischer Zeitvertreib: In der Freizeit leichte, kulturell inspirierte Interpretationen genießen.\nSoziale Interaktion: Spielerische Lesungen nutzen, um interessante Gemeinsamkeiten zu entdecken.</string>
+    <string name="fancy_ideas_usecase_17">🤝 Zwischenmenschliche Einsicht: MBTI-Kompatibilität mit Freunden und Kollegen verstehen und Tipps erhalten.\nBeziehungsblick: MBTI-Matching mit dem Partner erkunden, um sich besser zu verstehen.\nLockerer Spaß: Gemeinsam mit Freunden Paarungen spielerisch analysieren.</string>
+    <string name="fancy_ideas_usecase_18">📺 Entspannung: An Wochenenden oder in Pausen schnell etwas zum Anschauen finden.\nGeschmackstreffer: Nach Vorlieben wie Thriller oder hoher Bewertung filtern, um Fehlgriffe zu vermeiden.\nNeue Entdeckungen: Unterschätzte, aber starke Film- und Serienempfehlungen entdecken.</string>
+    <string name="fancy_ideas_usecase_19">📊 Berufliche Referenz: Wirtschaftsdaten abrufen, um Finanz- oder Geschäftsentscheidungen zu unterstützen.\nInvestitionskontext: Kennzahlen wie Zinsen und CPI als persönliche Referenz verwenden.\nLernunterstützung: Beim Lernen aktuelle Wirtschaftsindikatoren nachschlagen.</string>
+    <string name="fancy_ideas_usecase_20">💹 Persönliches Investieren: Eine eigene Strategie mit historischen Daten backtesten, bevor echtes Geld riskiert wird.\nStrategie-Tuning: Die Strategie mit Risiko- und Renditedaten aus Backtest-Berichten anpassen.\nLernen in der Praxis: Das Verständnis für quantitativen Handel durch Simulation vertiefen.</string>
+
+    <string name="fancy_ideas_prompt_01">Erstelle eine tägliche Aufgabe um 8:00 Uhr, die automatisch führende KI-Tech-News, wichtige Updates und kurze Zusammenfassungen aus dem Web sammelt und mir die Übersicht pünktlich zusendet.</string>
+    <string name="fancy_ideas_prompt_02">Bewerte die Start-up-Idee „AR-Brille als Büroautomatisierungs-Assistent“ hinsichtlich Marktnachfrage, Wettbewerb, Kosten und Geschäftsmodell und erstelle einen kurzen Machbarkeitsbericht.</string>
+    <string name="fancy_ideas_prompt_03">Ermittle die zentralen Nutzerprobleme von „AR-Brillen im Büroalltag“, sammle relevante Kommentare aus sozialen Plattformen und Branchendaten, kategorisiere sie und erstelle ein exportierbares Research-Briefing.</string>
+    <string name="fancy_ideas_prompt_04">Mein Trainingsziel ist „jeden Tag 30 Minuten laufen und 3-mal pro Woche trainieren“. Erstelle den Trainingsplan für morgen, setze eine Erinnerung um 18:30 Uhr, unterstütze Sprach-Check-ins und erlaube Plananpassungen auf Basis von Feedback.</string>
+    <string name="fancy_ideas_prompt_05">Empfiehl mir Mittag- und Abendessen für heute. Vorlieben: leicht, nicht scharf, fettarm, geeignet zum Kochen zu Hause. Ergänze einfache Kochanweisungen und achte auf ausgewogene Ernährung.</string>
+    <string name="fancy_ideas_prompt_06">Mein aktueller Trainingsplan ist zu anstrengend und ich habe nicht genug Zeit. Passe den Trainingsplan für morgen an, ersetze den 30-Minuten-Lauf durch 20 Minuten zügiges Gehen und verschiebe die Erinnerung auf 19:00 Uhr.</string>
+    <string name="fancy_ideas_prompt_07">Mein großes Ziel ist „in 3 Monaten 10 Pfund abnehmen“. Zerlege es in tägliche Mini-Ziele wie Ernährungskontrolle und moderate Bewegung, unterstütze Sprach-Check-ins und erstelle einen wöchentlichen Fortschrittsbericht.</string>
+    <string name="fancy_ideas_prompt_08">Ich möchte die Gewohnheit aufbauen, jeden Tag 30 Minuten zu lesen. Starte eine 21-Tage-Challenge, setze eine Erinnerung um 21:00 Uhr, unterstütze Sprach-Check-ins, gib tägliche Motivation und erstelle Check-in-Berichte.</string>
+    <string name="fancy_ideas_prompt_09">Prüfe das aktuelle Wetter in Peking und die Vorhersage für die nächsten 7 Tage, gib Kleidungstipps anhand der aktuellen Bedingungen, warne bei Extremwetter und lies das Ergebnis laut vor.</string>
+    <string name="fancy_ideas_prompt_10">Erstelle einen wöchentlichen IELTS-Lernplan mit 1,5 Stunden pro Tag, Schwerpunkt auf Hören und Lesen sowie einer Wochenrückschau an jedem Sonntag. Der Plan soll flexibel bleiben.</string>
+    <string name="fancy_ideas_prompt_11">Erkläre „die optischen Anzeigeprinzipien von AR-Brillen“ ausführlich, zerlege die schwierigsten Teile in einfache Sprache, nenne zwei Praxisbeispiele und erweitere das Thema um relevante Technologietrends.</string>
+    <string name="fancy_ideas_prompt_12">Richte eine tägliche Aufgabe um 9:00 Uhr ein, die automatisch die neuesten Papers und Branchenberichte im Bereich AR/VR sammelt, die Kernpunkte zu einem Research-Brief verdichtet und mir zusendet.</string>
+    <string name="fancy_ideas_prompt_13">Sende mir täglich ausgewählte KI- und AR/VR-Technologienews, fasse die Kernpunkte klar zusammen, unterstütze Sprachwiedergabe und aktualisiere mit 10 Meldungen pro Tag.</string>
+    <string name="fancy_ideas_prompt_14">Plane einen 2-tägigen Eltern-Kind-Wochenendtrip in Peking. Vorlieben: familienfreundliche Attraktionen und leichte Küche, bevorzugtes Verkehrsmittel ist die U-Bahn. Erstelle eine detaillierte Route.</string>
+    <string name="fancy_ideas_prompt_15">Ich bin unsicher, ob ich dieses Wochenende einen Kurztrip machen soll. Ziehe eine Tarotkarte und gib eine spielerische Interpretation in leichtem Ton, ohne Aberglauben.</string>
+    <string name="fancy_ideas_prompt_16">Nutze meine Geburtsdaten (10. Mai 1998), um eine unterhaltsame Deutung zu erstellen. Halte den Ton leicht, vermeide abergläubische Formulierungen und schütze meine Privatsphäre.</string>
+    <string name="fancy_ideas_prompt_17">Ich bin INFJ und die andere Person ist ESTP. Analysiere unsere Persönlichkeitskompatibilität, gib objektive und freundliche Hinweise zum Umgang miteinander und behandle es nur als Unterhaltung.</string>
+    <string name="fancy_ideas_prompt_18">Empfiehl spannende Filme oder Serien mit einer Douban-Bewertung über 8, möglichst aus den letzten zwei Jahren. Gib zulässige Sehhilfen, liste 10 Titel auf und stelle die Handlung jeweils kurz vor.</string>
+    <string name="fancy_ideas_prompt_19">Rufe die neuesten GDP-Daten Chinas und den 1-jährigen LPR-Zinssatz ab, erkläre sie in einfacher Sprache, vergleiche sie mit den Daten des letzten Monats, beschreibe den Trend und lies das Ergebnis laut vor.</string>
+    <string name="fancy_ideas_prompt_20">Starte einen Backtest für eine Quant-Strategie mit gleitendem Durchschnittskreuz (Kauf beim goldenen Kreuz des 5-Tage-Durchschnitts, Verkauf beim Todeskreuz), führe ihn auf den Aktiendaten des letzten Jahres aus und erstelle einen kompakten AR-tauglichen Bericht zu Rendite und Risiko.</string>
+
+    <string-array name="fancy_ideas_titles">
+        <item>@string/fancy_ideas_title_01</item>
+        <item>@string/fancy_ideas_title_02</item>
+        <item>@string/fancy_ideas_title_03</item>
+        <item>@string/fancy_ideas_title_04</item>
+        <item>@string/fancy_ideas_title_05</item>
+        <item>@string/fancy_ideas_title_06</item>
+        <item>@string/fancy_ideas_title_07</item>
+        <item>@string/fancy_ideas_title_08</item>
+        <item>@string/fancy_ideas_title_09</item>
+        <item>@string/fancy_ideas_title_10</item>
+        <item>@string/fancy_ideas_title_11</item>
+        <item>@string/fancy_ideas_title_12</item>
+        <item>@string/fancy_ideas_title_13</item>
+        <item>@string/fancy_ideas_title_14</item>
+        <item>@string/fancy_ideas_title_15</item>
+        <item>@string/fancy_ideas_title_16</item>
+        <item>@string/fancy_ideas_title_17</item>
+        <item>@string/fancy_ideas_title_18</item>
+        <item>@string/fancy_ideas_title_19</item>
+        <item>@string/fancy_ideas_title_20</item>
+    </string-array>
+
+    <string-array name="fancy_ideas_subtitles">
+        <item>@string/fancy_ideas_subtitle_01</item>
+        <item>@string/fancy_ideas_subtitle_02</item>
+        <item>@string/fancy_ideas_subtitle_03</item>
+        <item>@string/fancy_ideas_subtitle_04</item>
+        <item>@string/fancy_ideas_subtitle_05</item>
+        <item>@string/fancy_ideas_subtitle_06</item>
+        <item>@string/fancy_ideas_subtitle_07</item>
+        <item>@string/fancy_ideas_subtitle_08</item>
+        <item>@string/fancy_ideas_subtitle_09</item>
+        <item>@string/fancy_ideas_subtitle_10</item>
+        <item>@string/fancy_ideas_subtitle_11</item>
+        <item>@string/fancy_ideas_subtitle_12</item>
+        <item>@string/fancy_ideas_subtitle_13</item>
+        <item>@string/fancy_ideas_subtitle_14</item>
+        <item>@string/fancy_ideas_subtitle_15</item>
+        <item>@string/fancy_ideas_subtitle_16</item>
+        <item>@string/fancy_ideas_subtitle_17</item>
+        <item>@string/fancy_ideas_subtitle_18</item>
+        <item>@string/fancy_ideas_subtitle_19</item>
+        <item>@string/fancy_ideas_subtitle_20</item>
+    </string-array>
+
+    <string-array name="fancy_ideas_usecases">
+        <item>@string/fancy_ideas_usecase_01</item>
+        <item>@string/fancy_ideas_usecase_02</item>
+        <item>@string/fancy_ideas_usecase_03</item>
+        <item>@string/fancy_ideas_usecase_04</item>
+        <item>@string/fancy_ideas_usecase_05</item>
+        <item>@string/fancy_ideas_usecase_06</item>
+        <item>@string/fancy_ideas_usecase_07</item>
+        <item>@string/fancy_ideas_usecase_08</item>
+        <item>@string/fancy_ideas_usecase_09</item>
+        <item>@string/fancy_ideas_usecase_10</item>
+        <item>@string/fancy_ideas_usecase_11</item>
+        <item>@string/fancy_ideas_usecase_12</item>
+        <item>@string/fancy_ideas_usecase_13</item>
+        <item>@string/fancy_ideas_usecase_14</item>
+        <item>@string/fancy_ideas_usecase_15</item>
+        <item>@string/fancy_ideas_usecase_16</item>
+        <item>@string/fancy_ideas_usecase_17</item>
+        <item>@string/fancy_ideas_usecase_18</item>
+        <item>@string/fancy_ideas_usecase_19</item>
+        <item>@string/fancy_ideas_usecase_20</item>
+    </string-array>
+
+    <string-array name="fancy_ideas_prompts">
+        <item>@string/fancy_ideas_prompt_01</item>
+        <item>@string/fancy_ideas_prompt_02</item>
+        <item>@string/fancy_ideas_prompt_03</item>
+        <item>@string/fancy_ideas_prompt_04</item>
+        <item>@string/fancy_ideas_prompt_05</item>
+        <item>@string/fancy_ideas_prompt_06</item>
+        <item>@string/fancy_ideas_prompt_07</item>
+        <item>@string/fancy_ideas_prompt_08</item>
+        <item>@string/fancy_ideas_prompt_09</item>
+        <item>@string/fancy_ideas_prompt_10</item>
+        <item>@string/fancy_ideas_prompt_11</item>
+        <item>@string/fancy_ideas_prompt_12</item>
+        <item>@string/fancy_ideas_prompt_13</item>
+        <item>@string/fancy_ideas_prompt_14</item>
+        <item>@string/fancy_ideas_prompt_15</item>
+        <item>@string/fancy_ideas_prompt_16</item>
+        <item>@string/fancy_ideas_prompt_17</item>
+        <item>@string/fancy_ideas_prompt_18</item>
+        <item>@string/fancy_ideas_prompt_19</item>
+        <item>@string/fancy_ideas_prompt_20</item>
+    </string-array>
+</resources>
+

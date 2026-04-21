@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_idea_detail_whatcando">何をしてくれるの？</string>
+    <string name="fancy_idea_detail_scenario">利用シーン</string>
+    <string name="fancy_idea_detail_prompt">プロンプト</string>
+    <string name="fancy_idea_detail_use_now">今すぐ使う</string>
+    <string name="fancy_idea_type_gxbg">効率的な仕事</string>
+    <string name="fancy_idea_type_glsh">整った暮らし</string>
+    <string name="fancy_idea_type_qxzz">学習サポート</string>
+    <string name="fancy_idea_type_xqbl">楽しい相棒</string>
+    <string name="fancy_idea_type_czdc">インサイト分析</string>
+</resources>
+

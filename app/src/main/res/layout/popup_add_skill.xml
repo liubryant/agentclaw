@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="506px"
+    android:layout_height="268px"
+    android:minWidth="506px"
+    android:background="@drawable/bg_add_skill_popup"
+    android:elevation="4dp"
+    android:orientation="vertical"
+    android:paddingHorizontal="16px"
+    android:paddingVertical="16px"
+    android:translationZ="4dp">
+
+    <LinearLayout
+        android:id="@+id/optionCreateByChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_popup_add_skill_item"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:minHeight="74dp"
+        android:orientation="horizontal"
+        android:paddingLeft="24px"
+        android:paddingRight="96px"
+        android:paddingVertical="17px">
+
+        <ImageView
+            android:layout_width="48px"
+            android:layout_height="48px"
+            android:src="@mipmap/icon_talk"
+            android:tint="#3C3C3C" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_add_skill_by_chat"
+                android:textColor="#222222"
+                android:textSize="28px"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/setting_add_skill_by_chat_desc"
+                android:textColor="#8E8E8E"
+                android:textSize="24px" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="7px"
+        android:paddingHorizontal="30px"
+        android:background="#FFF0F0F0" />
+
+    <LinearLayout
+        android:id="@+id/optionImportFromGithub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_popup_add_skill_item"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:minHeight="74dp"
+        android:orientation="horizontal"
+        android:paddingLeft="24px"
+        android:paddingRight="72px"
+        android:paddingVertical="17px">
+
+        <ImageView
+            android:layout_width="48px"
+            android:layout_height="48px"
+            android:src="@mipmap/icon_github"
+            android:tint="#3C3C3C" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_import_from_github"
+                android:textColor="#222222"
+                android:textSize="28px"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/setting_import_from_github_paste_repo"
+                android:textColor="#8E8E8E"
+                android:textSize="24px" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

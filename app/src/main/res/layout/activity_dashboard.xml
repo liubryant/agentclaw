@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface_primary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/dashboard_title" android:textColor="@color/text_primary" android:textSize="28sp" android:textStyle="bold" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="@string/dashboard_phase3_subtitle" android:textColor="@color/text_secondary" />
+
+        <ai.inmo.openclaw.ui.widget.StatusCardView android:id="@+id/gatewayStatusCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" />
+        <ai.inmo.openclaw.ui.widget.StatusCardView android:id="@+id/nodeStatusCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/dashboard_gateway_controls" android:textColor="@color/text_secondary" android:textStyle="bold" />
+        <ai.inmo.openclaw.ui.widget.GatewayControlsView android:id="@+id/gatewayControls" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/dashboard_quick_actions" android:textColor="@color/text_secondary" android:textStyle="bold" />
+
+        <LinearLayout android:id="@+id/chatCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="12dp" android:orientation="vertical">
+            <TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_chat" />
+            <TextView android:id="@+id/chatSubtitleView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="@color/text_secondary" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/terminalCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_terminal" /></LinearLayout>
+        <LinearLayout android:id="@+id/onboardingCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_onboarding" /></LinearLayout>
+        <LinearLayout android:id="@+id/configureCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_configure" /></LinearLayout>
+        <LinearLayout android:id="@+id/providersCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_providers" /></LinearLayout>
+        <LinearLayout android:id="@+id/packagesCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_packages" /></LinearLayout>
+        <LinearLayout android:id="@+id/sshCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_ssh" /></LinearLayout>
+        <LinearLayout android:id="@+id/logsCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_logs" /></LinearLayout>
+        <LinearLayout android:id="@+id/snapshotCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_snapshot" /></LinearLayout>
+        <LinearLayout android:id="@+id/webDashboardCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_web_dashboard" /></LinearLayout>
+        <LinearLayout android:id="@+id/settingsCard" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/dashboard_settings" /></LinearLayout>
+
+        <TextView android:id="@+id/versionFooter" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:gravity="center" android:textColor="@color/text_secondary" android:textSize="12sp" />
+    </LinearLayout>
+</ScrollView>
+

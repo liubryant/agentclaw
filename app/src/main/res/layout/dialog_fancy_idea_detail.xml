@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="640dp"
+    android:layout_height="666.6dp"
+    android:background="@drawable/bg_terms_dialog"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="32dp"
+    android:paddingVertical="26.6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ideaIconView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:padding="12dp"
+            android:scaleX="2"
+            android:scaleY="2"
+            android:scaleType="fitCenter" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18.6dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ideaTitleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FF1E1E1C"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ideaSubtitleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="#FF8B8B8B"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="28dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fancy_idea_detail_scenario"
+            android:textColor="#FF1E1E1C"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/ideaScenarioContentView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="top"
+            android:lineSpacingExtra="6dp"
+            android:textColor="#FF8B8B8B"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/fancy_idea_detail_prompt"
+            android:textColor="#FF1E1E1C"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="18dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:overScrollMode="ifContentScrolls"
+            android:scrollbars="vertical">
+
+            <TextView
+                android:id="@+id/ideaPromptContentView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="6dp"
+                android:textColor="#FF8B8B8B"
+                android:textSize="16sp" />
+        </ScrollView>
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/useNowButton"
+        android:layout_width="213.3dp"
+        android:layout_height="53.3dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/bg_terms_button_primary"
+        android:text="@string/fancy_idea_detail_use_now"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="18.6sp"
+        android:textStyle="bold" />
+</LinearLayout>

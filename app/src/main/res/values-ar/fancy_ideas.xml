@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_ideas_title_01">ملخص الأخبار الساخنة تلقائياً</string>
+    <string name="fancy_ideas_title_02">فحص جدوى فكرة ناشئة</string>
+    <string name="fancy_ideas_title_03">تحليل اكتشاف نقاط الألم</string>
+    <string name="fancy_ideas_title_04">خطة تمرين الغد</string>
+    <string name="fancy_ideas_title_05">اقتراح الوجبات اليومية</string>
+    <string name="fancy_ideas_title_06">تعديل مهام التمرين</string>
+    <string name="fancy_ideas_title_07">تفكيك الأهداف والمتابعة</string>
+    <string name="fancy_ideas_title_08">متتبع عادات الانضباط الذاتي</string>
+    <string name="fancy_ideas_title_09">الطقس المباشر ونصائح اللباس</string>
+    <string name="fancy_ideas_title_10">خطة دراسة خفيفة</string>
+    <string name="fancy_ideas_title_11">شرح متعمق للموضوع</string>
+    <string name="fancy_ideas_title_12">موجز بحث يومي</string>
+    <string name="fancy_ideas_title_13">مختارات أخبار التقنية</string>
+    <string name="fancy_ideas_title_14">مخطط رحلات سهل</string>
+    <string name="fancy_ideas_title_15">إرشاد تاروت ممتع</string>
+    <string name="fancy_ideas_title_16">قراءة ممتعة لخريطة الميلاد</string>
+    <string name="fancy_ideas_title_17">تحليل توافق MBTI</string>
+    <string name="fancy_ideas_title_18">مرشح أفلام ومسلسلات</string>
+    <string name="fancy_ideas_title_19">استعلام بيانات اقتصادية</string>
+    <string name="fancy_ideas_title_20">اختبار رجعي لاستراتيجية كمية</string>
+
+    <string name="fancy_ideas_subtitle_01">ما زلت تتصفح الأخبار واحدة تلو الأخرى؟ احصل على ملخص يومي لأهم التحديثات من دون بحث يدوي.</string>
+    <string name="fancy_ideas_subtitle_02">لديك فكرة لكنك متردد في البدء؟ تحقّق سريعاً من جدواها وخفّض تكلفة التجربة والخطأ.</string>
+    <string name="fancy_ideas_subtitle_03">لا يوجد اتجاه واضح لمشروع جديد؟ استكشف نقاط ألم السوق تلقائياً واحصل على تقرير للمراجعة.</string>
+    <string name="fancy_ideas_subtitle_04">تريد ممارسة الرياضة لكن الاستمرار صعب؟ احصل على خطة يومية تدفعك للحركة في الوقت المناسب.</string>
+    <string name="fancy_ideas_subtitle_05">لا تعرف ماذا تأكل اليوم؟ احصل على اقتراحات وجبات تناسب ذوقك وموقعك.</string>
+    <string name="fancy_ideas_subtitle_06">هل أصبحت روتينات التمرين فوضوية؟ أعد بناء إيقاعك بجدول أوضح.</string>
+    <string name="fancy_ideas_subtitle_07">هل تسقط أهدافك دائماً؟ قسّم الأهداف الكبيرة إلى خطوات صغيرة وتابع التقدم يومياً.</string>
+    <string name="fancy_ideas_subtitle_08">لا تستطيع الالتزام بالعادات الجيدة؟ استخدم تحدي 21 يوماً مع تتبع البيانات لبناء الاستمرارية.</string>
+    <string name="fancy_ideas_subtitle_09">تحقق من الحرارة والرطوبة والرياح وجودة الهواء مباشرة، مع توقع 7 أيام ونصائح اللباس وتنبيهات الطقس القاسي.</string>
+    <string name="fancy_ideas_subtitle_10">هل تبدو الاستعدادات للاختبار مرهقة؟ حوّل خطة الدراسة المبعثرة إلى شيء قابل للتنفيذ.</string>
+    <string name="fancy_ideas_subtitle_11">عالِق في مشكلة صعبة وتفكر في الاستسلام؟ فكك العائق وابحث عن طريق للتقدم.</string>
+    <string name="fancy_ideas_subtitle_12">هل تفوتك الأوراق المهمة وتقارير القطاع؟ أبقِ التحديثات المهمة أمامك كل يوم.</string>
+    <string name="fancy_ideas_subtitle_13">هل تأخرت بسبب طوفان المعلومات؟ احصل يومياً على اختيار موجز لأهم أخبار التقنية.</string>
+    <string name="fancy_ideas_subtitle_14">لا تعرف إلى أين تذهب في عطلة نهاية الأسبوع؟ احصل بسرعة على خطة سفر سهلة.</string>
+    <string name="fancy_ideas_subtitle_15">تشعر ببعض الحيرة؟ اسحب بطاقة تاروت ممتعة كمرجع خفيف.</string>
+    <string name="fancy_ideas_subtitle_16">أدخل بيانات ميلادك للحصول على قراءة ممتعة مستوحاة من الثقافة التقليدية.</string>
+    <string name="fancy_ideas_subtitle_17">هل تريد معرفة ما إذا كان شخصان متوافقين؟ حلّل توافق الشخصيات.</string>
+    <string name="fancy_ideas_subtitle_18">لست متأكداً ماذا تشاهد في عطلة نهاية الأسبوع؟ احصل على توصيات دقيقة حسب ذوقك.</string>
+    <string name="fancy_ideas_subtitle_19">افهم GDP وأسعار الفائدة وCPI لتتابع الإشارات الاقتصادية المهمة فعلاً.</string>
+    <string name="fancy_ideas_subtitle_20">لست متأكداً إن كانت الاستراتيجية تنجح؟ اختبرها ببيانات تاريخية.</string>
+
+    <string name="fancy_ideas_usecase_01">🚗 أثناء التنقل: اضبطه قبل الخروج واطلع سريعاً على أبرز أحداث اليوم على INMO Air3 أثناء الطريق.\nالتحضير للاجتماعات: لخص أهم تطورات القطاع حتى لا تفاجأ أثناء الاجتماع.\nعمل أكثر كفاءة: صفِّ الضوضاء المتفرقة، والتقط إشارات السوق والسياسات المهمة، وادعم قراراتك.</string>
+    <string name="fancy_ideas_usecase_02">💡 استكشاف مشروع ناشئ: قيّم فكرة عمل مبكرة بسرعة قبل الاستثمار العشوائي.\nمراجعة مشروع: أضف تحليلاً متعدد الأبعاد إلى فكرة موجودة وحسّن خطة التنفيذ.\nنقاش الشركاء: اعرض جدوى الفكرة بأدلة أوضح وأكثر إقناعاً.</string>
+    <string name="fancy_ideas_usecase_03">📊 إطلاق منتج: افهم مشكلات القطاع قبل بدء مبادرة جديدة وحدد الاتجاه.\nتحليل المنافسين: ادرس تعليقات المستخدمين على المنافسين واكشف نقاط الضعف وابحث عن فرصتك.\nتحسين المقترح: حسّن منتجك أو حلك حول مشكلات السوق الحقيقية.</string>
+    <string name="fancy_ideas_usecase_04">💪 تخطيط اللياقة: حدد أهدافاً مثل خسارة الوزن أو بناء العضلات وأنشئ خطة عملية.\nتمرين يومي: ابنِ عادة رياضية بهيكل يومي واضح بدلاً من التدريب العشوائي.\nإدارة الوقت: وازن بين الرياضة والعمل والدراسة بشكل أفضل.</string>
+    <string name="fancy_ideas_usecase_05">🍳 الطبخ اليومي: أدخل تفضيلاتك واحصل بسرعة على أفكار وجبات وخطوات التحضير.\nأكل صحي: تلقَّ اقتراحات خفيفة قليلة الدهون تناسب أهدافك الصحية.\nملاءمة الذوق: رشّح أطباقاً بحسب تفضيلات مثل غير الحار أو الخفيف لتقليل الاختيارات السيئة.</string>
+    <string name="fancy_ideas_usecase_06">💪 تعديل الخطة: خفف برنامجاً رياضياً شديداً ليصبح أسهل في الاستمرار.\nتعديل الوقت: قصّر التمارين عندما يكون العمل مزدحماً والوقت محدوداً.\nتقدم تدريجي: عدّل الشدة حسب حالتك وتحسن خطوة بخطوة.</string>
+    <string name="fancy_ideas_usecase_07">🎯 هدف خسارة الوزن: حوّل هدفاً كبيراً مثل خسارة 10 أرطال إلى أفعال يومية.\nهدف دراسي: قسّم الدراسة إلى مهام يومية لتجنب التسويف.\nهدف عادة: حوّل أهدافاً مثل القراءة اليومية إلى خطوات صغيرة قابلة للتكرار.</string>
+    <string name="fancy_ideas_usecase_08">📖 عادة القراءة: ابنِ عادة قراءة 30 دقيقة يومياً عبر تسجيلات المتابعة.\nعادة صحية: حافظ على روتينات مثل شرب الماء الكافي والنوم المبكر.\nعادة عمل: أنشئ عادات مثل تنظيم الملفات ومراجعة عمل اليوم.</string>
+    <string name="fancy_ideas_usecase_09">🚗 التنقل اليومي: افحص الطقس قبل الخروج واحصل على نصائح اللباس.\nرحلات قصيرة: راجع طقس الوجهة مسبقاً وجهّز الملابس والمستلزمات.\nتنبيهات شديدة: احصل على تحذيرات مبكرة من المطر الغزير أو الحر أو غيرها من الظروف القاسية.</string>
+    <string name="fancy_ideas_usecase_10">📚 اندفاعة الامتحان: أنشئ خطة دراسة لـ IELTS أو الدراسات العليا أو أهداف مشابهة من دون مذاكرة عشوائية.\nبناء المهارات: جزّئ موضوعات مثل Python أو الذكاء الاصطناعي إلى أجزاء يسهل التعامل معها.\nنمو يومي: حافظ على روتينات قراءة أو تعلم لغات خفيفة وأسهل في الاستمرار.</string>
+    <string name="fancy_ideas_usecase_11">📝 تفكيك الموضوعات الصعبة: احصل على تفسيرات مبسطة للمفاهيم المعقدة وتجاوز عنق الزجاجة في التعلم.\nتوسيع المعرفة: انطلق من الأساسيات وامتد إلى موضوعات مرتبطة لتعميق الفهم.\nإجابات سريعة: احصل على شروحات واضحة وفي الوقت المناسب للمشكلات المتخصصة في الدراسة أو العمل.</string>
+    <string name="fancy_ideas_usecase_12">📊 متابعة البحث: استقبل الأوراق والتقارير في مجالك كل يوم وابقَ محدثاً.\nنمو مهني: تابع تقارير الصناعة المتقدمة لتعزيز معرفتك المهنية.\nإعداد أكاديمي: اجمع مخرجات البحث للمقالات والعروض والتقارير.</string>
+    <string name="fancy_ideas_usecase_13">📱 أوقات الفراغ: راجع تحديثات التقنية سريعاً أثناء التنقل أو الاستراحة.\nصلة بالعمل: تابع التغيرات التقنية التي قد تؤثر في قراراتك العملية.\nدعم الدراسة: تعرّف إلى الاتجاهات المتقدمة التي تلهم البحث والتعلم.</string>
+    <string name="fancy_ideas_usecase_14">🚗 خروجات نهاية الأسبوع: احصل على خطة كاملة دفعة واحدة من دون البحث اليدوي في الأدلة.\nسفر عائلي: أنشئ مسارات مناسبة للأطفال وتحافظ على سهولة الرحلة.\nرحلات قصيرة: وفر وقت التخطيط قبل الهروب السريع.</string>
+    <string name="fancy_ideas_usecase_15">🤔 حيرة صغيرة: احصل على توجيه ممتع عندما تتعثر في اختيار بسيط.\nترفيه خفيف: اسحب بطاقة للتسلية أثناء وقت الفراغ.\nدعم المزاج: استخدم الإرشاد الخفيف كدفعة إيجابية بسيطة.</string>
+    <string name="fancy_ideas_usecase_16">😜 مرح عابر: تحدث مع الأصدقاء عن قراءات تواريخ الميلاد للترفيه.\nتسلية شخصية: استمتع بتفسيرات خفيفة مستلهمة من الثقافة في وقت فراغك.\nتفاعل اجتماعي: استخدم القراءات المرحة لاكتشاف نقاط مشتركة ممتعة مع الآخرين.</string>
+    <string name="fancy_ideas_usecase_17">🤝 فهم العلاقات: افهم توافق MBTI مع الأصدقاء والزملاء واحصل على نصائح.\nرؤية للعلاقة: استكشف توافق MBTI مع الشريك لتحسين الفهم المتبادل.\nمرح خفيف: حلل التوافقات مع الأصدقاء كنشاط ممتع.</string>
+    <string name="fancy_ideas_usecase_18">📺 استرخاء: ابحث بسرعة عن شيء تشاهده في العطل أو أثناء الاستراحة.\nمطابقة الذوق: صفِّ حسب تفضيلات مثل التشويق أو التقييم العالي لتجنب الاختيارات السيئة.\nاكتشاف جديد: اعثر على أعمال سينمائية وتلفزيونية قوية لكنها أقل شهرة.</string>
+    <string name="fancy_ideas_usecase_19">📊 مرجع للعمل: استعلم عن البيانات الاقتصادية لدعم القرارات المالية أو التجارية.\nسياق الاستثمار: استخدم أرقاماً مثل أسعار الفائدة وCPI كنقاط مرجعية شخصية.\nدعم التعلم: راجع مؤشرات اقتصادية حديثة أثناء الدراسة.</string>
+    <string name="fancy_ideas_usecase_20">💹 استثمار شخصي: اختبر استراتيجية مخصصة ببيانات تاريخية قبل المخاطرة بأموال حقيقية.\nضبط الاستراتيجية: عدّلها باستخدام بيانات المخاطر والعائد من تقارير الاختبار الرجعي.\nتعلم عملي: عمّق فهمك للتداول الكمي من خلال المحاكاة.</string>
+
+    <string name="fancy_ideas_prompt_01">أنشئ مهمة يومية مجدولة عند الساعة 8:00 لالتقاط أهم أخبار وتقنيات الذكاء الاصطناعي والتحديثات الكبرى والملخصات الموجزة من الويب تلقائياً، ثم أرسل إليّ الملخص في الوقت المحدد.</string>
+    <string name="fancy_ideas_prompt_02">قيّم فكرة الشركة الناشئة &quot;مساعد أتمتة مكتبية لنظارات AR&quot; من حيث طلب السوق والمنافسة والتكلفة ونموذج العمل، ثم أنشئ تقرير جدوى بسيطاً.</string>
+    <string name="fancy_ideas_prompt_03">حدّد نقاط الألم الأساسية للمستخدمين في &quot;سيناريوهات المكتب باستخدام نظارات AR&quot;، واجمع تعليقات المنصات الاجتماعية وبيانات القطاع، وصنفها، وأنشئ موجزاً بحثياً قابلاً للتصدير.</string>
+    <string name="fancy_ideas_prompt_04">هدفي الرياضي هو &quot;الجري 30 دقيقة كل يوم وممارسة الرياضة 3 مرات أسبوعياً&quot;. أنشئ خطة تمرين الغد، واضبط تذكيراً عند 18:30، وادعم تسجيلات الوصول الصوتية، واسمح بتعديل الخطة وفقاً للملاحظات.</string>
+    <string name="fancy_ideas_prompt_05">اقترح الغداء والعشاء لليوم. التفضيلات: خفيف، غير حار، قليل الدهون، ومناسب للطبخ المنزلي. أضف إرشادات طبخ بسيطة لكل طبق مع الحفاظ على توازن غذائي.</string>
+    <string name="fancy_ideas_prompt_06">خطتي الحالية للتمرين مرهقة جداً وليس لدي وقت كافٍ. عدّل خطة الغد باستبدال الجري لمدة 30 دقيقة بمشي سريع لمدة 20 دقيقة، وانقل التذكير إلى 19:00.</string>
+    <string name="fancy_ideas_prompt_07">هدفي الكبير هو &quot;خسارة 10 أرطال خلال 3 أشهر&quot;. قسّمه إلى أهداف يومية صغيرة مثل التحكم في الطعام والرياضة المعتدلة، وادعم تسجيلات الوصول الصوتية، وأنشئ تقرير تقدم أسبوعي.</string>
+    <string name="fancy_ideas_prompt_08">أريد بناء عادة قراءة لمدة 30 دقيقة يومياً. ابدأ تحدي 21 يوماً، واضبط تذكيراً عند 21:00، وادعم تسجيلات الوصول الصوتية، وقدم تشجيعاً يومياً، وأنشئ تقارير متابعة.</string>
+    <string name="fancy_ideas_prompt_09">تحقق من الطقس الحالي في بكين اليوم إضافة إلى توقعات الأيام السبعة القادمة، وقدّم نصائح اللباس بحسب الظروف الحالية، وأصدر تنبيهات عند الطقس القاسي، واقرأ النتائج بصوت عالٍ.</string>
+    <string name="fancy_ideas_prompt_10">أنشئ خطة دراسة أسبوعية لـ IELTS بمعدل 1.5 ساعة يومياً، مع التركيز على الاستماع والقراءة، ومراجعة أسبوعية كل أحد. يجب أن تظل الخطة مرنة.</string>
+    <string name="fancy_ideas_prompt_11">اشرح بعمق &quot;مبادئ العرض البصري في نظارات AR&quot;، وفكك أصعب الأجزاء بلغة بسيطة، وقدّم مثالين واقعيين، ووسّع الشرح إلى الاتجاهات التقنية ذات الصلة.</string>
+    <string name="fancy_ideas_prompt_12">اضبط مهمة يومية عند 9:00 لجمع أحدث الأوراق البحثية وتقارير القطاع في مجال AR/VR تلقائياً، واستخراج النقاط الرئيسية في موجز بحثي، ثم إرساله إليّ.</string>
+    <string name="fancy_ideas_prompt_13">أرسل يومياً أخباراً مختارة عن الذكاء الاصطناعي وAR/VR، مع تلخيص واضح للنقاط الأساسية، ودعم القراءة الصوتية، وتحديث 10 عناصر يومياً.</string>
+    <string name="fancy_ideas_prompt_14">خطط لرحلة عائلية ليومي عطلة في بكين. التفضيلات: أماكن مناسبة للعائلة وطعام خفيف، مع أولوية لاستخدام المترو. أنشئ مساراً مفصلاً.</string>
+    <string name="fancy_ideas_prompt_15">أنا غير متأكد إن كنت سأقوم برحلة قصيرة هذا الأسبوع. فعّل سحب بطاقة تاروت واحدة وقدّم تفسيراً مرحاً بنبرة خفيفة ومن دون خرافات.</string>
+    <string name="fancy_ideas_prompt_16">استخدم معلومات ميلادي (10 مايو 1998) لإنشاء تفسير ممتع. اجعل النبرة خفيفة، وتجنب الطابع الخرافي، واحمِ خصوصيتي.</string>
+    <string name="fancy_ideas_prompt_17">أنا INFJ والطرف الآخر ESTP. حلّل توافق شخصيتينا، وقدّم اقتراحات موضوعية ولطيفة للتعامل، وليكن ذلك لأغراض الترفيه فقط.</string>
+    <string name="fancy_ideas_prompt_18">رشّح أفلاماً أو مسلسلات تشويقية بتقييم أعلى من 8 على Douban، ويفضل أن تكون من العامين الأخيرين. قدّم دليلاً مناسباً للمشاهدة، واذكر 10 عناوين مع تعريف موجز بكل قصة.</string>
+    <string name="fancy_ideas_prompt_19">استعلم عن أحدث بيانات GDP للصين وسعر فائدة LPR لمدة سنة، واشرحهما بلغة بسيطة، وقارنهما ببيانات الشهر الماضي، واذكر الاتجاه، ثم اقرأ النتيجة بصوت عالٍ.</string>
+    <string name="fancy_ideas_prompt_20">ابدأ اختباراً رجعياً لاستراتيجية تداول تقاطع المتوسطات المتحركة (شراء عند التقاطع الذهبي لـ 5 أيام وبيع عند التقاطع الميت)، ونفّذه على بيانات الأسهم للسنة الماضية، وأنشئ تقريراً موجزاً مناسباً للعرض على AR يركز على العائد والمخاطر.</string>
+
+    <string-array name="fancy_ideas_titles"><item>@string/fancy_ideas_title_01</item><item>@string/fancy_ideas_title_02</item><item>@string/fancy_ideas_title_03</item><item>@string/fancy_ideas_title_04</item><item>@string/fancy_ideas_title_05</item><item>@string/fancy_ideas_title_06</item><item>@string/fancy_ideas_title_07</item><item>@string/fancy_ideas_title_08</item><item>@string/fancy_ideas_title_09</item><item>@string/fancy_ideas_title_10</item><item>@string/fancy_ideas_title_11</item><item>@string/fancy_ideas_title_12</item><item>@string/fancy_ideas_title_13</item><item>@string/fancy_ideas_title_14</item><item>@string/fancy_ideas_title_15</item><item>@string/fancy_ideas_title_16</item><item>@string/fancy_ideas_title_17</item><item>@string/fancy_ideas_title_18</item><item>@string/fancy_ideas_title_19</item><item>@string/fancy_ideas_title_20</item></string-array>
+    <string-array name="fancy_ideas_subtitles"><item>@string/fancy_ideas_subtitle_01</item><item>@string/fancy_ideas_subtitle_02</item><item>@string/fancy_ideas_subtitle_03</item><item>@string/fancy_ideas_subtitle_04</item><item>@string/fancy_ideas_subtitle_05</item><item>@string/fancy_ideas_subtitle_06</item><item>@string/fancy_ideas_subtitle_07</item><item>@string/fancy_ideas_subtitle_08</item><item>@string/fancy_ideas_subtitle_09</item><item>@string/fancy_ideas_subtitle_10</item><item>@string/fancy_ideas_subtitle_11</item><item>@string/fancy_ideas_subtitle_12</item><item>@string/fancy_ideas_subtitle_13</item><item>@string/fancy_ideas_subtitle_14</item><item>@string/fancy_ideas_subtitle_15</item><item>@string/fancy_ideas_subtitle_16</item><item>@string/fancy_ideas_subtitle_17</item><item>@string/fancy_ideas_subtitle_18</item><item>@string/fancy_ideas_subtitle_19</item><item>@string/fancy_ideas_subtitle_20</item></string-array>
+    <string-array name="fancy_ideas_usecases"><item>@string/fancy_ideas_usecase_01</item><item>@string/fancy_ideas_usecase_02</item><item>@string/fancy_ideas_usecase_03</item><item>@string/fancy_ideas_usecase_04</item><item>@string/fancy_ideas_usecase_05</item><item>@string/fancy_ideas_usecase_06</item><item>@string/fancy_ideas_usecase_07</item><item>@string/fancy_ideas_usecase_08</item><item>@string/fancy_ideas_usecase_09</item><item>@string/fancy_ideas_usecase_10</item><item>@string/fancy_ideas_usecase_11</item><item>@string/fancy_ideas_usecase_12</item><item>@string/fancy_ideas_usecase_13</item><item>@string/fancy_ideas_usecase_14</item><item>@string/fancy_ideas_usecase_15</item><item>@string/fancy_ideas_usecase_16</item><item>@string/fancy_ideas_usecase_17</item><item>@string/fancy_ideas_usecase_18</item><item>@string/fancy_ideas_usecase_19</item><item>@string/fancy_ideas_usecase_20</item></string-array>
+    <string-array name="fancy_ideas_prompts"><item>@string/fancy_ideas_prompt_01</item><item>@string/fancy_ideas_prompt_02</item><item>@string/fancy_ideas_prompt_03</item><item>@string/fancy_ideas_prompt_04</item><item>@string/fancy_ideas_prompt_05</item><item>@string/fancy_ideas_prompt_06</item><item>@string/fancy_ideas_prompt_07</item><item>@string/fancy_ideas_prompt_08</item><item>@string/fancy_ideas_prompt_09</item><item>@string/fancy_ideas_prompt_10</item><item>@string/fancy_ideas_prompt_11</item><item>@string/fancy_ideas_prompt_12</item><item>@string/fancy_ideas_prompt_13</item><item>@string/fancy_ideas_prompt_14</item><item>@string/fancy_ideas_prompt_15</item><item>@string/fancy_ideas_prompt_16</item><item>@string/fancy_ideas_prompt_17</item><item>@string/fancy_ideas_prompt_18</item><item>@string/fancy_ideas_prompt_19</item><item>@string/fancy_ideas_prompt_20</item></string-array>
+</resources>
+

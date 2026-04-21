@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="surface_primary">#F5F5F5</color>
+    <color name="surface_card">#FFFFFFFF</color>
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="brand_primary">#3978F3</color>
+    <color name="chat_user_bubble">#1F3A7DFF</color>
+    <color name="stroke_soft">#D6DCE7</color>
+    <color name="sidebar_chip">#0A000000</color>
+    <color name="sidebar_selected">#04000000</color>
+    <color name="sidebar_pressed">#16000000</color>
+    <color name="sidebar_muted">#A6A6A6</color>
+    <color name="search_overlay_scrim">#992E2E2E</color>
+    <color name="search_result_divider">#14000000</color>
+    <color name="error">#C2410C</color>
+    <color name="idea_soft_blue">#FFF5F7FB</color>
+    <color name="idea_soft_orange">#FFF9F2E9</color>
+    <color name="idea_soft_pink">#FFF7F1F6</color>
+    <color name="schedule_running">#FF2E7D32</color>
+    <color name="schedule_paused">#FFEF6C00</color>
+    <color name="schedule_completed">#FF1565C0</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="terms_title">#FF000000</color>
+    <color name="terms_body">#FF242424</color>
+    <color name="terms_hint">#FF666666</color>
+    <color name="terms_link">#FF3978F3</color>
+    <color name="terms_button_secondary">#14000000</color>
+    <color name="terms_dialog_surface">#FFFFFFFF</color>
+    <color name="gray">#8C8C8C</color>
+    <color name="black_alpha_4">#0A000000</color>
+    <color name="alto">#D8D8D8</color>
+    <color name="gallery">#EBEBEB</color>
+</resources>

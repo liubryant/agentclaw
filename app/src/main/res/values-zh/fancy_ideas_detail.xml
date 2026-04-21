@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_idea_detail_whatcando">能帮我做什么？</string>
+    <string name="fancy_idea_detail_scenario">应用场景</string>
+    <string name="fancy_idea_detail_prompt">Prompt</string>
+    <string name="fancy_idea_detail_use_now">立即使用</string>
+
+    <string name="fancy_idea_type_gxbg">高效办公</string><!-- 1-3 -->
+    <string name="fancy_idea_type_glsh">规律生活</string><!-- 4-9 -->
+    <string name="fancy_idea_type_qxzz">勤学智助</string><!-- 10-13 -->
+    <string name="fancy_idea_type_xqbl">闲趣伴侣</string><!-- 14-18 -->
+    <string name="fancy_idea_type_czdc">财智洞察</string><!-- 19-20 -->
+</resources>

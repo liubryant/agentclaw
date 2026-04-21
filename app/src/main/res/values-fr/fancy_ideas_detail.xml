@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_idea_detail_whatcando">Que peut-il faire pour moi ?</string>
+    <string name="fancy_idea_detail_scenario">Cas d\'utilisation</string>
+    <string name="fancy_idea_detail_prompt">Prompt</string>
+    <string name="fancy_idea_detail_use_now">Utiliser maintenant</string>
+    <string name="fancy_idea_type_gxbg">Travail efficace</string>
+    <string name="fancy_idea_type_glsh">Vie organisée</string>
+    <string name="fancy_idea_type_qxzz">Aide à l\'étude</string>
+    <string name="fancy_idea_type_xqbl">Compagnon ludique</string>
+    <string name="fancy_idea_type_czdc">Analyse éclairée</string>
+</resources>
+

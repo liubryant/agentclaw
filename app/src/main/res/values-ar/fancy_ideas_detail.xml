@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_idea_detail_whatcando">ماذا يمكنه أن يفعل لي؟</string>
+    <string name="fancy_idea_detail_scenario">حالات الاستخدام</string>
+    <string name="fancy_idea_detail_prompt">الموجّه</string>
+    <string name="fancy_idea_detail_use_now">استخدم الآن</string>
+    <string name="fancy_idea_type_gxbg">عمل أكثر كفاءة</string>
+    <string name="fancy_idea_type_glsh">حياة منظمة</string>
+    <string name="fancy_idea_type_qxzz">دعم الدراسة</string>
+    <string name="fancy_idea_type_xqbl">رفيق ممتع</string>
+    <string name="fancy_idea_type_czdc">تحليل استبصاري</string>
+</resources>
+

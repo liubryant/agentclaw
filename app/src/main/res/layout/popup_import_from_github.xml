@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/githubImportOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:id="@+id/githubImportDialog"
+        android:layout_width="960px"
+        android:layout_height="442px"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_setting_dialog"
+        android:orientation="vertical"
+        android:paddingHorizontal="48px"
+        android:paddingVertical="48px">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_import_from_github"
+            android:textColor="#222222"
+            android:textSize="32px"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12px"
+            android:text="@string/setting_import_from_github_dialog_subtitle"
+            android:textColor="#8A8A8A"
+            android:textSize="24px" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_url_label"
+                android:textColor="#333333"
+                android:textSize="28px" />
+
+            <EditText
+                android:id="@+id/etGithubUrl"
+                android:layout_width="0dp"
+                android:layout_height="64px"
+                android:layout_marginStart="16px"
+                android:layout_weight="1"
+                android:background="@drawable/bg_search"
+                android:paddingHorizontal="12dp"
+                android:singleLine="true"
+                android:textColor="#222222"
+                android:textColorHint="#A0A0A0"
+                android:textSize="20px" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60px"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnCancelImport"
+                android:layout_width="320px"
+                android:layout_height="80px"
+                android:background="@drawable/bg_about_item"
+                android:gravity="center"
+                android:text="@string/setting_cancel"
+                android:textColor="#555555"
+                android:textSize="28px" />
+
+            <TextView
+                android:id="@+id/btnConfirmImport"
+                android:layout_width="320px"
+                android:layout_height="80px"
+                android:layout_marginStart="24px"
+                android:background="@drawable/bg_btn_select"
+                android:gravity="center"
+                android:text="@string/setting_import"
+                android:textColor="@color/white"
+                android:textSize="28px" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

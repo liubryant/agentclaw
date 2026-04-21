@@ -1,0 +1,162 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    id 'com.google.gms.google-services'
+    id("com.google.firebase.crashlytics")
+}
+
+android {
+    namespace 'ai.inmo.openclaw'
+    compileSdkVersion 34
+
+    defaultConfig {
+        applicationId "ai.inmo.openclaw"
+        minSdk 24
+        targetSdk 34
+        versionCode 6
+        versionName "1.0.5"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../keystore/InmoClaw.jks')
+            storePassword '123456'
+            keyAlias 'INMOClaw'
+            keyPassword '123456'
+            enableV3Signing = true
+            enableV4Signing = true
+        }
+        debug {
+            storeFile file('../keystore/InmoClaw.jks')
+            storePassword '123456'
+            keyAlias 'INMOClaw'
+            keyPassword '123456'
+            enableV3Signing = true
+            enableV4Signing = true
+        }
+    }
+
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            def createTime = new Date().format("yyyyMMddhhmm")
+            outputFileName = "INMOClaw" +
+                    "-${variant.buildType.name}-v${variant.versionName}-${createTime}.apk"
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            minifyEnabled = false
+            shrinkResources = false
+        }
+
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled = false
+            shrinkResources = false
+        }
+    }
+
+    aaptOptions {
+        // Asset files that are already compressed; prevent aapt2 from
+        // double-compressing them. Required for openFd() to work on large assets.
+        noCompress 'gz', 'xz', 'bin', 'tar.gz', 'tar.xz'
+    }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+        resources {
+            excludes += ['META-INF/versions/9/OSGI-INF/MANIFEST.MF']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+        buildConfig true
+        aidl true
+    }
+}
+
+dependencies {
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.core.splashscreen
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    implementation libs.androidx.activity
+    implementation libs.androidx.constraintlayout
+    implementation libs.fragment.ktx
+    implementation libs.recyclerview
+    implementation libs.swiperefreshlayout
+    implementation libs.webkit
+
+    // Lifecycle
+    implementation libs.lifecycle.viewmodel
+    implementation libs.lifecycle.livedata
+    implementation libs.lifecycle.runtime
+
+    // Network
+    implementation libs.retrofit.core
+    implementation libs.retrofit.gson
+    implementation libs.okhttp.core
+    implementation libs.okhttp.logging
+    implementation libs.gson
+    implementation libs.bcprov
+    implementation libs.mmkv
+
+    // Database
+    implementation libs.room.runtime
+    implementation libs.room.ktx
+    ksp libs.room.compiler
+
+    // Compression (for BootstrapManager rootfs extraction)
+    implementation libs.commons.compress
+    implementation libs.xz
+    implementation libs.termux.terminal.emulator
+    implementation libs.termux.terminal.view
+    implementation libs.concurrent.futures
+    implementation 'com.github.felHR85:UsbSerial:6.1.0'
+
+    // Markdown rendering
+    implementation libs.markwon.core
+    implementation libs.markwon.strikethrough
+    implementation libs.markwon.tables
+    implementation libs.markwon.linkify
+
+    // Project modules
+    implementation project(':core:core_common')
+
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+
+    implementation platform(libs.firebase.bom)
+    implementation(libs.firebase.crashlytics.ndk)
+    implementation(libs.firebase.analytics)
+}
+
+
+
+
+
+

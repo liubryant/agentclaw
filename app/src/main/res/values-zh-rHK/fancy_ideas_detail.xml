@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_idea_detail_whatcando">可以幫我做什麼？</string>
+    <string name="fancy_idea_detail_scenario">應用場景</string>
+    <string name="fancy_idea_detail_prompt">Prompt</string>
+    <string name="fancy_idea_detail_use_now">立即使用</string>
+    <string name="fancy_idea_type_gxbg">高效工作</string>
+    <string name="fancy_idea_type_glsh">規律生活</string>
+    <string name="fancy_idea_type_qxzz">學習支援</string>
+    <string name="fancy_idea_type_xqbl">趣味陪伴</string>
+    <string name="fancy_idea_type_czdc">洞察分析</string>
+</resources>
+

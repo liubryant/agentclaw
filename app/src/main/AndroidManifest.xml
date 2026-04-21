@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+<!--    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />-->
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher_beta"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_beta"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.INMOClaw"
+        android:usesCleartextTraffic="true">
+
+        <provider
+            android:name=".startup.MmkvInitProvider"
+            android:authorities="${applicationId}.mmkv-init"
+            android:exported="false"
+            android:initOrder="110" />
+
+        <activity
+            android:name=".ui.capture.ScreenCaptureRequestActivity"
+            android:exported="false"
+            android:theme="@style/Theme.INMOClaw.Transparent" />
+        <activity android:name=".ui.license.LicenseActivity" android:exported="false" />
+        <activity android:name=".ui.ssh.SshActivity" android:exported="false" />
+        <activity android:name=".ui.packages.PackagesActivity" android:exported="false" />
+        <activity android:name=".ui.providers.ProviderDetailActivity" android:exported="false" />
+        <activity android:name=".ui.providers.ProvidersActivity" android:exported="false" />
+        <activity android:name=".ui.synced_chat.SyncedChatActivity" android:exported="false" />
+        <activity
+            android:name=".ui.shell.ShellActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.search.ChatSearchActivity"
+            android:exported="false"
+            android:theme="@style/Theme.INMOClaw.SearchOverlay"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.node.NodeActivity" android:exported="false" />
+        <activity android:name=".ui.chat.ChatActivity" android:exported="false" />
+        <activity android:name=".ui.packages.PackageInstallActivity" android:exported="false" />
+        <activity android:name=".ui.configure.ConfigureActivity" android:exported="false" />
+        <activity android:name=".ui.onboarding.OnboardingActivity" android:exported="false" />
+        <activity android:name=".ui.terminal.TerminalActivity" android:exported="false" />
+        <activity android:name=".ui.settings.SettingsActivity" android:exported="false" />
+        <activity android:name=".ui.web.WebDashboardActivity" android:exported="false" />
+        <activity android:name=".ui.logs.LogsActivity" android:exported="false" />
+        <activity android:name=".ui.placeholder.FeaturePlaceholderActivity" android:exported="false" />
+        <activity android:name=".ui.dashboard.DashboardActivity" android:exported="false" />
+        <activity android:name=".ui.startup.StartupActivity" android:exported="false" />
+        <activity android:name=".MainActivity" android:exported="false" />
+        <activity
+            android:name=".SettingActivity"
+            android:exported="true"
+            >
+        </activity>
+
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.INMOClaw.Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".service.gateway.GatewayService" android:exported="false" android:foregroundServiceType="dataSync" />
+        <service android:name=".service.terminal.TerminalSessionService" android:exported="false" android:foregroundServiceType="dataSync" />
+        <service android:name=".service.node.NodeForegroundService" android:exported="false" android:foregroundServiceType="dataSync" />
+        <service android:name=".service.setup.SetupService" android:exported="false" android:foregroundServiceType="dataSync" />
+        <service android:name=".service.ssh.SshForegroundService" android:exported="false" android:foregroundServiceType="dataSync" />
+        <service android:name=".service.capture.ScreenCaptureService" android:exported="false" android:foregroundServiceType="mediaProjection" />
+    </application>
+</manifest>

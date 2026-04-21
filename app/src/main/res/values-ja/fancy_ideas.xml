@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fancy_ideas_title_01">話題ニュース自動要約</string>
+    <string name="fancy_ideas_title_02">スタートアップ案の実現性チェック</string>
+    <string name="fancy_ideas_title_03">課題発見分析</string>
+    <string name="fancy_ideas_title_04">明日の運動プラン</string>
+    <string name="fancy_ideas_title_05">毎日の食事提案</string>
+    <string name="fancy_ideas_title_06">運動タスク調整</string>
+    <string name="fancy_ideas_title_07">目標分解とチェックイン</string>
+    <string name="fancy_ideas_title_08">自律習慣トラッカー</string>
+    <string name="fancy_ideas_title_09">リアルタイム天気と服装アドバイス</string>
+    <string name="fancy_ideas_title_10">軽量学習プラン</string>
+    <string name="fancy_ideas_title_11">深掘りテーマ解説</string>
+    <string name="fancy_ideas_title_12">毎日の研究ブリーフ</string>
+    <string name="fancy_ideas_title_13">テックニュース厳選</string>
+    <string name="fancy_ideas_title_14">らくらく旅行プランナー</string>
+    <string name="fancy_ideas_title_15">お楽しみタロットガイド</string>
+    <string name="fancy_ideas_title_16">出生チャートの遊び読み</string>
+    <string name="fancy_ideas_title_17">MBTI相性分析</string>
+    <string name="fancy_ideas_title_18">映画・ドラマおすすめ</string>
+    <string name="fancy_ideas_title_19">経済データ検索</string>
+    <string name="fancy_ideas_title_20">量的戦略バックテスト</string>
+
+    <string name="fancy_ideas_subtitle_01">ニュースをまだ一件ずつ追っていますか。手動検索なしで重要更新を毎日まとめて確認できます。</string>
+    <string name="fancy_ideas_subtitle_02">アイデアはあるのに始めるのを迷っていますか。素早く実現性を確認して試行錯誤のコストを下げます。</string>
+    <string name="fancy_ideas_subtitle_03">新しい企画の方向性が見えませんか。市場の課題を自動で掘り下げ、確認用レポートを作成します。</string>
+    <string name="fancy_ideas_subtitle_04">運動したいのに続きませんか。動くべき時間に背中を押してくれる毎日のプランを作れます。</string>
+    <string name="fancy_ideas_subtitle_05">今日は何を食べるか迷いますか。好みや場所に合わせた食事提案を受け取れます。</string>
+    <string name="fancy_ideas_subtitle_06">運動のリズムが崩れましたか。より分かりやすいスケジュールで立て直せます。</string>
+    <string name="fancy_ideas_subtitle_07">立てた目標が続きませんか。大きな目標を小さな行動に分けて毎日進捗を追えます。</string>
+    <string name="fancy_ideas_subtitle_08">良い習慣が続きませんか。21日連続記録とデータ追跡で継続を支えます。</string>
+    <string name="fancy_ideas_subtitle_09">気温、湿度、風、空気質のリアルタイム確認に加え、7日間予報、服装提案、荒天アラートも確認できます。</string>
+    <string name="fancy_ideas_subtitle_10">試験勉強が重荷ですか。散らかった学習計画を実行しやすい形に整えます。</string>
+    <string name="fancy_ideas_subtitle_11">難しい問題で行き詰まっていますか。詰まりを分解し、前に進む糸口を見つけます。</string>
+    <string name="fancy_ideas_subtitle_12">重要論文や業界レポートを見逃しがちですか。大切な更新を毎日見える形で届けます。</string>
+    <string name="fancy_ideas_subtitle_13">情報量が多すぎて追えませんか。毎日テックの要点だけを簡潔に受け取れます。</string>
+    <string name="fancy_ideas_subtitle_14">週末の行き先が決まりませんか。手間をかけずにすぐ使える旅行プランを得られます。</string>
+    <string name="fancy_ideas_subtitle_15">少し迷いがありますか。軽い参考として楽しいタロットを引けます。</string>
+    <string name="fancy_ideas_subtitle_16">生年月日を入力すると、伝統文化の雰囲気を活かした軽い読み物を楽しめます。</string>
+    <string name="fancy_ideas_subtitle_17">二人が合うか知りたいですか。性格の相性を分析します。</string>
+    <string name="fancy_ideas_subtitle_18">週末に何を見るか迷いますか。好みに合わせた精度の高いおすすめを受け取れます。</string>
+    <string name="fancy_ideas_subtitle_19">GDP、金利、CPIを理解して、本当に重要な経済シグナルを追えます。</string>
+    <string name="fancy_ideas_subtitle_20">戦略が機能するか不安ですか。過去データのバックテストで検証できます。</string>
+
+    <string name="fancy_ideas_usecase_01">🚗 通勤中: 出発前に設定しておけば、移動中にINMO Air3でその日の要点をすばやく確認できます。\n会議準備: 業界の重要動向を把握して、会議で置いていかれません。\n効率的な仕事: 断片的なノイズを減らし、政策や市場の重要シグナルをつかんで判断を助けます。</string>
+    <string name="fancy_ideas_usecase_02">💡 起業検討: むやみに投資する前に初期アイデアを素早く評価できます。\n企画レビュー: 既存案に多面的な分析を加えて実行計画を改善できます。\nパートナー議論: より明確な根拠で案の実現性を共有できます。</string>
+    <string name="fancy_ideas_usecase_03">📊 プロダクト立ち上げ: 新規企画前に業界課題を把握して方向性を固めます。\n競合分析: 競合の反応を調べ、弱点と差別化ポイントを見つけます。\n提案改善: 実際の市場課題に沿って製品や解決策を磨けます。</string>
+    <string name="fancy_ideas_usecase_04">💪 フィットネス計画: 減量や筋力アップなどの目標から実践的な計画を作成します。\n毎日の運動: 明確な一日単位の構成で運動習慣を作れます。\n時間管理: 仕事や学習と運動をうまく両立できます。</string>
+    <string name="fancy_ideas_usecase_05">🍳 日々の料理: 好みを入力すると献立案と手順をすぐ受け取れます。\n健康的な食事: 目標に合う軽めで低脂質な提案を得られます。\n味の相性: 辛くない、あっさりなどの好みに合わせて外れを減らします。</string>
+    <string name="fancy_ideas_usecase_06">💪 計画調整: きつすぎる運動計画を続けやすい強度へ和らげます。\n時間調整: 忙しい日は短時間の運動に変えて日常に合わせます。\n段階的成長: 体調に応じて強度を調整し、少しずつ改善します。</string>
+    <string name="fancy_ideas_usecase_07">🎯 減量目標: 10ポンド減などの大きな目標を毎日の行動に分解します。\n学習目標: 学習内容を毎日のタスクに分けて先延ばしを防ぎます。\n習慣目標: 毎日読書のような目標を繰り返しやすい小さな行動にします。</string>
+    <string name="fancy_ideas_usecase_08">📖 読書習慣: チェックインで毎日30分の読書習慣を作ります。\n健康習慣: 水分補給や早寝などの生活リズムを維持します。\n仕事習慣: ファイル整理や一日の振り返りを習慣化します。</string>
+    <string name="fancy_ideas_usecase_09">🚗 日常移動: 外出前に天気を見て服装の参考を得られます。\n短期旅行: 目的地の天気を先に確認し、服や持ち物を準備できます。\n極端気象: 大雨や猛暑などの警告を早めに受け取れます。</string>
+    <string name="fancy_ideas_usecase_10">📚 試験対策: IELTSや大学院受験などに向けた現実的な学習計画を作れます。\nスキル習得: PythonやAIなどの学習テーマを取り組みやすい単位に分けます。\n毎日の成長: 続けやすい軽めの読書や語学学習を維持できます。</string>
+    <string name="fancy_ideas_usecase_11">📝 難題分解: 複雑な概念を分かりやすく説明し、学習の詰まりを乗り越えます。\n知識拡張: 基礎から関連テーマへ広げて理解を深めます。\n即時回答: 学習や仕事の専門的な疑問に明確な説明を返します。</string>
+    <string name="fancy_ideas_usecase_12">📊 研究追跡: 分野の論文やレポートを毎日受け取り、最新状態を保てます。\nキャリア成長: 先端の業界レポートを追って専門知識を強化します。\n学術準備: 論文、発表、報告書向けの資料収集に役立ちます。</string>
+    <string name="fancy_ideas_usecase_13">📱 すきま時間: 通勤や休憩中にテック更新を素早く確認できます。\n仕事関連: 仕事判断に影響する技術変化を追えます。\n学習支援: 研究や学習に刺激を与える先端トレンドを把握できます。</string>
+    <string name="fancy_ideas_usecase_14">🚗 週末外出: 手作業で調べなくても一度で全体プランを取得できます。\n家族旅行: 子どもに合った移動しやすいルートを作れます。\n短いお出かけ: ちょっとした旅行前の計画時間を節約できます。</string>
+    <string name="fancy_ideas_usecase_15">🤔 小さな迷い: ちょっとした選択で迷うときに遊び心あるヒントを得られます。\n気軽な娯楽: 空き時間にカードを引いて楽しめます。\n気分サポート: 軽いガイドを前向きなきっかけとして使えます。</string>
+    <string name="fancy_ideas_usecase_16">😜 気軽な楽しみ: 誕生日読みを友人との話題にできます。\n個人の暇つぶし: 文化的な雰囲気を持つ軽い解釈を楽しめます。\n交流: 遊び感覚の読みで共通点を見つけやすくなります。</string>
+    <string name="fancy_ideas_usecase_17">🤝 対人理解: 友人や同僚とのMBTI相性と接し方のヒントを得られます。\n関係理解: パートナーとのMBTI相性を見て相互理解を深められます。\n気軽な遊び: 友人同士で相性分析を楽しめます。</string>
+    <string name="fancy_ideas_usecase_18">📺 リラックス: 週末や休憩中に見るものをすぐ見つけられます。\n好み一致: サスペンスや高評価などで絞り込み、失敗を減らします。\n新規発見: 過小評価されがちな良作を見つけられます。</string>
+    <string name="fancy_ideas_usecase_19">📊 仕事の参考: 経済データを金融やビジネス判断の参考にできます。\n投資の背景: 金利やCPIなどを個人の参考指標として使えます。\n学習支援: 学びながら最新の経済指標も確認できます。</string>
+    <string name="fancy_ideas_usecase_20">💹 個人投資: 実資金を入れる前に過去データで戦略を検証できます。\n戦略調整: バックテストのリスクと収益データから戦略を見直せます。\n実践学習: シミュレーションでクオンツ取引への理解を深められます。</string>
+
+    <string name="fancy_ideas_prompt_01">毎朝8:00に実行される定時タスクを作成し、Web全体からAIテックの主要ニュース、重要更新、簡潔な要約を自動収集して、時間通りに私へ届けてください。</string>
+    <string name="fancy_ideas_prompt_02">「ARメガネ向けオフィス自動化アシスタント」という起業アイデアについて、市場需要、競争、コスト、ビジネスモデルの観点から評価し、簡潔な実現性レポートを作成してください。</string>
+    <string name="fancy_ideas_prompt_03">「ARメガネのオフィス利用シーン」における主要なユーザー課題を特定し、SNSコメントや業界データを収集・分類して、書き出し可能な調査ブリーフを作成してください。</string>
+    <string name="fancy_ideas_prompt_04">私の運動目標は「毎日30分走る、週3回運動する」です。明日の運動プランを作成し、18:30にリマインダーを設定し、音声チェックインに対応し、フィードバックに応じて調整できるようにしてください。</string>
+    <string name="fancy_ideas_prompt_05">今日の昼食と夕食を提案してください。条件は、あっさり、辛くない、低脂質、自宅で作りやすいことです。各料理に簡単な作り方も添え、栄養バランスも考慮してください。</string>
+    <string name="fancy_ideas_prompt_06">今の運動計画はきつすぎて時間も足りません。明日の計画を調整し、30分のランニングを20分の早歩きに置き換え、リマインダーを19:00に変更してください。</string>
+    <string name="fancy_ideas_prompt_07">私の大きな目標は「3か月で10ポンド減量」です。食事管理や適度な運動などの毎日の小目標に分解し、音声チェックインに対応し、週次の進捗レポートを作成してください。</string>
+    <string name="fancy_ideas_prompt_08">毎日30分読書する習慣を作りたいです。21日チャレンジを開始し、21:00にリマインダーを設定し、音声チェックインに対応し、毎日の励ましと記録レポートを生成してください。</string>
+    <string name="fancy_ideas_prompt_09">今日の北京のリアルタイム天気と今後7日間の予報を確認し、現在の状況に基づく服装アドバイスを出し、荒天時は警告し、結果を読み上げてください。</string>
+    <string name="fancy_ideas_prompt_10">IELTS向けの週次学習プランを作成してください。1日1.5時間で、リスニングとリーディングを中心にし、毎週日曜に振り返りを入れてください。柔軟に調整できる形にしてください。</string>
+    <string name="fancy_ideas_prompt_11">「ARメガネの光学表示原理」を深く説明し、難しい部分を分かりやすく分解し、実例を2つ示し、関連技術トレンドにも広げてください。</string>
+    <string name="fancy_ideas_prompt_12">毎日9:00に実行する定時タスクを設定し、AR/VR分野の最新論文や業界レポートを自動収集し、要点を研究ブリーフとしてまとめて私に届けてください。</string>
+    <string name="fancy_ideas_prompt_13">AIとAR/VRのニュースを毎日厳選して配信し、要点を分かりやすくまとめ、音声再生にも対応し、1日10件更新してください。</string>
+    <string name="fancy_ideas_prompt_14">北京で2日間の親子向け週末旅行を計画してください。家族向けスポットと軽めの食事を希望し、移動は地下鉄優先で、詳細ルートを作成してください。</string>
+    <string name="fancy_ideas_prompt_15">今週末に小旅行へ行くべきか迷っています。タロットを1枚引き、迷信に寄りすぎない軽いトーンで楽しく解釈してください。</string>
+    <string name="fancy_ideas_prompt_16">私の生年月日（1998年5月10日）を使って、軽く楽しめる解釈を作ってください。迷信的な表現は避け、プライバシーにも配慮してください。</string>
+    <string name="fancy_ideas_prompt_17">私はINFJ、相手はESTPです。性格の相性を分析し、客観的でやさしい付き合い方の提案をしてください。娯楽目的の範囲でお願いします。</string>
+    <string name="fancy_ideas_prompt_18">Doubanで8点以上のサスペンス映画またはドラマを、できれば直近2年の作品から推薦してください。適切な視聴案内も添え、10作品を簡潔に紹介してください。</string>
+    <string name="fancy_ideas_prompt_19">中国の最新GDPデータと1年物LPR金利を調べ、分かりやすく説明し、先月データと比較して傾向を示し、結果を読み上げてください。</string>
+    <string name="fancy_ideas_prompt_20">移動平均クロス戦略（5日線のゴールデンクロスで買い、デッドクロスで売り）で量的バックテストを開始し、直近1年の株価データで検証し、収益とリスクに焦点を当てたAR向けの簡潔なレポートを作成してください。</string>
+
+    <string-array name="fancy_ideas_titles"><item>@string/fancy_ideas_title_01</item><item>@string/fancy_ideas_title_02</item><item>@string/fancy_ideas_title_03</item><item>@string/fancy_ideas_title_04</item><item>@string/fancy_ideas_title_05</item><item>@string/fancy_ideas_title_06</item><item>@string/fancy_ideas_title_07</item><item>@string/fancy_ideas_title_08</item><item>@string/fancy_ideas_title_09</item><item>@string/fancy_ideas_title_10</item><item>@string/fancy_ideas_title_11</item><item>@string/fancy_ideas_title_12</item><item>@string/fancy_ideas_title_13</item><item>@string/fancy_ideas_title_14</item><item>@string/fancy_ideas_title_15</item><item>@string/fancy_ideas_title_16</item><item>@string/fancy_ideas_title_17</item><item>@string/fancy_ideas_title_18</item><item>@string/fancy_ideas_title_19</item><item>@string/fancy_ideas_title_20</item></string-array>
+    <string-array name="fancy_ideas_subtitles"><item>@string/fancy_ideas_subtitle_01</item><item>@string/fancy_ideas_subtitle_02</item><item>@string/fancy_ideas_subtitle_03</item><item>@string/fancy_ideas_subtitle_04</item><item>@string/fancy_ideas_subtitle_05</item><item>@string/fancy_ideas_subtitle_06</item><item>@string/fancy_ideas_subtitle_07</item><item>@string/fancy_ideas_subtitle_08</item><item>@string/fancy_ideas_subtitle_09</item><item>@string/fancy_ideas_subtitle_10</item><item>@string/fancy_ideas_subtitle_11</item><item>@string/fancy_ideas_subtitle_12</item><item>@string/fancy_ideas_subtitle_13</item><item>@string/fancy_ideas_subtitle_14</item><item>@string/fancy_ideas_subtitle_15</item><item>@string/fancy_ideas_subtitle_16</item><item>@string/fancy_ideas_subtitle_17</item><item>@string/fancy_ideas_subtitle_18</item><item>@string/fancy_ideas_subtitle_19</item><item>@string/fancy_ideas_subtitle_20</item></string-array>
+    <string-array name="fancy_ideas_usecases"><item>@string/fancy_ideas_usecase_01</item><item>@string/fancy_ideas_usecase_02</item><item>@string/fancy_ideas_usecase_03</item><item>@string/fancy_ideas_usecase_04</item><item>@string/fancy_ideas_usecase_05</item><item>@string/fancy_ideas_usecase_06</item><item>@string/fancy_ideas_usecase_07</item><item>@string/fancy_ideas_usecase_08</item><item>@string/fancy_ideas_usecase_09</item><item>@string/fancy_ideas_usecase_10</item><item>@string/fancy_ideas_usecase_11</item><item>@string/fancy_ideas_usecase_12</item><item>@string/fancy_ideas_usecase_13</item><item>@string/fancy_ideas_usecase_14</item><item>@string/fancy_ideas_usecase_15</item><item>@string/fancy_ideas_usecase_16</item><item>@string/fancy_ideas_usecase_17</item><item>@string/fancy_ideas_usecase_18</item><item>@string/fancy_ideas_usecase_19</item><item>@string/fancy_ideas_usecase_20</item></string-array>
+    <string-array name="fancy_ideas_prompts"><item>@string/fancy_ideas_prompt_01</item><item>@string/fancy_ideas_prompt_02</item><item>@string/fancy_ideas_prompt_03</item><item>@string/fancy_ideas_prompt_04</item><item>@string/fancy_ideas_prompt_05</item><item>@string/fancy_ideas_prompt_06</item><item>@string/fancy_ideas_prompt_07</item><item>@string/fancy_ideas_prompt_08</item><item>@string/fancy_ideas_prompt_09</item><item>@string/fancy_ideas_prompt_10</item><item>@string/fancy_ideas_prompt_11</item><item>@string/fancy_ideas_prompt_12</item><item>@string/fancy_ideas_prompt_13</item><item>@string/fancy_ideas_prompt_14</item><item>@string/fancy_ideas_prompt_15</item><item>@string/fancy_ideas_prompt_16</item><item>@string/fancy_ideas_prompt_17</item><item>@string/fancy_ideas_prompt_18</item><item>@string/fancy_ideas_prompt_19</item><item>@string/fancy_ideas_prompt_20</item></string-array>
+</resources>
+

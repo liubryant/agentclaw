@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface_primary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/common_back"
+                android:src="@android:drawable/ic_media_previous" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_title"
+                android:textColor="@color/text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/settings_general" android:textColor="@color/text_secondary" />
+        <Switch android:id="@+id/autoStartSwitch" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <Switch android:id="@+id/nodeSwitch" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" />
+
+        <LinearLayout android:id="@+id/batteryRow" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="16dp" android:orientation="vertical">
+            <TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_battery_optimization" />
+            <TextView android:id="@+id/batteryValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="@color/text_secondary" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/storageRow" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical">
+            <TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_setup_storage" />
+            <TextView android:id="@+id/storageValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="@color/text_secondary" />
+        </LinearLayout>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/settings_system_info" android:textColor="@color/text_secondary" />
+        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_architecture" /><TextView android:id="@+id/archValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_secondary" /></LinearLayout>
+        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_proot_path" /><TextView android:id="@+id/prootValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_secondary" /></LinearLayout>
+        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_rootfs" /><TextView android:id="@+id/rootfsValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_secondary" /></LinearLayout>
+        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_node_js" /><TextView android:id="@+id/nodeValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_secondary" /></LinearLayout>
+        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_openclaw" /><TextView android:id="@+id/openclawValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_secondary" /></LinearLayout>
+        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_go" /><TextView android:id="@+id/goValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_secondary" /></LinearLayout>
+        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_homebrew" /><TextView android:id="@+id/brewValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_secondary" /></LinearLayout>
+        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical"><TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_openssh" /><TextView android:id="@+id/sshValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_secondary" /></LinearLayout>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/settings_dashboard_url" android:textColor="@color/text_secondary" />
+        <TextView android:id="@+id/dashboardUrlValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:fontFamily="monospace" android:textColor="@color/text_primary" />
+
+        <Button android:id="@+id/exportSnapshotButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/settings_export_snapshot" />
+        <Button android:id="@+id/importSnapshotButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/settings_import_snapshot" />
+        <Button android:id="@+id/rerunSetupButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/settings_rerun_setup" />
+
+        <LinearLayout android:id="@+id/licenseRow" style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="16dp" android:orientation="vertical">
+            <TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/settings_license" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/settings_license_subtitle" android:textColor="@color/text_secondary" />
+        </LinearLayout>
+
+        <TextView android:id="@+id/snapshotStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textColor="@color/text_secondary" />
+    </LinearLayout>
+</ScrollView>
+
+

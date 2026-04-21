@@ -1,0 +1,102 @@
+{
+  "models": {
+    "providers": {
+      "inmoclaw": {
+        "api": "openai-completions",
+        "apiKey": "",
+        "baseUrl": "http://192.168.110.37:8066/v1",
+        "models": [
+          {
+            "id": "glm-4.7",
+            "name": "glm-4.7"
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "inmoclaw/glm-4.7"
+      }
+    }
+  },
+  "gateway": {
+    "nodes": {
+      "denyCommands": [],
+      "allowCommands": [
+        "camera.snap",
+        "camera.clip",
+        "camera.list",
+        "canvas.navigate",
+        "canvas.eval",
+        "canvas.snapshot",
+        "fs.list",
+        "fs.stat",
+        "fs.readText",
+        "fs.readBytes",
+        "fs.writeText",
+        "fs.writeBytes",
+        "fs.mkdir",
+        "fs.delete",
+        "fs.image.load",
+        "location.get",
+        "system.app.open",
+        "system.volume.set",
+        "system.volume.adjust",
+        "system.volume.status",
+        "system.brightness.set",
+        "system.brightness.adjust",
+        "system.brightness.status",
+        "system.wifi.on",
+        "system.wifi.off",
+        "system.wifi.status",
+        "system.bluetooth.on",
+        "system.bluetooth.off",
+        "system.bluetooth.status",
+        "system.media.play",
+        "system.media.pause",
+        "system.media.toggle",
+        "system.media.next",
+        "system.media.previous",
+        "system.screenshot",
+        "system.shutdown",
+        "system.tasks.clear",
+        "system.home",
+        "system.back",
+        "system.battery.status",
+        "system.performance.high",
+        "system.performance.normal",
+        "system.performance.status",
+        "system.powerSave.on",
+        "system.powerSave.off",
+        "system.powerSave.status",
+        "system.language.set",
+        "system.doNotDisturb.on",
+        "system.doNotDisturb.off",
+        "system.doNotDisturb.status",
+        "system.screenOffNotification.on",
+        "system.screenOffNotification.off",
+        "system.screenOffNotification.status",
+        "system.autoai.start",
+        "system.autoai.status",
+        "system.autoai.cancel"
+      ]
+    },
+    "http": {
+      "endpoints": {
+        "chatCompletions": {
+          "enabled": true
+        }
+      }
+    },
+    "auth": {
+      "mode": "token",
+      "token": "669e5240a8fef8d4b1c1dd88e9d72651d7354d6cd2460a18"
+    },
+    "mode": "local"
+  },
+  "tools": {
+    "profile": "full"
+  }
+}

@@ -1,0 +1,43 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+
+        maven {
+            // central仓和jcenter仓的聚合仓
+            url "https://maven.aliyun.com/repository/public"
+        }
+        maven { url 'https://repo1.maven.org/maven2/' }
+        maven { url 'https://jitpack.io' }
+    }
+}
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+
+        maven {
+            // central仓和jcenter仓的聚合仓
+            url "https://maven.aliyun.com/repository/public"
+        }
+        maven { url 'https://repo1.maven.org/maven2/' }
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://gitee.com/lijianwen_zy/InmoCommonLibs/raw/master' }
+
+    }
+}
+
+rootProject.name = "INMOClaw"
+include ':app'
+include ':core:core_common'

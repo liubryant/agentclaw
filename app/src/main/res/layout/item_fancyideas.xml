@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="item"
+            type="ai.inmo.openclaw.ui.fancyideas.FancyIdeasItem" />
+    </data>
+
+    <LinearLayout
+        android:elevation="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="152dp"
+        android:background="@drawable/bg_fancy_idea_card_selector"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/fg_fancy_idea_click"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/skillIconView"
+            android:layout_width="56.6dp"
+            android:layout_height="48dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/skillTitleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@{item.title}"
+            android:textColor="#FF1E1E1C"
+            android:textSize="18.6sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/skillSubtitleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@{item.subtitle}"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="#FF9A978F"
+            android:textSize="14.6sp" />
+
+    </LinearLayout>
+</layout>

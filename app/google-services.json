@@ -1,0 +1,124 @@
+{
+  "project_info": {
+    "project_number": "23299047557",
+    "project_id": "inmo-4f600",
+    "storage_bucket": "inmo-4f600.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23299047557:android:a2a54a2233564935c5e9ec",
+        "android_client_info": {
+          "package_name": "ai.inmo.assist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-S05CJz60aRLG-dc-Z7ucCrYArnNF0xs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23299047557:android:7db2e8de6385d73ac5e9ec",
+        "android_client_info": {
+          "package_name": "ai.inmo.openclaw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-S05CJz60aRLG-dc-Z7ucCrYArnNF0xs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23299047557:android:f518bc9f69471a7ec5e9ec",
+        "android_client_info": {
+          "package_name": "com.inmo.inmoglasses"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-S05CJz60aRLG-dc-Z7ucCrYArnNF0xs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23299047557:android:57b446db58ac50c8c5e9ec",
+        "android_client_info": {
+          "package_name": "com.inmo.one"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-S05CJz60aRLG-dc-Z7ucCrYArnNF0xs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23299047557:android:aeb68aa73e53cdd7c5e9ec",
+        "android_client_info": {
+          "package_name": "com.passion.glasses"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-S05CJz60aRLG-dc-Z7ucCrYArnNF0xs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23299047557:android:bb8980706eec6b9cc5e9ec",
+        "android_client_info": {
+          "package_name": "com.qualcomm.qti.sva"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-S05CJz60aRLG-dc-Z7ucCrYArnNF0xs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
