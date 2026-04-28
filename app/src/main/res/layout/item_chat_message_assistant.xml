@@ -42,7 +42,7 @@
                 android:linksClickable="true"
                 android:textColor="@color/black"
                 android:textIsSelectable="false"
-                android:textSize="18sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/streamingView"

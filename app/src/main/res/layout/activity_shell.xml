@@ -149,7 +149,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2.5"
-        android:layout_margin="13dp">
+        android:layout_margin="3dp">
 
         <LinearLayout
             android:clipToOutline="true"
@@ -169,8 +169,8 @@
 
                 <ImageButton
                     android:id="@+id/sidebarButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:padding="4dp"
                     android:background="@drawable/bg_chat_icon_button"
                     android:contentDescription="@string/shell_open_sidebar"
@@ -180,8 +180,8 @@
 
                 <ImageButton
                     android:id="@+id/newConversationButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:padding="4dp"
                     android:background="@drawable/bg_chat_icon_button"
                     android:contentDescription="@string/chat_new"

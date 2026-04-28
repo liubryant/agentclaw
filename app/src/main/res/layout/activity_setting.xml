@@ -6,12 +6,12 @@
 
     <LinearLayout
         android:id="@+id/settingDialogContainer"
-        android:layout_width="1400px"
-        android:layout_height="900px"
+        android:layout_width="950px"
+        android:layout_height="1000px"
         android:background="@drawable/bg_setting_left"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:padding="20px">
+        android:padding="10px">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,11 +20,11 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="332px"
+                android:layout_width="250px"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_setting_left"
                 android:orientation="vertical"
-                android:padding="34px">
+                android:padding="4px">
 
                 <LinearLayout
                     android:layout_width="332px"

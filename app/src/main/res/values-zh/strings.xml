@@ -12,7 +12,7 @@
     <string name="setup_skip">暂时跳过</string>
 
     <string name="startup_title">正在启动 INMOClaw</string>
-    <string name="startup_loading_title">INMOClaw启动中，正在唤醒您的专属小龙虾</string>
+    <string name="startup_loading_title">AgentClaw启动中，正在唤醒您的专属小龙虾</string>
     <string name="startup_loading_subtitle">首次加载需要几分钟时间，请稍等</string>
 
     <string name="dashboard_title">INMOClaw</string>
