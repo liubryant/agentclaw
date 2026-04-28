@@ -55,16 +55,16 @@ class FancyIdeasFragment :
             itemAnimator = null
             overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLLS
             updatePadding(
-                left = dp(26.6f),
-                top = dp(14f),
-                right = dp(26.6f),
-                bottom = dp(26.6f)
+                left = dp(16f),
+                top = dp(12f),
+                right = dp(16f),
+                bottom = dp(20f)
             )
             addItemDecoration(
                 GridSpacingItemDecoration(
                     adapter = this@FancyIdeasFragment.adapter,
                     spanCount = 3,
-                    spacingPx = dp(14f)
+                    spacingPx = dp(10f)
                 )
             )
         }

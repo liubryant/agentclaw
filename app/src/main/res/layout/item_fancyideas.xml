@@ -11,42 +11,44 @@
         android:elevation="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="152dp"
+        android:minHeight="128dp"
         android:background="@drawable/bg_fancy_idea_card_selector"
         android:clickable="true"
         android:focusable="true"
         android:foreground="@drawable/fg_fancy_idea_click"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="12dp">
 
         <ImageView
             android:id="@+id/skillIconView"
-            android:layout_width="56.6dp"
-            android:layout_height="48dp"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/skillTitleView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="14dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{item.title}"
             android:textColor="#FF1E1E1C"
-            android:textSize="18.6sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/skillSubtitleView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@{item.subtitle}"
-            android:maxLines="1"
             android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="#FF9A978F"
-            android:textSize="14.6sp" />
+            android:textSize="10sp" />
 
     </LinearLayout>
 </layout>

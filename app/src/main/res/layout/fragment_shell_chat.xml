@@ -98,8 +98,8 @@
 
                 <ImageView
                     android:id="@+id/lobsterView"
-                    android:layout_width="140dp"
-                    android:layout_height="98dp"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="@null"
                     android:src="@drawable/img_chat_lobster" />
@@ -112,7 +112,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/chat_empty_brand"
                     android:textColor="#333333"
-                    android:textSize="36sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -123,7 +123,7 @@
                     android:gravity="center"
                     android:text="@string/chat_empty_subtitle"
                     android:textColor="@color/gray"
-                    android:textSize="16sp" />
+                    android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/quickPromptRecycler"
