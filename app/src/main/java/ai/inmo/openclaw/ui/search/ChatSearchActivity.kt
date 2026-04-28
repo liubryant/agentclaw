@@ -3,7 +3,10 @@ package ai.inmo.openclaw.ui.search
 import ai.inmo.core_common.ui.activity.BaseBindingActivity
 import ai.inmo.openclaw.databinding.ActivityChatSearchBinding
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.view.View
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
@@ -24,6 +27,7 @@ class ChatSearchActivity : BaseBindingActivity<ActivityChatSearchBinding>(
     private val adapter = ChatSearchAdapter()
 
     override fun initView() {
+        configureStatusBar()
         binding.searchResultsRecycler.layoutManager = LinearLayoutManager(this)
         binding.searchResultsRecycler.adapter = adapter
         binding.searchPanel.setOnClickListener { }
@@ -38,6 +42,15 @@ class ChatSearchActivity : BaseBindingActivity<ActivityChatSearchBinding>(
     }
 
     override fun initData() = Unit
+
+    private fun configureStatusBar() {
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = Color.parseColor("#992E2E2E")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility =
+                window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+        }
+    }
 
     override fun initEvent() {
         binding.scrimView.setOnClickListener { finish() }

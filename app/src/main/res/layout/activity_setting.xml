@@ -123,7 +123,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_setting_right"
-                android:padding="48px">
+                android:padding="20px">
 
                 <LinearLayout
                     android:id="@+id/pageSkill"
@@ -187,7 +187,7 @@
 
                         <TextView
                             android:id="@+id/btnAddSkill"
-                            android:layout_width="110dp"
+                            android:layout_width="60dp"
                             android:layout_height="match_parent"
                             android:layout_marginStart="10dp"
                             android:background="@drawable/bg_add_skill"
@@ -260,7 +260,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginTop="10px"
-                        android:paddingHorizontal="72px"
+                        android:paddingHorizontal="10px"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:paddingTop="12dp">

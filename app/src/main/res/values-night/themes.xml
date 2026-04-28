@@ -26,6 +26,7 @@
 
     <style name="Theme.INMOClaw.SearchOverlay" parent="Theme.INMOClaw.Transparent">
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 </resources>

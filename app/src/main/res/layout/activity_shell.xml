@@ -94,8 +94,8 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="140dp"
-                    android:layout_height="140dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_shell_empty_history" />
 
@@ -107,7 +107,7 @@
                     android:gravity="center"
                     android:text="@string/shell_session_empty"
                     android:textColor="@color/sidebar_muted"
-                    android:textSize="18sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
         </FrameLayout>
 
