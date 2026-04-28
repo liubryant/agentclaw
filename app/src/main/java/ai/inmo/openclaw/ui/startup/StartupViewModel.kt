@@ -1,8 +1,8 @@
 package ai.inmo.openclaw.ui.startup
 
 import ai.inmo.core_common.ui.viewModel.BaseViewModel
+import ai.inmo.openclaw.data.repository.GatewayConfigDefaults
 import ai.inmo.openclaw.di.AppGraph
-import ai.inmo.core_common.utils.DeviceInfo
 import ai.inmo.openclaw.domain.model.AiProvider
 import ai.inmo.openclaw.domain.model.GatewayStatus
 import ai.inmo.openclaw.domain.model.NodeStatus
@@ -172,7 +172,7 @@ class StartupViewModel : BaseViewModel() {
 //            )
             AppGraph.providerConfigService.saveProviderConfig(
                 provider = AiProvider.INMOCLAW,
-                apiKey = DeviceInfo.sn /*"YM00FCE5600128"*/,
+                apiKey = GatewayConfigDefaults.resolveInmoClawApiKey(),
                 model = "glm-4.7"
             )
         }

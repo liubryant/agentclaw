@@ -112,20 +112,8 @@ class ShellSharedViewModel : BaseViewModel() {
 
     fun loadTokenUsage() {
         launchIo {
-            val sn = DeviceInfo.sn
-            val data = runCatching {
-                AppGraph.botApi.getTokenUsage(TokenUsageRequest(sn))
-            }.getOrNull()?.data ?: return@launchIo
-
-            val usedWan = data.usedTokens / 10_000
-            val remainingPct = if (data.totalQuota > 0)
-                (data.totalQuota - data.usedTokens) * 100 / data.totalQuota
-            else 0L
-            val text = AppProvider.get().getString(
-                R.string.chat_usage_hint, usedWan.toString(), (if (remainingPct<0) 0 else remainingPct).toString()
-            )
-            Logger.d("chat_usage_hint:$text")
-            _uiState.update { it.copy(usageText = text) }
+            Logger.d("token-usage api disabled temporarily, skip /im/bot/token-usage request")
+            return@launchIo
         }
     }
 

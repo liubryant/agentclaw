@@ -4,6 +4,7 @@ import ai.inmo.openclaw.constants.AppConstants
 import ai.inmo.openclaw.data.local.prefs.PreferencesManager
 import ai.inmo.openclaw.domain.model.AiProvider
 import ai.inmo.openclaw.proot.BootstrapManager
+import ai.inmo.core_common.utils.DeviceInfo
 import ai.inmo.core_common.utils.Logger
 import android.content.Context
 import com.google.gson.GsonBuilder
@@ -17,6 +18,7 @@ class GatewayConfigService(
     private companion object {
         private const val TAG = "GatewayConfigService"
         private const val CONFIG_PATH = "root/.openclaw/openclaw.json"
+        private const val MAIN_AGENT_AUTH_PATH = "root/.openclaw/agents/main/agent/auth-profiles.json"
         private const val SKILL_ASSET_ROOT = "skills"
         private const val ROOTFS_SKILL_DIR = "root/.openclaw/skills"
     }
@@ -37,8 +39,14 @@ class GatewayConfigService(
 
     fun prepareForLaunch(): PreparedGatewayConfig {
         val existing = readMutableConfig()
+        Logger.d(TAG, "agentclaw CONFIG_BEFORE ${summarizeInmoProvider(existing)}")
         val merged = GatewayConfigDefaults.mergeConfig(existing)
         bootstrapManager.writeRootfsFile(CONFIG_PATH, gson.toJson(merged.config))
+        bootstrapManager.writeRootfsFile(
+            MAIN_AGENT_AUTH_PATH,
+            gson.toJson(GatewayConfigDefaults.createMainAgentAuthProfiles())
+        )
+        logGatewayAuthDiagnostics(merged.config)
         deployBundledSkills()
 
         val upstreamSummary = runCatching {
@@ -60,6 +68,41 @@ class GatewayConfigService(
             dashboardUrl = merged.dashboardUrl,
             token = merged.token
         )
+    }
+
+    private fun logGatewayAuthDiagnostics(config: Map<String, Any?>) {
+        Logger.d(TAG, "agentclaw CONFIG_AFTER ${summarizeInmoProvider(config)}")
+
+        val persistedConfig = runCatching { bootstrapManager.readRootfsFile(CONFIG_PATH).orEmpty() }
+            .getOrElse { error -> "<read-error:${error.message}>" }
+        Logger.d(
+            TAG,
+            "agentclaw CONFIG_FILE path=$CONFIG_PATH, len=${persistedConfig.length}, " +
+                "hasInmoclaw=${persistedConfig.contains(AiProvider.INMOCLAW.id)}, " +
+                "hasApiKeyField=${persistedConfig.contains("\"apiKey\"")}, " +
+                "apiKeyBlank=${persistedConfig.contains("\"apiKey\": \"\"") || persistedConfig.contains("\"apiKey\":\"\"")}"
+        )
+
+        val authProfiles = runCatching { bootstrapManager.readRootfsFile(MAIN_AGENT_AUTH_PATH) }.getOrNull()
+        Logger.d(
+            TAG,
+            "agentclaw AGENT_AUTH_FILE path=$MAIN_AGENT_AUTH_PATH, exists=${authProfiles != null}, " +
+                "len=${authProfiles?.length ?: 0}, hasInmoclaw=${authProfiles?.contains(AiProvider.INMOCLAW.id) == true}, " +
+                "hasApiKeyField=${authProfiles?.contains("\"apiKey\"") == true}"
+        )
+    }
+
+    private fun summarizeInmoProvider(config: Map<String, Any?>): String {
+        val models = config["models"] as? Map<*, *>
+        val providers = models?.get("providers") as? Map<*, *>
+        val inmo = providers?.get(AiProvider.INMOCLAW.id) as? Map<*, *>
+        val agents = config["agents"] as? Map<*, *>
+        val defaults = agents?.get("defaults") as? Map<*, *>
+        val model = defaults?.get("model") as? Map<*, *>
+        val apiKey = inmo?.get("apiKey")?.toString().orEmpty()
+        return "providerExists=${inmo != null}, primary=${model?.get("primary")}, " +
+            "api=${inmo?.get("api")}, baseUrl=${inmo?.get("baseUrl")}, " +
+            "apiKeyPresent=${apiKey.isNotBlank()}, apiKeyLen=${apiKey.length}"
     }
 
     fun syncDashboardUrlFromConfig(): String? {
@@ -117,6 +160,8 @@ object GatewayConfigDefaults {
         val token: String?,
         val dashboardUrl: String?
     )
+
+    const val FALLBACK_INMOCLAW_API_KEY = "YM00FCE5600128"
 
     private val secureRandom = SecureRandom()
 
@@ -212,7 +257,7 @@ object GatewayConfigDefaults {
         val inmoProvider = providers.mutableChild(AiProvider.INMOCLAW.id)
         inmoProvider["baseUrl"] = AiProvider.INMOCLAW.baseUrl
         inmoProvider["api"] = "openai-completions"
-        inmoProvider.putIfAbsent("apiKey", "")
+        inmoProvider["apiKey"] = resolveInmoClawApiKey()
         // 修复：openclaw 当前配置 schema 不支持 timeoutMs，若存在会导致网关启动失败。
         inmoProvider.remove("timeoutMs")
         inmoProvider["models"] = listOf(
@@ -232,6 +277,37 @@ object GatewayConfigDefaults {
             token = if (existingToken == null) effectiveToken else null,
             dashboardUrl = effectiveToken?.let { "${AppConstants.GATEWAY_URL}/#token=$it" }
         )
+    }
+
+    fun createMainAgentAuthProfiles(): MutableMap<String, Any?> {
+        val apiKey = resolveInmoClawApiKey()
+        val baseUrl = AiProvider.INMOCLAW.baseUrl
+        val providerId = AiProvider.INMOCLAW.id
+        val profile = mutableMapOf<String, Any?>(
+            "id" to providerId,
+            "provider" to providerId,
+            "apiKey" to apiKey,
+            "baseUrl" to baseUrl,
+            "api" to "openai-completions",
+            "model" to "glm-4.7"
+        )
+
+        // 兼容不同 openclaw 版本可能使用的 auth-profiles.json 结构。
+        // 当前报错只说明 agent lane 读取该文件并按 provider=inmoclaw 查 key，
+        // 因此同时写入 profiles/providers 顶层映射与 active/default 指针，避免只满足某一种 schema。
+        return mutableMapOf(
+            "version" to 1,
+            "active" to providerId,
+            "default" to providerId,
+            "activeProfile" to providerId,
+            "profiles" to mutableMapOf(providerId to profile),
+            "providers" to mutableMapOf(providerId to profile),
+            providerId to profile
+        )
+    }
+
+    fun resolveInmoClawApiKey(): String {
+        return DeviceInfo.sn.trim().ifBlank { FALLBACK_INMOCLAW_API_KEY }
     }
 
     private fun MutableMap<String, Any?>.mutableChild(key: String): MutableMap<String, Any?> {

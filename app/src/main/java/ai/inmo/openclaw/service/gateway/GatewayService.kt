@@ -170,6 +170,10 @@ class GatewayService : Service() {
                 val filesDir = applicationContext.filesDir.absolutePath
                 val nativeLibDir = applicationContext.applicationInfo.nativeLibraryDir
                 val pm = ProcessManager(filesDir, nativeLibDir)
+                emitLog(
+                    "agentclaw GATEWAY_START_PATHS filesDir=$filesDir, " +
+                        "nativeLibDir=$nativeLibDir, proot=${pm.getProotPath()}"
+                )
 
                 val bootstrapManager = BootstrapManager(applicationContext, filesDir, nativeLibDir)
                 try {
@@ -225,6 +229,7 @@ class GatewayService : Service() {
                 synchronized(lock) {
                     if (stopping) return@Thread
                     processStartTime = System.currentTimeMillis()
+                    emitLog("agentclaw GATEWAY_SPAWN command=openclaw gateway")
                     gatewayProcess = pm.startProotProcess("openclaw gateway")
 //                    val gatewayEnv = mapOf(
 //                        AiProvider.ENV_INMOCLAW_API_KEY to "YM00FCE5600128",
@@ -530,6 +535,7 @@ class GatewayService : Service() {
         } catch (_: Exception) {}
     }
 }
+
 
 
 
