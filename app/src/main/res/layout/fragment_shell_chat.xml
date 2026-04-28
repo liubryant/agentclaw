@@ -127,12 +127,14 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/quickPromptRecycler"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="24dp"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="8dp" />
             </LinearLayout>
         </ScrollView>

@@ -89,8 +89,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
                 }
             }
         })
-        binding.quickPromptRecycler.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.quickPromptRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.quickPromptRecycler.adapter = quickPromptAdapter
         quickPromptAdapter.submitList(ShellSeedData.ideaTemplates())
 
