@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="4dp"
-    android:paddingBottom="16dp"
+    android:paddingBottom="6dp"
     android:textColor="#FF1E1E1C"
-    android:textSize="18sp"
+    android:textSize="12sp"
     android:textStyle="bold" />

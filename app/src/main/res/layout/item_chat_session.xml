@@ -9,7 +9,7 @@
     android:gravity="center_vertical"
     android:maxHeight="45dp"
     android:orientation="horizontal"
-    android:paddingStart="8dp"
+    android:paddingStart="2dp"
     android:paddingTop="4dp"
     android:paddingEnd="4dp"
     android:paddingBottom="8dp">
@@ -25,15 +25,15 @@
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
         android:textColor="@color/text_primary"
-        android:textSize="15sp" />
+        android:textSize="12sp" />
 
     <ImageButton
         android:id="@+id/actionButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:background="@drawable/bg_shell_delete_button"
         android:contentDescription="@string/chat_delete_confirm"
-        android:padding="10dp"
+        android:padding="2dp"
         android:src="@drawable/ic_shell_delete"
         android:visibility="invisible" />
 </LinearLayout>

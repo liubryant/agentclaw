@@ -3,8 +3,8 @@
 
     <ImageView
         android:id="@+id/navIconView"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
         android:layout_gravity="center"
         android:contentDescription="@null" />
 
@@ -12,9 +12,9 @@
         android:id="@+id/navTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="6dp"
         android:layout_weight="1"
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/text_primary"
-        android:textSize="16sp" />
+        android:textSize="12sp" />
 </merge>
