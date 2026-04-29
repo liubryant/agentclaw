@@ -17,7 +17,7 @@ class TermsDialog(
     context = context,
     inflate = DialogTermsBinding::inflate,
     canceledOnTouchOutside = false,
-    widthPercentage = 0.7f,
+    widthPercentage = 0.9f,
     heightPercentage = 0.9f,
     gravity = Gravity.CENTER
 ) {
