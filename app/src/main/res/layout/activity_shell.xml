@@ -20,7 +20,7 @@
         <TextView
             android:id="@+id/sidebarSearchInput"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:background="@drawable/bg_shell_search_field"
             android:clickable="true"
             android:drawableStart="@drawable/ic_shell_search"
@@ -33,8 +33,8 @@
             android:importantForAutofill="no"
             android:inputType="text"
             android:maxLines="1"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/sidebar_muted"
             android:textSize="12sp" />

@@ -31,7 +31,7 @@ class SidebarNavItemView @JvmOverloads constructor(
         isClickable = true
         isFocusable = true
         background = AppCompatResources.getDrawable(context, R.drawable.bg_sidebar_nav_item)
-        setPaddingRelative(12.dp, 0, 12.dp, 0)
+        setPaddingRelative(6.dp, 0, 6.dp, 0)
 
         LayoutInflater.from(context).inflate(R.layout.view_sidebar_nav_item, this, true)
         iconView = requireNotNull(findViewById<ImageView>(R.id.navIconView))

@@ -11,6 +11,29 @@ This skill ensures that all generated files default to HTML format and automatic
 
 ## Core Behavior
 
+### Mandatory Workspace File Creation
+
+When the user asks to generate a document, report, article, README, HTML page, or any file-like output, you MUST create a real file by calling the available file writing tool (for example `write`) instead of only replying with the document text in chat.
+
+- Write generated files under `/root/.openclaw/workspace`.
+- Use an absolute path such as `/root/.openclaw/workspace/shenzhen.html`.
+- Do not rely on the Android client to create or export files from assistant text.
+- After writing, briefly tell the user the file path that was created.
+- If no format is specified, create an `.html` file by default.
+
+**Required workflow:**
+```
+User: "生成一个深圳的文档"
+Action: call write with path=/root/.openclaw/workspace/shenzhen.html and full HTML content
+Reply: 已生成：/root/.openclaw/workspace/shenzhen.html
+```
+
+**Do not do this:**
+```
+User: "生成一个深圳的文档"
+Action: only output the full document text in chat without a write/tool call
+```
+
 ### Default Output Format
 
 When a user requests file creation without specifying the format:
@@ -18,13 +41,13 @@ When a user requests file creation without specifying the format:
 **Example 1 - Default to HTML:**
 ```
 User: "Generate a report on sales data"
-Action: Generate sales-data.html (not sales-data.md or sales-data.txt)
+Action: call write to create /root/.openclaw/workspace/sales-data.html (not sales-data.md or sales-data.txt)
 ```
 
 **Example 2 - Implicit HTML:**
 ```
 User: "Create a document about the project"
-Action: Create project-document.html with proper HTML structure
+Action: call write to create /root/.openclaw/workspace/project-document.html with proper HTML structure
 ```
 
 ### Markdown to HTML Conversion

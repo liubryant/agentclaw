@@ -1150,6 +1150,7 @@ class SyncedChatWsManager(
                     completed = phase == "result",
                     previousItem = previousItem
                 )
+                Logger.d(TRACE_TAG, "agentclaw TOOL_EVENT phase=$phase, name=$toolName, toolCallId=$toolCallId, args=${next.lastArgs}, completed=${next.completed}")
                 val newEntries = chain.entries.toMutableList()
 
                 if (phase == "start") {

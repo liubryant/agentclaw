@@ -243,9 +243,11 @@ object GatewayConfigDefaults {
 
         nodes["denyCommands"] = emptyList<String>()
         nodes["allowCommands"] = allowCommands
-        // 不再强制 full 工具集，避免每次请求都注入超大 tools schema，
-        // 导致上游首包慢、触发 embedded LLM request timed out。
-        tools.remove("profile")
+        // 文件生成必须让 gateway 在上游请求中注入可执行 tools schema，
+        // 这样模型才能返回 tool_calls，由 Ubuntu rootfs 内的 skill/工具链执行 write，
+        // 将文件写入 /root/.openclaw/workspace；避免 Android 端根据纯文本回复主动造文件。
+        tools["profile"] = "full"
+        Logger.d("GatewayConfigDefaults", "agentclaw TOOL_PROFILE profile=${tools["profile"]}, workspace=/root/.openclaw/workspace")
         defaults.putIfAbsent("timeoutSeconds", DEFAULT_AGENT_TIMEOUT_SECONDS)
         // clawbootdo 当前联调基线固定 glm-4.7（Postman 已验证可用），
         // 这里显式覆盖，避免历史配置残留为 glm-5.1 导致网关侧超时/异常。

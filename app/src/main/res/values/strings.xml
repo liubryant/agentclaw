@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">INMOClaw（尝鲜版）</string>
+    <string name="app_name">AgentClaw</string>
     <string name="common_retry">Retry</string>
     <string name="common_back">Back</string>
     <string name="common_copied">Copied</string>

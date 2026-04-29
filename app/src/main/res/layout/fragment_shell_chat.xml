@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:paddingStart="4dp"
-    android:paddingEnd="4dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
     >
 
     <TextView
@@ -180,7 +180,7 @@
         android:paddingEnd="16dp"
         android:text="@string/chat_click_to_download_file"
         android:textColor="#3978F3"
-        android:textSize="24px"
+        android:textSize="13sp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/composerCard"
         app:layout_constraintStart_toStartOf="parent" />

@@ -1896,6 +1896,70 @@ require('/root/.openclaw/proot-compat.js');
 
 const originalFetch = global.fetch;
 
+function agentclawBridgeToolTextSse(rawText) {
+  const raw = String(rawText || '');
+  console.log('agentclaw TOOL_BRIDGE_INPUT rawLen=' + raw.length + ', preview=' + raw.slice(0, 500));
+  const dataLines = raw.split(/\r?\n/).filter((line) => line.startsWith('data:'));
+  console.log('agentclaw TOOL_BRIDGE_LINES count=' + dataLines.length + ', first=' + (dataLines[0] || '').slice(0, 300));
+  let assistantText = '';
+  for (const line of dataLines) {
+    const payload = line.slice(5).trim();
+    if (!payload || payload === '[DONE]') continue;
+    try {
+      const json = JSON.parse(payload);
+      const choices = Array.isArray(json?.choices) ? json.choices : [];
+      for (const choice of choices) {
+        const delta = choice?.delta || {};
+        if (typeof delta.content === 'string') assistantText += delta.content;
+        if (typeof delta.text === 'string') assistantText += delta.text;
+      }
+    } catch (err) {
+      console.log('agentclaw TOOL_BRIDGE_PARSE_SKIP payload=' + payload.slice(0, 300) + ', err=' + (err?.message || String(err)));
+    }
+  }
+  console.log('agentclaw TOOL_BRIDGE_ASSISTANT_TEXT len=' + assistantText.length + ', text=' + assistantText.slice(0, 1000));
+
+  const toolMatch = assistantText.match(/<tool>\s*([A-Za-z0-9_-]+)([\s\S]*?)<\/tool>/i);
+  if (!toolMatch) {
+    return { changed: false, text: raw, reason: 'no-tool-text', assistantText };
+  }
+
+  const toolName = String(toolMatch[1] || '').trim();
+  const body = String(toolMatch[2] || '');
+  console.log('agentclaw TOOL_BRIDGE_MATCH name=' + toolName + ', body=' + body.slice(0, 1000));
+  const args = {};
+  const tagRegex = /<([A-Za-z0-9_-]+)>([\s\S]*?)<\/\1>/g;
+  let tagMatch;
+  while ((tagMatch = tagRegex.exec(body)) !== null) {
+    const key = String(tagMatch[1] || '').trim();
+    const value = String(tagMatch[2] || '').trim();
+    if (key) args[key] = value;
+  }
+  console.log('agentclaw TOOL_BRIDGE_ARGS ' + JSON.stringify(args));
+
+  const toolCallId = 'call_agentclaw_' + Date.now().toString(36);
+  const roleEvent = { choices: [{ delta: { role: 'assistant' } }] };
+  const toolEvent = {
+    choices: [{
+      delta: {
+        tool_calls: [{
+          index: 0,
+          id: toolCallId,
+          type: 'function',
+          function: { name: toolName, arguments: JSON.stringify(args) }
+        }]
+      }
+    }]
+  };
+  const finishEvent = { choices: [{ delta: {}, finish_reason: 'tool_calls' }] };
+  const bridged =
+    'data: ' + JSON.stringify(roleEvent) + '\n\n' +
+    'data: ' + JSON.stringify(toolEvent) + '\n\n' +
+    'data: ' + JSON.stringify(finishEvent) + '\n\n' +
+    'data: [DONE]\n\n';
+  return { changed: true, text: bridged, toolName, args, assistantText };
+}
+
 if (typeof originalFetch === 'function') {
   global.fetch = async function(...args) {
     const url = typeof args[0] === 'string' ? args[0] : (args[0]?.url || String(args[0]));
@@ -1932,28 +1996,10 @@ if (typeof originalFetch === 'function') {
             }
           }
 
-          // clawbootdo 兼容模式：禁用工具调用，避免模型只返回 <tool_call> 文本后结束。
-          // 部分 OpenAI-compat 后端不会执行工具编排，导致对话看起来“只生成一次就停”。
-          let toolCompatApplied = false;
+          // 文件生成必须保留 gateway 注入的 tools/tool_choice，不能在 Android hook 中禁用。
+          // 否则上游只能输出 <tool> 文本，gateway 拿不到可执行 tool_calls，skill 就无法写入 /root/.openclaw/workspace。
           if (Array.isArray(reqJson?.tools) && reqJson.tools.length > 0) {
-            delete reqJson.tools;
-            toolCompatApplied = true;
-          }
-          if (reqJson?.tool_choice !== undefined) {
-            reqJson.tool_choice = 'none';
-            toolCompatApplied = true;
-          }
-          if (Array.isArray(reqJson?.messages)) {
-            const sysIndex = reqJson.messages.findIndex((m) => String(m?.role || '') === 'system');
-            const noToolTip = '\n\n[兼容模式] 当前上游不支持工具调用执行，请直接输出最终答案，不要输出<tool_call>或工具调用JSON。';
-            if (sysIndex >= 0 && typeof reqJson.messages[sysIndex]?.content === 'string' && !reqJson.messages[sysIndex].content.includes('兼容模式')) {
-              reqJson.messages[sysIndex].content += noToolTip;
-              toolCompatApplied = true;
-            }
-          }
-          if (toolCompatApplied) {
-            opts.body = JSON.stringify(reqJson);
-            console.log('agentclaw REQ_8066_CHAT_TOOL_COMPAT tools-disabled');
+            console.log('agentclaw REQ_8066_CHAT_TOOLS_PASSTHROUGH count=' + reqJson.tools.length + ', tool_choice=' + JSON.stringify(reqJson.tool_choice ?? null));
           }
 
           const msgs = Array.isArray(reqJson?.messages) ? reqJson.messages : [];
@@ -2039,6 +2085,21 @@ if (typeof originalFetch === 'function') {
         console.error('agentclaw RESP_8066_CHAT_FETCH_ERR ' + JSON.stringify(detail));
       }
       throw err;
+    }
+    if (is8066Chat && typeof res.text === 'function') {
+      const rawResponseText = await res.text();
+      const bridged = agentclawBridgeToolTextSse(rawResponseText);
+      if (bridged.changed) {
+        console.log('agentclaw RESP_8066_CHAT_TOOL_TEXT_BRIDGE name=' + bridged.toolName + ', args=' + JSON.stringify(bridged.args));
+        console.log('agentclaw RESP_8066_CHAT_TOOL_TEXT_BRIDGED_BODY ' + bridged.text.slice(0, 1000));
+      } else if (bridged.assistantText && bridged.assistantText.includes('<tool')) {
+        console.log('agentclaw RESP_8066_CHAT_TOOL_TEXT_BRIDGE_SKIP reason=' + bridged.reason + ', text=' + bridged.assistantText.slice(0, 300));
+      }
+      res = new Response(bridged.text, {
+        status: res.status,
+        statusText: res.statusText,
+        headers: res.headers
+      });
     }
     const clone = typeof res.clone === 'function' ? res.clone() : res;
 

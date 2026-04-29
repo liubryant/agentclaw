@@ -4,7 +4,7 @@ import java.util.Locale
 
 object AppConstants {
     const val APP_NAME = "INMOClaw"
-    const val VERSION = "1.8.4"
+    const val VERSION = "1.0.0"
     const val PACKAGE_NAME = "ai.inmo.openclaw"
 
     /** Matches ANSI escape sequences (e.g. color codes in terminal output). */
