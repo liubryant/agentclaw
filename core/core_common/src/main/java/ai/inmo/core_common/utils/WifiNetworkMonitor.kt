@@ -14,13 +14,14 @@ object WifiNetworkMonitor {
         fun onWifiConnectionChanged(isConnected: Boolean)
     }
 
-    private data class WifiNetworkState(
+    private data class NetworkState(
+        val hasSupportedTransport: Boolean,
         val hasInternetCapability: Boolean,
         val hasValidatedCapability: Boolean
     ) {
         val isConnected: Boolean
             get() = evaluateConnectionState(
-                hasWifiTransport = true,
+                hasSupportedTransport = hasSupportedTransport,
                 hasInternetCapability = hasInternetCapability,
                 hasValidatedCapability = hasValidatedCapability
             )
@@ -38,7 +39,7 @@ object WifiNetworkMonitor {
     @Volatile
     private var lastState: Boolean? = null
 
-    private val wifiNetworks = linkedMapOf<Network, WifiNetworkState>()
+    private val trackedNetworks = linkedMapOf<Network, NetworkState>()
 
     fun isWifiConnected(context: Context): Boolean {
         val appContext = context.applicationContext
@@ -47,7 +48,7 @@ object WifiNetworkMonitor {
                 ?: return false
         @Suppress("DEPRECATION")
         return manager.allNetworks.any { network ->
-            createWifiNetworkState(manager.getNetworkCapabilities(network))?.isConnected == true
+            createNetworkState(manager.getNetworkCapabilities(network))?.isConnected == true
         }
     }
 
@@ -97,9 +98,7 @@ object WifiNetworkMonitor {
         networkCallback = callback
         lastState = null
         manager.registerNetworkCallback(
-            NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .build(),
+            NetworkRequest.Builder().build(),
             callback
         )
         refreshTrackedNetworks(manager)
@@ -120,7 +119,7 @@ object WifiNetworkMonitor {
             }
         }
 
-        wifiNetworks.clear()
+        trackedNetworks.clear()
         networkCallback = null
         connectivityManager = null
         listener = null
@@ -130,10 +129,10 @@ object WifiNetworkMonitor {
     @Synchronized
     private fun dispatchCurrentState() {
         val currentListener = listener ?: return
-        val isConnected = wifiNetworks.values.any { it.isConnected }
+        val isConnected = trackedNetworks.values.any { it.isConnected }
         Logger.d(
             TAG,
-            "dispatchCurrentState lastState=$lastState currentState=$isConnected trackedNetworks=${wifiNetworks.size} details=${wifiNetworks.values.joinToString { "internet=${it.hasInternetCapability}, validated=${it.hasValidatedCapability}" }}"
+            "dispatchCurrentState lastState=$lastState currentState=$isConnected trackedNetworks=${trackedNetworks.size} details=${trackedNetworks.values.joinToString { "supported=${it.hasSupportedTransport}, internet=${it.hasInternetCapability}, validated=${it.hasValidatedCapability}" }}"
         )
 
         if (lastState == isConnected) {
@@ -147,25 +146,25 @@ object WifiNetworkMonitor {
     }
 
     internal fun isValidatedWifi(capabilities: NetworkCapabilities?): Boolean {
-        return createWifiNetworkState(capabilities)?.isConnected == true
+        return createNetworkState(capabilities)?.isConnected == true
     }
 
     internal fun evaluateConnectionState(
-        hasWifiTransport: Boolean,
+        hasSupportedTransport: Boolean,
         hasInternetCapability: Boolean,
         hasValidatedCapability: Boolean
     ): Boolean {
-        return hasWifiTransport && hasInternetCapability
+        return hasSupportedTransport && hasInternetCapability
     }
 
     private fun refreshTrackedNetworks(manager: ConnectivityManager) {
-        wifiNetworks.clear()
+        trackedNetworks.clear()
         @Suppress("DEPRECATION")
         manager.allNetworks.forEach { network ->
             val capabilities = manager.getNetworkCapabilities(network)
-            val state = createWifiNetworkState(capabilities)
+            val state = createNetworkState(capabilities)
             if (state != null) {
-                wifiNetworks[network] = state
+                trackedNetworks[network] = state
                 Logger.d(
                     TAG,
                     "refreshTrackedNetworks network=$network ${describeCapabilities(capabilities)}"
@@ -176,15 +175,15 @@ object WifiNetworkMonitor {
 
     @Synchronized
     private fun updateTrackedNetwork(network: Network, capabilities: NetworkCapabilities?) {
-        val state = createWifiNetworkState(capabilities)
+        val state = createNetworkState(capabilities)
         if (state == null) {
-            wifiNetworks.remove(network)
-            Logger.d(TAG, "updateTrackedNetwork removed network=$network: not a wifi network")
+            trackedNetworks.remove(network)
+            Logger.d(TAG, "updateTrackedNetwork removed network=$network: not a supported internet network")
         } else {
-            wifiNetworks[network] = state
+            trackedNetworks[network] = state
             Logger.d(
                 TAG,
-                "updateTrackedNetwork stored network=$network internet=${state.hasInternetCapability} validated=${state.hasValidatedCapability}"
+                "updateTrackedNetwork stored network=$network supported=${state.hasSupportedTransport} internet=${state.hasInternetCapability} validated=${state.hasValidatedCapability}"
             )
         }
         dispatchCurrentState()
@@ -192,17 +191,28 @@ object WifiNetworkMonitor {
 
     @Synchronized
     private fun removeTrackedNetwork(network: Network) {
-        val removed = wifiNetworks.remove(network)
+        val removed = trackedNetworks.remove(network)
         Logger.d(TAG, "removeTrackedNetwork network=$network removed=${removed != null}")
         dispatchCurrentState()
     }
 
-    private fun createWifiNetworkState(capabilities: NetworkCapabilities?): WifiNetworkState? {
-        if (capabilities == null || !capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+    private fun createNetworkState(capabilities: NetworkCapabilities?): NetworkState? {
+        if (capabilities == null) {
             return null
         }
 
-        return WifiNetworkState(
+        val hasSupportedTransport = capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) ||
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+
+        if (!hasSupportedTransport || !capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+            return null
+        }
+
+        return NetworkState(
+            hasSupportedTransport = hasSupportedTransport,
             hasInternetCapability = capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET),
             hasValidatedCapability = capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
         )
@@ -214,6 +224,10 @@ object WifiNetworkMonitor {
         }
 
         return "wifi=${capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)} " +
+            "cellular=${capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)} " +
+            "ethernet=${capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)} " +
+            "bluetooth=${capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)} " +
+            "vpn=${capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)} " +
             "internet=${capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)} " +
             "validated=${capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)}"
     }

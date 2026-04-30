@@ -7,10 +7,10 @@ import org.junit.Test
 class WifiNetworkMonitorTest {
 
     @Test
-    fun evaluateConnectionState_returnsTrue_whenWifiInternetAndValidated() {
+    fun evaluateConnectionState_returnsTrue_whenSupportedTransportInternetAndValidated() {
         assertTrue(
             WifiNetworkMonitor.evaluateConnectionState(
-                hasWifiTransport = true,
+                hasSupportedTransport = true,
                 hasInternetCapability = true,
                 hasValidatedCapability = true
             )
@@ -18,10 +18,10 @@ class WifiNetworkMonitorTest {
     }
 
     @Test
-    fun evaluateConnectionState_returnsFalse_whenTransportIsNotWifi() {
+    fun evaluateConnectionState_returnsFalse_whenTransportIsNotSupported() {
         assertFalse(
             WifiNetworkMonitor.evaluateConnectionState(
-                hasWifiTransport = false,
+                hasSupportedTransport = false,
                 hasInternetCapability = true,
                 hasValidatedCapability = true
             )
@@ -32,7 +32,7 @@ class WifiNetworkMonitorTest {
     fun evaluateConnectionState_returnsFalse_whenInternetCapabilityIsMissing() {
         assertFalse(
             WifiNetworkMonitor.evaluateConnectionState(
-                hasWifiTransport = true,
+                hasSupportedTransport = true,
                 hasInternetCapability = false,
                 hasValidatedCapability = true
             )
@@ -43,7 +43,7 @@ class WifiNetworkMonitorTest {
     fun evaluateConnectionState_returnsTrue_whenValidatedCapabilityIsMissing() {
         assertTrue(
             WifiNetworkMonitor.evaluateConnectionState(
-                hasWifiTransport = true,
+                hasSupportedTransport = true,
                 hasInternetCapability = true,
                 hasValidatedCapability = false
             )
