@@ -271,6 +271,8 @@
 
     <string name="ideas_title">灵感泉涌</string>
     <string name="ideas_subtitle">可以一键带入聊天的灵感卡片</string>
+
+    <string name="agentclaw_docs_title">文件</string>
     <string name="ideas_heading">先选一个灵感，再到聊天页细化</string>
     <string name="ideas_filter_all">全部</string>
     <string name="ideas_filter_work">办公</string>

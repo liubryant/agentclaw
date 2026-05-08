@@ -125,6 +125,14 @@
                 app:navIconTint="@color/black"
                 app:navText="@string/ideas_title" />
 
+            <ai.inmo.openclaw.ui.widget.SidebarNavItemView
+                android:id="@+id/navAgentclawDocs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:navIcon="@mipmap/file"
+                app:navIconTint="@color/black"
+                app:navText="@string/agentclaw_docs_title" />
+
 <!--            <ai.inmo.openclaw.ui.widget.SidebarNavItemView-->
 <!--                android:id="@+id/navSchedule"-->
 <!--                android:layout_width="match_parent"-->
@@ -137,7 +145,6 @@
                 android:id="@+id/navSetting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 app:navIcon="@drawable/ic_shell_setting"
                 app:navIconTint="@color/black"
                 app:navText="@string/settings_title" />

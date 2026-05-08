@@ -16,6 +16,9 @@ import ai.inmo.openclaw.ui.search.ChatSearchActivity
 import ai.inmo.openclaw.ui.shell.chat.ChatFragment
 import ai.inmo.openclaw.ui.shell.schedule.ScheduleFragment
 import android.content.Intent
+import android.app.DownloadManager
+import android.net.Uri
+import android.provider.DocumentsContract
 import android.view.MotionEvent
 import android.os.Build
 import android.graphics.Color
@@ -144,6 +147,10 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
 
         binding.navIdeas.setOnClickListener { navigateTo(ShellDestination.IDEAS) }
 //        binding.navSchedule.setOnClickListener { navigateTo(ShellDestination.SCHEDULE) }
+        binding.navAgentclawDocs.setOnClickListener {
+            shellViewModel.requestClearChatComposerFocus()
+            openAgentclawDocsDirectory()
+        }
         binding.navSetting.setOnClickListener {
             shellViewModel.requestClearChatComposerFocus()
             showSettingDialogPopup()
@@ -568,5 +575,31 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         handleSessionClick(targetSessionKey)
         intent?.removeExtra(EXTRA_TARGET_SESSION_KEY)
         intent?.removeExtra(EXTRA_TARGET_MESSAGE_INDEX)
+    }
+
+    private fun openAgentclawDocsDirectory() {
+        // Target directory: /sdcard/Download/inmoclaw
+        // Use SAF Document URI to open the folder in a file manager.
+        val folderDocUri = Uri.parse(
+            "content://com.android.externalstorage.documents/document/primary%3ADownload%2Finmoclaw"
+        )
+
+        val openFolderIntent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(folderDocUri, DocumentsContract.Document.MIME_TYPE_DIR)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        val fallbackIntent = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
+
+        val opened = tryStartActivity(openFolderIntent) ||
+            tryStartActivity(fallbackIntent)
+
+        if (!opened) {
+            Toast.makeText(this, "未找到可用的文件管理器", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun tryStartActivity(intent: Intent): Boolean {
+        if (intent.resolveActivity(packageManager) == null) return false
+        return runCatching { startActivity(intent) }.isSuccess
     }
 }

@@ -26,6 +26,23 @@
     <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
 <!--    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />-->
 
+    <queries>
+        <!-- Allow AgentClaw to discover and launch installed apps by launcher name on Android 11+. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+
+        <!-- Tencent App Store (应用宝), used for app installation/download handoff. -->
+        <package android:name="com.tencent.android.qqdownloader" />
+
+        <!-- Allow resolving market links when handing installation to an app store. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="market" />
+        </intent>
+    </queries>
+
     <application
         android:name=".App"
         android:allowBackup="true"

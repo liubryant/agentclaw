@@ -27,7 +27,8 @@ class SidebarNavItemView @JvmOverloads constructor(
     init {
         orientation = HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
-        minimumHeight = 50.dp
+        // Keep the bottom nav compact; spacing between items should be tight.
+        minimumHeight = 36.dp
         isClickable = true
         isFocusable = true
         background = AppCompatResources.getDrawable(context, R.drawable.bg_sidebar_nav_item)

@@ -257,6 +257,8 @@
     <string name="chat_search_match_tool">Tool</string>
     <string name="ideas_title">Ideas</string>
     <string name="ideas_subtitle">Prompt starter cards you can carry directly into chat</string>
+
+    <string name="agentclaw_docs_title">claw docs</string>
     <string name="ideas_heading">Pick an idea, then refine it with chat</string>
     <string name="ideas_filter_all">All</string>
     <string name="ideas_filter_work">Work</string>
