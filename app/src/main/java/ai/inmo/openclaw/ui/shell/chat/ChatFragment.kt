@@ -1,7 +1,11 @@
 package ai.inmo.openclaw.ui.shell.chat
 
 import ai.inmo.core_common.utils.Logger
+import android.content.ContentValues
+import android.content.Context
 import android.os.Bundle
+import android.os.Build
+import android.os.Environment
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -33,13 +37,22 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import android.provider.DocumentsContract
+import android.provider.MediaStore
+import android.webkit.MimeTypeMap
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import android.os.SystemClock
 import ai.inmo.core_common.ui.dialog.CommonMessageDialog
 import ai.inmo.core_common.utils.coroutine.CoroutineUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.File
+import java.net.URLDecoder
+import java.util.Locale
 
 class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShellChatBinding::inflate) {
     private companion object {
@@ -59,6 +72,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
     private var lastTailMessageId: String? = null
     private var lastRenderedSessionId: String? = null
     private var activeRenderTrace: RenderTrace? = null
+    private val imageDownloadClient by lazy { OkHttpClient() }
 
     override fun initView(savedInstanceState: Bundle?) {
         chatViewModel.start()
@@ -277,6 +291,19 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         messageAdapter.onAssistantExportClick = { messageId ->
             chatViewModel.exportArtifactsByMessage(messageId)
         }
+        messageAdapter.onAssistantImageClick = { imageUrl ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                val saved = downloadGeneratedImageToDownloads(imageUrl)
+                Toast.makeText(
+                    requireContext(),
+                    if (saved) R.string.chat_image_downloaded else R.string.chat_image_download_failed,
+                    Toast.LENGTH_SHORT
+                ).show()
+                if (saved) {
+                    binding.shellChatRoot.postDelayed({ openInmoClawDirectory() }, 300L)
+                }
+            }
+        }
         messageAdapter.onUserNoticeClick = { messageId ->
             chatViewModel.retryMessage(messageId)
         }
@@ -389,6 +416,88 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
     private fun tryStartActivity(intent: Intent): Boolean {
         if (intent.resolveActivity(requireContext().packageManager) == null) return false
         return runCatching { startActivity(intent) }.isSuccess
+    }
+
+    private suspend fun downloadGeneratedImageToDownloads(imageUrl: String): Boolean {
+        val appContext = requireContext().applicationContext
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                val request = Request.Builder().url(imageUrl).build()
+                val response = imageDownloadClient.newCall(request).execute()
+                response.use {
+                    if (!it.isSuccessful) return@withContext false
+                    val bytes = it.body?.bytes() ?: return@withContext false
+                    val contentType = it.body?.contentType()?.toString().orEmpty()
+                    val fileName = buildGeneratedImageFileName(imageUrl, contentType)
+                    val mimeType = contentType.substringBefore(';').trim().ifBlank { guessMimeType(fileName) }
+                    writeImageToDownloads(appContext, fileName, bytes, mimeType)
+                    true
+                }
+            }.getOrElse { error ->
+                Logger.e(TAG, "downloadGeneratedImageToDownloads failed url=$imageUrl\n${error.stackTraceToString()}")
+                false
+            }
+        }
+    }
+
+    private fun writeImageToDownloads(
+        context: Context,
+        fileName: String,
+        bytes: ByteArray,
+        mimeType: String
+    ): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val relativePath = Environment.DIRECTORY_DOWNLOADS + "/InmoClaw/"
+            val values = ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+                put(MediaStore.Downloads.MIME_TYPE, mimeType)
+                put(MediaStore.Downloads.RELATIVE_PATH, relativePath)
+            }
+            val uri = context.contentResolver.insert(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                values
+            ) ?: error("Unable to create generated image in Downloads")
+            context.contentResolver.openOutputStream(uri, "wt")?.use { output ->
+                output.write(bytes)
+            } ?: error("Unable to write generated image")
+            uri.toString()
+        } else {
+            @Suppress("DEPRECATION")
+            val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val targetDir = File(downloadDir, "InmoClaw").apply { mkdirs() }
+            val targetFile = File(targetDir, fileName)
+            targetFile.writeBytes(bytes)
+            targetFile.absolutePath
+        }
+    }
+
+    private fun buildGeneratedImageFileName(imageUrl: String, contentType: String): String {
+        val pathName = runCatching {
+            URLDecoder.decode(Uri.parse(imageUrl).lastPathSegment.orEmpty(), "UTF-8")
+        }.getOrDefault("")
+            .substringBefore('?')
+            .replace(Regex("[\\\\/:*?\"<>|]"), "_")
+            .trim()
+
+        val baseName = pathName
+            .takeIf { it.isNotBlank() && it.contains('.') }
+            ?: "generated-image-${System.currentTimeMillis()}.${extensionFor(contentType)}"
+        return baseName
+    }
+
+    private fun extensionFor(contentType: String): String {
+        val normalized = contentType.substringBefore(';').trim().lowercase(Locale.US)
+        return when (normalized) {
+            "image/jpeg", "image/jpg" -> "jpg"
+            "image/webp" -> "webp"
+            "image/gif" -> "gif"
+            else -> "png"
+        }
+    }
+
+    private fun guessMimeType(fileName: String): String {
+        val ext = fileName.substringAfterLast('.', "").lowercase(Locale.US)
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "image/png"
     }
 
     private fun scrollMessagesToBottom() {

@@ -32,8 +32,9 @@ class ChatService(private val context: Context) {
         messages: List<ChatMessage>,
         model: String = "openclaw:main"
     ): Flow<String> = callbackFlow {
+        val requestModel = if (isImageGenerationRequest(messages)) "glm-image" else model
         val payload = JSONObject().apply {
-            put("model", model)
+            put("model", requestModel)
             put("stream", false)
             put(
                 "messages",
@@ -61,7 +62,7 @@ class ChatService(private val context: Context) {
 
         Logger.d(
             TAG,
-            "agentclaw REQ_CHAT_COMPLETIONS url=$url, model=$model, stream=false, messageCount=${messages.size}, tokenPresent=${!token.isNullOrBlank()}, payload=${payload.toString().take(500)}"
+            "agentclaw REQ_CHAT_COMPLETIONS url=$url, model=$requestModel, stream=false, imageRoute=${requestModel == "glm-image"}, messageCount=${messages.size}, tokenPresent=${!token.isNullOrBlank()}, payload=${payload.toString().take(500)}"
         )
 
         val call = NetworkModule.okHttpClient.newCall(request)
@@ -107,6 +108,71 @@ class ChatService(private val context: Context) {
     fun cancelGeneration() {
         activeCall?.cancel()
         activeCall = null
+    }
+
+    private fun isImageGenerationRequest(messages: List<ChatMessage>): Boolean {
+        val prompt = messages.lastOrNull { it.role.apiName == "user" }
+            ?.content
+            ?.trim()
+            .orEmpty()
+        if (prompt.isBlank()) return false
+        val lower = prompt.lowercase()
+        if (containsAny(
+                lower,
+                "不要画",
+                "别画",
+                "不用画",
+                "不需要画",
+                "不要生成图",
+                "别生成图"
+            )
+        ) {
+            return false
+        }
+        if (containsAny(
+                lower,
+                "生成图片",
+                "生成一张图",
+                "生成一张图片",
+                "生成图像",
+                "生成照片",
+                "图片生成",
+                "图像生成",
+                "帮我画",
+                "给我画",
+                "画一张",
+                "画一个",
+                "画一只",
+                "画个",
+                "画幅",
+                "画一幅",
+                "绘制",
+                "画出",
+                "设计一张",
+                "做一张海报",
+                "生成海报",
+                "生图",
+                "出图",
+                "作图",
+                "做图",
+                "做张图",
+                "create an image",
+                "generate an image",
+                "generate a picture",
+                "draw an image",
+                "draw me",
+                "image of "
+            )
+        ) {
+            return true
+        }
+        val compact = prompt.replace(Regex("\\s+"), "")
+        return Regex(".*(请|帮我|给我|帮|想要|来|用)?(画|绘制|画出|生成|生图|出图|做图|作图)[\\u4e00-\\u9fa5A-Za-z0-9_\\-]{1,80}.*")
+            .matches(compact)
+    }
+
+    private fun containsAny(text: String, vararg keywords: String): Boolean {
+        return keywords.any { keyword -> text.contains(keyword.lowercase()) }
     }
 
     private fun parseSse(source: BufferedSource, onChunk: (String) -> Unit) {

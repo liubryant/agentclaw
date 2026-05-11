@@ -12,7 +12,12 @@ import ai.inmo.core_common.ui.adapter.BaseListViewTypePlusAdapter
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Typeface
+import android.os.Handler
+import android.os.Looper
+import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +29,9 @@ import io.noties.markwon.Markwon
 import io.noties.markwon.core.MarkwonTheme
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tables.TablePlugin
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.util.concurrent.Executors
 
 class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBinding>(
     object : DiffUtil.ItemCallback<ChatMessageItem>() {
@@ -59,6 +67,7 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
     }
 ) {
     var onAssistantExportClick: ((messageId: String) -> Unit)? = null
+    var onAssistantImageClick: ((imageUrl: String) -> Unit)? = null
     var onUserNoticeClick: ((messageId: String) -> Unit)? = null
     private var contentWidthPx: Int = 0
     private var firstFrameRender: Boolean = false
@@ -222,11 +231,14 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         } else {
             binding.messageView.setTextIsSelectable(true)
             val markdownStart = System.currentTimeMillis()
-            getMarkwon(binding.root.context).setMarkdown(binding.messageView, item.content)
+            val imageUrl = extractFirstImageUrl(item.content)
+            val displayContent = stripImageMarkdown(item.content)
+            getMarkwon(binding.root.context).setMarkdown(binding.messageView, displayContent)
+            bindGeneratedImage(binding, imageUrl)
             val markdownCost = System.currentTimeMillis() - markdownStart
             binding.streamingView.visibility = View.GONE
             binding.messageView.visibility =
-                if (item.content.isBlank()) View.GONE else View.VISIBLE
+                if (displayContent.isBlank()) View.GONE else View.VISIBLE
             renderStats = renderStats.copy(
                 markdownCount = renderStats.markdownCount + 1,
                 markdownTotalMs = renderStats.markdownTotalMs + markdownCost
@@ -322,10 +334,56 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         binding: ItemChatMessageAssistantBinding,
         item: ChatMessageItem.AssistantMessageItem
     ) {
+        val imageUrl = extractFirstImageUrl(item.content)
+        val displayContent = stripImageMarkdown(item.content)
         binding.messageView.setTextIsSelectable(false)
-        binding.messageView.text = if (item.content.isBlank()) "..." else item.content
-        binding.messageView.visibility = View.VISIBLE
+        binding.messageView.text = if (displayContent.isBlank() && imageUrl == null) "..." else displayContent
+        binding.messageView.visibility =
+            if (displayContent.isBlank() && imageUrl != null) View.GONE else View.VISIBLE
+        bindGeneratedImage(binding, imageUrl)
         binding.streamingView.visibility = if (item.isStreaming) View.VISIBLE else View.GONE
+    }
+
+    private fun bindGeneratedImage(
+        binding: ItemChatMessageAssistantBinding,
+        imageUrl: String?
+    ) {
+        val imageView = binding.generatedImageView
+        val statusView = binding.generatedImageStatusView
+        imageView.setImageDrawable(null)
+        imageView.tag = imageUrl
+        imageView.setOnClickListener(null)
+
+        if (imageUrl.isNullOrBlank()) {
+            imageView.visibility = View.GONE
+            statusView.visibility = View.GONE
+            return
+        }
+
+        imageView.visibility = View.VISIBLE
+        statusView.visibility = View.VISIBLE
+        statusView.setText(R.string.chat_image_loading)
+        imageView.setOnClickListener {
+            onAssistantImageClick?.invoke(imageUrl)
+        }
+
+        loadImage(
+            context = binding.root.context,
+            url = imageUrl,
+            onSuccess = { bitmap ->
+                if (imageView.tag == imageUrl) {
+                    imageView.setImageBitmap(bitmap)
+                    statusView.visibility = View.GONE
+                }
+            },
+            onFailure = {
+                if (imageView.tag == imageUrl) {
+                    imageView.setImageDrawable(null)
+                    statusView.visibility = View.VISIBLE
+                    statusView.setText(R.string.chat_image_load_failed)
+                }
+            }
+        )
     }
 
     private fun showAssistantActions(
@@ -358,6 +416,75 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
 
         @Volatile
         private var markwonInstance: Markwon? = null
+        private val imageRegex = Regex("""!\[[^\]]*]\((https?://[^)\s]+)\)""")
+        private val urlRegex = Regex("""https?://\S+""")
+        private val mainHandler = Handler(Looper.getMainLooper())
+        private val imageExecutor = Executors.newFixedThreadPool(3)
+        private val imageClient = OkHttpClient()
+        private val bitmapCache = object : LruCache<String, Bitmap>(32 * 1024) {
+            override fun sizeOf(key: String, value: Bitmap): Int {
+                return value.byteCount / 1024
+            }
+        }
+
+        private fun extractFirstImageUrl(content: String): String? {
+            imageRegex.find(content)?.groupValues?.getOrNull(1)?.let { return it.trim() }
+            return urlRegex.findAll(content)
+                .map { it.value.trim().trimEnd('.', ',', ';', ')') }
+                .firstOrNull { url ->
+                    val lower = url.lowercase()
+                    lower.endsWith(".png") ||
+                        lower.endsWith(".jpg") ||
+                        lower.endsWith(".jpeg") ||
+                        lower.endsWith(".webp") ||
+                        lower.contains("ufileos.com/")
+                }
+        }
+
+        private fun stripImageMarkdown(content: String): String {
+            return content
+                .replace(imageRegex, "")
+                .lineSequence()
+                .filterNot { line ->
+                    val trimmed = line.trim()
+                    trimmed.startsWith("图片链接") ||
+                        trimmed.startsWith("Image link") ||
+                        trimmed.matches(urlRegex)
+                }
+                .joinToString("\n")
+                .replace(Regex("\n{3,}"), "\n\n")
+                .trim()
+        }
+
+        private fun loadImage(
+            context: Context,
+            url: String,
+            onSuccess: (Bitmap) -> Unit,
+            onFailure: () -> Unit
+        ) {
+            bitmapCache.get(url)?.let { bitmap ->
+                onSuccess(bitmap)
+                return
+            }
+
+            imageExecutor.execute {
+                val bitmap = runCatching {
+                    val request = Request.Builder().url(url).build()
+                    imageClient.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) return@runCatching null
+                        val bytes = response.body?.bytes() ?: return@runCatching null
+                        BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                    }
+                }.getOrNull()
+
+                if (bitmap != null) {
+                    bitmapCache.put(url, bitmap)
+                    mainHandler.post { onSuccess(bitmap) }
+                } else {
+                    mainHandler.post { onFailure() }
+                }
+            }
+        }
 
         private fun getMarkwon(context: Context): Markwon {
             return markwonInstance ?: synchronized(this) {

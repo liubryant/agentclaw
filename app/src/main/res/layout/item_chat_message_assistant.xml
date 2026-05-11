@@ -44,6 +44,29 @@
                 android:textIsSelectable="false"
                 android:textSize="12sp" />
 
+            <ImageView
+                android:id="@+id/generatedImageView"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:adjustViewBounds="true"
+                android:background="#0F000000"
+                android:contentDescription="@string/chat_generated_image"
+                android:maxHeight="360dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/generatedImageStatusView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/chat_image_loading"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/streamingView"
                 android:layout_width="wrap_content"

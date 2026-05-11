@@ -168,7 +168,7 @@ data class AiProvider(
             description = "clawbootdo OpenAI-compatible chat service",
             iconResName = "ic_hub",
             color = 0xFF4F46E5.toInt(),
-            baseUrl = "http://39.108.144.196:8066/v1",
+            baseUrl = "http://192.168.1.17:8066/v1",
             defaultModels = listOf("glm-5.1", "glm-4.7"),
             apiKeyHint = "gateway token (optional)",
             apiType = "openai-completions"

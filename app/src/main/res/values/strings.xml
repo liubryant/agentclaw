@@ -183,6 +183,11 @@
     <string name="chat_action_export_generated_files">Export generated files</string>
     <string name="chat_export_session_files">Export session files</string>
     <string name="chat_click_to_download_file">Click to download file</string>
+    <string name="chat_generated_image">Generated image</string>
+    <string name="chat_image_loading">Loading image...</string>
+    <string name="chat_image_load_failed">Image failed to load</string>
+    <string name="chat_image_downloaded">Image saved to Downloads/InmoClaw</string>
+    <string name="chat_image_download_failed">Failed to save image</string>
     <string name="chat_export_no_new_files">No new files available to export</string>
     <string name="chat_export_success_to_downloads">Exported %1$d file(s) to Downloads/InmoClaw</string>
     <string name="chat_export_result_partial">Export finished: %1$d succeeded, %2$d failed</string>
