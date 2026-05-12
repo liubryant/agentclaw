@@ -61,6 +61,24 @@ class ShellSharedViewModel : BaseViewModel() {
         }
     }
 
+    fun bindSessionEntryMode(sessionId: String, entryMode: ChatEntryMode) {
+        _uiState.update { state ->
+            val trimmedSessionId = sessionId.trim()
+            if (trimmedSessionId.isBlank()) {
+                return@update state
+            }
+            state.copy(chatEntryModes = state.chatEntryModes + (trimmedSessionId to entryMode))
+        }
+    }
+
+    fun launchImageChat() {
+        navigateToChatInNewSession(draft = "", entryMode = ChatEntryMode.IMAGE)
+    }
+
+    fun launchVideoChat() {
+        navigateToChatInNewSession(draft = "", entryMode = ChatEntryMode.VIDEO)
+    }
+
     fun launchIdeaIntoChat(promptTemplate: String, sourceId: String) {
         navigateToChatInNewSession(promptTemplate, ideaId = sourceId)
     }
@@ -110,6 +128,16 @@ class ShellSharedViewModel : BaseViewModel() {
         }
     }
 
+    fun removeSessionEntryMode(sessionId: String) {
+        _uiState.update { state ->
+            val trimmedSessionId = sessionId.trim()
+            if (trimmedSessionId.isBlank() || !state.chatEntryModes.containsKey(trimmedSessionId)) {
+                return@update state
+            }
+            state.copy(chatEntryModes = state.chatEntryModes - trimmedSessionId)
+        }
+    }
+
     fun loadTokenUsage() {
         launchIo {
             Logger.d("token-usage api disabled temporarily, skip /im/bot/token-usage request")
@@ -135,7 +163,8 @@ class ShellSharedViewModel : BaseViewModel() {
     private fun navigateToChatInNewSession(
         draft: String,
         ideaId: String? = null,
-        taskId: String? = null
+        taskId: String? = null,
+        entryMode: ChatEntryMode = ChatEntryMode.DEFAULT
     ) {
         _uiState.update {
             it.copy(
@@ -147,7 +176,8 @@ class ShellSharedViewModel : BaseViewModel() {
         _events.tryEmit(
             ShellEvent.OpenChatInNewSession(
                 draft = draft,
-                sourceId = ideaId ?: taskId.orEmpty()
+                sourceId = ideaId ?: taskId.orEmpty(),
+                entryMode = entryMode
             )
         )
     }

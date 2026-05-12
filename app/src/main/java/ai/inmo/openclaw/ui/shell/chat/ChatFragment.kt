@@ -25,6 +25,7 @@ import ai.inmo.openclaw.ui.chat.ChatMessageItem
 import ai.inmo.openclaw.ui.chat.ChatMessageAdapter
 import ai.inmo.openclaw.ui.chat.ChatScreenState
 import ai.inmo.openclaw.ui.common.BaseBindingFragment
+import ai.inmo.openclaw.ui.shell.ChatEntryMode
 import ai.inmo.openclaw.ui.shell.ShellChatViewModel
 import ai.inmo.openclaw.ui.shell.ShellChromeController
 import ai.inmo.openclaw.ui.shell.ShellEvent
@@ -215,10 +216,16 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         viewLifecycleOwner.lifecycleScope.launch {
             combine(
                 chatViewModel.state.map { it.selectedSessionId }.distinctUntilChanged(),
-                shellViewModel.uiState.map { it.chatDrafts }.distinctUntilChanged()
-            ) { selectedSessionId, chatDrafts ->
-                chatDrafts[selectedSessionId].orEmpty()
-            }.collectLatest { draft ->
+                shellViewModel.uiState.map { state ->
+                    state.chatDrafts to state.chatEntryModes
+                }.distinctUntilChanged()
+            ) { selectedSessionId, shellState ->
+                Pair(
+                    shellState.first[selectedSessionId].orEmpty(),
+                    shellState.second[selectedSessionId] ?: ChatEntryMode.DEFAULT
+                )
+            }.collectLatest { (draft, entryMode) ->
+                updateComposerHint(entryMode)
                 if (!suppressDraftSync && binding.composerInput.text?.toString() != draft) {
                     binding.composerInput.setText(draft)
                     binding.composerInput.setSelection(binding.composerInput.text?.length ?: 0)
@@ -240,7 +247,9 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
                         binding.composerInput.requestFocus()
                     }
 
-                    is ShellEvent.OpenChatInNewSession -> openDraftInNewSession(event.draft)
+                    is ShellEvent.OpenChatInNewSession -> {
+                        openDraftInNewSession(draft = event.draft, entryMode = event.entryMode)
+                    }
                     is ShellEvent.OpenChatInNewSessionWithPresetConversation -> {
                         openPresetConversationInNewSession(event.conversation)
                     }
@@ -318,6 +327,8 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             }
             refreshComposerActionButton()
         }
+        binding.imageChatEntryButton.setOnClickListener { shellViewModel.launchImageChat() }
+        binding.videoChatEntryButton.setOnClickListener { shellViewModel.launchVideoChat() }
     }
 
     override fun onPause() {
@@ -347,11 +358,17 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         ViewCompat.requestApplyInsets(root)
     }
 
-    private fun openDraftInNewSession(draft: String) {
+    private fun openDraftInNewSession(
+        draft: String,
+        entryMode: ChatEntryMode = ChatEntryMode.DEFAULT
+    ) {
         val proceed: (Boolean) -> Unit = { abortCurrent ->
             viewLifecycleOwner.lifecycleScope.launch {
-                chatViewModel.createPersistentSession(abortCurrent = abortCurrent)
-                chatViewModel.sendMessage(draft)
+                val sessionId = chatViewModel.createPersistentSession(abortCurrent = abortCurrent)
+                shellViewModel.bindSessionEntryMode(sessionId, entryMode)
+                if (draft.isNotBlank()) {
+                    chatViewModel.sendMessage(draft)
+                }
             }
         }
 
@@ -603,6 +620,14 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             android.view.View.VISIBLE
         } else {
             android.view.View.GONE
+        }
+    }
+
+    private fun updateComposerHint(entryMode: ChatEntryMode) {
+        binding.composerInput.hint = when (entryMode) {
+            ChatEntryMode.IMAGE -> getString(R.string.chat_shell_input_hint_image)
+            ChatEntryMode.VIDEO -> getString(R.string.chat_shell_input_hint_video)
+            ChatEntryMode.DEFAULT -> getString(R.string.chat_shell_input_hint)
         }
     }
 

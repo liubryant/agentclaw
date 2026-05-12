@@ -357,4 +357,8 @@
     <string name="ssh_copied">SSH 命令已複製。</string>
     <string name="ssh_command_template">ssh root@%1$s -p %2$d</string>
     <string name="ssh_command_placeholder">ssh root@&lt;device-ip&gt; -p %1$d</string>
+    <string name="chat_shell_input_hint_image">輸入描述你想要的圖片</string>
+    <string name="chat_shell_input_hint_video">輸入描述你想要的影片</string>
+    <string name="chat_entry_image">AI圖文</string>
+    <string name="chat_entry_video">AI視頻</string>
 </resources>

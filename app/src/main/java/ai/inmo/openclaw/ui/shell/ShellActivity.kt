@@ -253,6 +253,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             negativeText = getString(R.string.shell_delete_confirm_negative),
             onPositive = {
                 shellViewModel.removeSessionDraft(session.id)
+                shellViewModel.removeSessionEntryMode(session.id)
                 chatViewModel.deleteSession(session.id)
             }
         ).show()

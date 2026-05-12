@@ -178,6 +178,10 @@
     <string name="chat_empty_subtitle">Your all-day AI assistant, available 24/7</string>
     <string name="chat_disclaimer_cn">AI-generated content is for reference only</string>
     <string name="chat_shell_input_hint">Describe a task or ask any question</string>
+    <string name="chat_shell_input_hint_image">Describe the image you want to create</string>
+    <string name="chat_shell_input_hint_video">Describe the video you want to create</string>
+    <string name="chat_entry_image">AI Image</string>
+    <string name="chat_entry_video">AI Video</string>
     <string name="chat_usage_hint">Used %1$s, %2$s%% remaining</string>
     <string name="chat_action_copy">Copy content</string>
     <string name="chat_action_export_generated_files">Export generated files</string>
