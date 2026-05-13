@@ -16,6 +16,7 @@ import ai.inmo.openclaw.domain.model.SyncedMessage
 import ai.inmo.openclaw.domain.model.SyncedSession
 import ai.inmo.openclaw.domain.model.TimelineEntry
 import ai.inmo.openclaw.domain.model.ToolCallUiModel
+import ai.inmo.openclaw.ui.shell.ChatEntryMode
 import android.content.Context
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -48,6 +49,37 @@ class SyncedChatWsManager(
     private val preferencesManager: PreferencesManager,
     cacheRepository: SyncedChatCacheRepository? = null
 ) {
+    companion object {
+        private const val TAG = "SyncedChatWsManager"
+        private const val TRACE_TAG = "ShellChatTrace"
+        const val DEFAULT_SESSION_KEY = "agent:main:main"
+        private const val NEW_CHAT_TITLE = "新对话"
+        private const val KIND_LOCAL_PENDING_PERSISTENT = "local_pending_persistent"
+        private const val INITIAL_HISTORY_LIMIT = 50
+        private const val PAGE_SIZE = 50
+        private const val RATE_LIMIT_FALLBACK_TEXT = "提问过于频繁，请稍后再试～"
+        private const val IMAGE_MODE_MARKER = "[[OPENCLAW_IMAGE_MODE]]"
+        private const val VIDEO_MODE_MARKER = "[[OPENCLAW_VIDEO_MODE]]"
+
+        internal fun resolveToolIcon(name: String): Int {
+            return when (name.trim()) {
+                "write" -> R.drawable.ic_tool_write
+                "edit" -> R.drawable.ic_tool_edit
+                "read" -> R.drawable.ic_tool_read
+                "memory_get" -> R.drawable.ic_tool_memory_get
+                "sessions_list" -> R.drawable.ic_tool_sessions_list
+                "sessions_history" -> R.drawable.ic_tool_sessions_history
+                "agents_list" -> R.drawable.ic_tool_agents_list
+                "browser", "web_fetch" -> R.drawable.ic_tool_browse
+                "web_search" -> R.drawable.ic_tool_web_search
+                "image" -> R.drawable.ic_tool_image
+                "pdf" -> R.drawable.ic_tool_pdf
+                "memory_search" -> R.drawable.ic_tool_memory_search
+                else -> R.drawable.ic_tool_exe
+            }
+        }
+    }
+
     private enum class SessionCreateMode {
         DRAFT,
         PERSISTENT_PENDING
@@ -56,6 +88,7 @@ class SyncedChatWsManager(
     private val appContext = context.applicationContext
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val pendingRequests = ConcurrentHashMap<String, CompletableDeferred<NodeFrame>>()
+    private val sessionEntryModes = ConcurrentHashMap<String, ChatEntryMode>()
     private val draftSessionKeys = linkedSetOf<String>()
     private val cacheRepo = cacheRepository ?: run {
         val database = AppDatabase.getInstance(appContext)
@@ -265,6 +298,18 @@ class SyncedChatWsManager(
         )
     }
 
+    fun bindSessionEntryMode(sessionId: String, entryMode: ChatEntryMode) {
+        val trimmedSessionId = sessionId.trim()
+        if (trimmedSessionId.isBlank()) return
+        sessionEntryModes[trimmedSessionId] = entryMode
+    }
+
+    fun removeSessionEntryMode(sessionId: String) {
+        val trimmedSessionId = sessionId.trim()
+        if (trimmedSessionId.isBlank()) return
+        sessionEntryModes.remove(trimmedSessionId)
+    }
+
     suspend fun retryMessage(messageId: String) {
         if (_isGenerating.value) return
         val sessionKey = _currentSessionKey.value ?: return
@@ -323,12 +368,17 @@ class SyncedChatWsManager(
             clearTransientRunState()
             currentRunId = transportRunId
             draftSessionKeys.remove(sessionKey)
+            val outboundMessage = when (sessionEntryModes[sessionKey] ?: ChatEntryMode.DEFAULT) {
+                ChatEntryMode.IMAGE -> "$IMAGE_MODE_MARKER ${text.trim()}"
+                ChatEntryMode.VIDEO -> "$VIDEO_MODE_MARKER ${text.trim()}"
+                else -> text.trim()
+            }
             val response = sendRequest(
                 NodeFrame.request(
                     "chat.send",
                     mapOf(
                         "sessionKey" to sessionKey,
-                        "message" to text.trim(),
+                        "message" to outboundMessage,
                         "idempotencyKey" to transportRunId
                     )
                 ),
@@ -1657,6 +1707,8 @@ class SyncedChatWsManager(
                 val map = block as? Map<String, Any?>
                 when {
                     map?.get("type") == "text" -> map["text"] as? String
+                    map?.get("type")?.toString()?.trim()?.lowercase() in setOf("image", "image_url", "video", "video_url") ->
+                        map?.let { extractMediaUrlFromBlock(it) }
                     block is String -> block
                     else -> null
                 }
@@ -1665,12 +1717,52 @@ class SyncedChatWsManager(
             is JSONArray -> buildList {
                 for (i in 0 until content.length()) {
                     val item = content.optJSONObject(i)
-                    if (item?.optString("type") == "text") add(item.optString("text"))
+                    when (item?.optString("type")?.trim()?.lowercase()) {
+                        "text" -> add(item.optString("text"))
+                        "image", "image_url", "video", "video_url" -> {
+                            extractMediaUrlFromJson(item)?.let(::add)
+                        }
+                    }
                 }
             }.joinToString("\n")
 
             else -> content?.toString().orEmpty()
         }
+    }
+
+    private fun extractMediaUrlFromBlock(block: Map<String, Any?>): String? {
+        val nestedImage = block["image_url"]
+        val nestedVideo = block["video_url"]
+        val directUrl = block["url"] ?: block["src"] ?: block["uri"]
+        return when {
+            nestedImage is Map<*, *> -> nestedImage["url"]?.toString()
+            nestedVideo is Map<*, *> -> nestedVideo["url"]?.toString()
+            else -> directUrl?.toString()
+        }?.let { normalizeMediaUrl(it) }
+    }
+
+    private fun extractMediaUrlFromJson(item: JSONObject): String? {
+        val nestedImage = item.optJSONObject("image_url")?.optString("url")
+        val nestedVideo = item.optJSONObject("video_url")?.optString("url")
+        val directUrl = item.optString("url")
+            .ifBlank { item.optString("src") }
+            .ifBlank { item.optString("uri") }
+        return sequenceOf(nestedImage, nestedVideo, directUrl)
+            .firstOrNull { !it.isNullOrBlank() }
+            ?.let { normalizeMediaUrl(it) }
+    }
+
+    private fun normalizeMediaUrl(url: String): String {
+        var trimmed = url.trim()
+        while (trimmed.isNotEmpty()) {
+            val last = trimmed.last()
+            if (last == '.' || last == ',' || last == ';' || last == ')' || last == ']' || last == '>') {
+                trimmed = trimmed.dropLast(1)
+            } else {
+                break
+            }
+        }
+        return trimmed
     }
 
     private fun extractToolCalls(content: Any?): List<ToolCallUiModel> {
@@ -1933,31 +2025,4 @@ class SyncedChatWsManager(
 
     private fun String.stableHash(): String = hashCode().toUInt().toString(16)
 
-    companion object {
-        private const val TAG = "SyncedChatWsManager"
-        private const val TRACE_TAG = "ShellChatTrace"
-        const val DEFAULT_SESSION_KEY = "agent:main:main"
-        private const val NEW_CHAT_TITLE = "新对话"
-        private const val KIND_LOCAL_PENDING_PERSISTENT = "local_pending_persistent"
-        private const val INITIAL_HISTORY_LIMIT = 50
-        private const val PAGE_SIZE = 50
-        private const val RATE_LIMIT_FALLBACK_TEXT = "提问过于频繁，请稍后再试～"
-        internal fun resolveToolIcon(name: String): Int {
-            return when (name.trim()) {
-                "write" -> R.drawable.ic_tool_write
-                "edit" -> R.drawable.ic_tool_edit
-                "read" -> R.drawable.ic_tool_read
-                "memory_get" -> R.drawable.ic_tool_memory_get
-                "sessions_list" -> R.drawable.ic_tool_sessions_list
-                "sessions_history" -> R.drawable.ic_tool_sessions_history
-                "agents_list" -> R.drawable.ic_tool_agents_list
-                "browser", "web_fetch" -> R.drawable.ic_tool_browse
-                "web_search" -> R.drawable.ic_tool_web_search
-                "image" -> R.drawable.ic_tool_image
-                "pdf" -> R.drawable.ic_tool_pdf
-                "memory_search" -> R.drawable.ic_tool_memory_search
-                else -> R.drawable.ic_tool_exe
-            }
-        }
-    }
 }

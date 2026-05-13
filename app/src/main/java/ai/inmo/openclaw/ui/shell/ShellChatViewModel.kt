@@ -102,7 +102,10 @@ class ShellChatViewModel : BaseViewModel() {
             }
         }
 
-        messageItemsBySession[sessionKey] = CachedMessageItems(messages = messages, items = optimized)
+        messageItemsBySession[sessionKey] = CachedMessageItems(
+            messages = messages,
+            items = optimized
+        )
         while (messageItemsBySession.size > MAX_CACHED_SESSIONS) {
             val oldestKey = messageItemsBySession.entries.firstOrNull()?.key ?: break
             messageItemsBySession.remove(oldestKey)
@@ -125,6 +128,20 @@ class ShellChatViewModel : BaseViewModel() {
             lineSpacingExtraPx = assistantLineSpacingPx
         )
         return optimized
+    }
+
+    fun bindSessionEntryMode(sessionId: String, entryMode: ChatEntryMode) {
+        val trimmedSessionId = sessionId.trim()
+        if (trimmedSessionId.isBlank()) return
+        manager.bindSessionEntryMode(trimmedSessionId, entryMode)
+        messageItemsBySession.remove(trimmedSessionId)
+    }
+
+    fun removeSessionEntryMode(sessionId: String) {
+        val trimmedSessionId = sessionId.trim()
+        if (trimmedSessionId.isBlank()) return
+        manager.removeSessionEntryMode(trimmedSessionId)
+        messageItemsBySession.remove(trimmedSessionId)
     }
 
     private fun appendTransientItems(
@@ -156,15 +173,16 @@ class ShellChatViewModel : BaseViewModel() {
         chain: StreamingToolChain,
         createdAt: Long
     ): List<ChatMessageItem> {
-        if (!chain.isActive && chain.pendingText.isNullOrBlank()) {
+        val pendingText = chain.pendingText.orEmpty()
+        if (!chain.isActive && pendingText.isBlank()) {
             return emptyList()
         }
 
         return buildList {
             if (chain.isActive && chain.entries.isNotEmpty()) {
                 val streamEntries = chain.entries.toMutableList()
-                if (!chain.pendingText.isNullOrBlank()) {
-                    streamEntries.add(TimelineEntry.Text(chain.pendingText))
+                if (pendingText.isNotBlank()) {
+                    streamEntries.add(TimelineEntry.Text(pendingText))
                 }
                 streamEntries.forEachIndexed { index, entry ->
                     val isFirst = index == 0
@@ -194,11 +212,11 @@ class ShellChatViewModel : BaseViewModel() {
                         )
                     }
                 }
-            } else if (!chain.isActive && !chain.pendingText.isNullOrBlank()) {
+            } else if (!chain.isActive && pendingText.isNotBlank()) {
                 add(
                     ChatMessageItem.AssistantMessageItem(
                         id = TRANSIENT_ASSISTANT_ID,
-                        content = chain.pendingText,
+                        content = pendingText,
                         createdAt = createdAt,
                         isStreaming = true
                     )
@@ -339,6 +357,7 @@ class ShellChatViewModel : BaseViewModel() {
             manager.deleteSession(sessionId)
             _sessionHasExportArtifacts.emit(_sessionHasExportArtifacts.value - sessionId)
             _sessionKeepExportButtonVisible.emit(_sessionKeepExportButtonVisible.value - sessionId)
+            messageItemsBySession.remove(sessionId)
         }
     }
 

@@ -1,4 +1,4 @@
-package ai.inmo.openclaw.ui.shell.chat
+﻿package ai.inmo.openclaw.ui.shell.chat
 
 import ai.inmo.core_common.utils.Logger
 import android.content.ContentValues
@@ -313,6 +313,19 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
                 }
             }
         }
+        messageAdapter.onAssistantVideoClick = { videoUrl ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                val saved = downloadGeneratedVideoToDownloads(videoUrl)
+                Toast.makeText(
+                    requireContext(),
+                    if (saved) R.string.chat_video_downloaded else R.string.chat_video_download_failed,
+                    Toast.LENGTH_SHORT
+                ).show()
+                if (saved) {
+                    binding.shellChatRoot.postDelayed({ openInmoClawDirectory() }, 300L)
+                }
+            }
+        }
         messageAdapter.onUserNoticeClick = { messageId ->
             chatViewModel.retryMessage(messageId)
         }
@@ -366,6 +379,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             viewLifecycleOwner.lifecycleScope.launch {
                 val sessionId = chatViewModel.createPersistentSession(abortCurrent = abortCurrent)
                 shellViewModel.bindSessionEntryMode(sessionId, entryMode)
+                chatViewModel.bindSessionEntryMode(sessionId, entryMode)
                 if (draft.isNotBlank()) {
                     chatViewModel.sendMessage(draft)
                 }
@@ -426,7 +440,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             tryStartActivity(fallbackIntent)
 
         if (!opened) {
-            Toast.makeText(requireContext(), "未找到可用的文件管理器", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "No file manager available", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -436,28 +450,54 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
     }
 
     private suspend fun downloadGeneratedImageToDownloads(imageUrl: String): Boolean {
+        return downloadGeneratedFileToDownloads(
+            fileUrl = imageUrl,
+            defaultPrefix = "generated-image",
+            fallbackMimeType = "image/png"
+        )
+    }
+
+    private suspend fun downloadGeneratedVideoToDownloads(videoUrl: String): Boolean {
+        return downloadGeneratedFileToDownloads(
+            fileUrl = videoUrl,
+            defaultPrefix = "generated-video",
+            fallbackMimeType = "video/mp4"
+        )
+    }
+
+    private suspend fun downloadGeneratedFileToDownloads(
+        fileUrl: String,
+        defaultPrefix: String,
+        fallbackMimeType: String
+    ): Boolean {
         val appContext = requireContext().applicationContext
         return withContext(Dispatchers.IO) {
             runCatching {
-                val request = Request.Builder().url(imageUrl).build()
+                val request = Request.Builder().url(fileUrl).build()
                 val response = imageDownloadClient.newCall(request).execute()
                 response.use {
                     if (!it.isSuccessful) return@withContext false
                     val bytes = it.body?.bytes() ?: return@withContext false
                     val contentType = it.body?.contentType()?.toString().orEmpty()
-                    val fileName = buildGeneratedImageFileName(imageUrl, contentType)
-                    val mimeType = contentType.substringBefore(';').trim().ifBlank { guessMimeType(fileName) }
-                    writeImageToDownloads(appContext, fileName, bytes, mimeType)
+                    val fileName = buildGeneratedFileName(
+                        fileUrl = fileUrl,
+                        contentType = contentType.ifBlank { fallbackMimeType },
+                        defaultPrefix = defaultPrefix
+                    )
+                    val mimeType = contentType.substringBefore(';').trim()
+                        .ifBlank { guessMimeType(fileName) }
+                        .ifBlank { fallbackMimeType }
+                    writeFileToDownloads(appContext, fileName, bytes, mimeType)
                     true
                 }
             }.getOrElse { error ->
-                Logger.e(TAG, "downloadGeneratedImageToDownloads failed url=$imageUrl\n${error.stackTraceToString()}")
+                Logger.e(TAG, "downloadGeneratedFileToDownloads failed url=$fileUrl\n${error.stackTraceToString()}")
                 false
             }
         }
     }
 
-    private fun writeImageToDownloads(
+    private fun writeFileToDownloads(
         context: Context,
         fileName: String,
         bytes: ByteArray,
@@ -473,10 +513,10 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             val uri = context.contentResolver.insert(
                 MediaStore.Downloads.EXTERNAL_CONTENT_URI,
                 values
-            ) ?: error("Unable to create generated image in Downloads")
-            context.contentResolver.openOutputStream(uri, "wt")?.use { output ->
+            ) ?: error("Unable to create generated file in Downloads")
+            context.contentResolver.openOutputStream(uri, "w")?.use { output ->
                 output.write(bytes)
-            } ?: error("Unable to write generated image")
+            } ?: error("Unable to write generated file")
             uri.toString()
         } else {
             @Suppress("DEPRECATION")
@@ -488,9 +528,13 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         }
     }
 
-    private fun buildGeneratedImageFileName(imageUrl: String, contentType: String): String {
+    private fun buildGeneratedFileName(
+        fileUrl: String,
+        contentType: String,
+        defaultPrefix: String
+    ): String {
         val pathName = runCatching {
-            URLDecoder.decode(Uri.parse(imageUrl).lastPathSegment.orEmpty(), "UTF-8")
+            URLDecoder.decode(Uri.parse(fileUrl).lastPathSegment.orEmpty(), "UTF-8")
         }.getOrDefault("")
             .substringBefore('?')
             .replace(Regex("[\\\\/:*?\"<>|]"), "_")
@@ -498,7 +542,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
 
         val baseName = pathName
             .takeIf { it.isNotBlank() && it.contains('.') }
-            ?: "generated-image-${System.currentTimeMillis()}.${extensionFor(contentType)}"
+            ?: "$defaultPrefix-${System.currentTimeMillis()}.${extensionFor(contentType)}"
         return baseName
     }
 
@@ -508,6 +552,11 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             "image/jpeg", "image/jpg" -> "jpg"
             "image/webp" -> "webp"
             "image/gif" -> "gif"
+            "video/mp4" -> "mp4"
+            "video/quicktime" -> "mov"
+            "video/x-m4v" -> "m4v"
+            "video/webm" -> "webm"
+            "application/vnd.apple.mpegurl", "application/x-mpegurl" -> "m3u8"
             else -> "png"
         }
     }

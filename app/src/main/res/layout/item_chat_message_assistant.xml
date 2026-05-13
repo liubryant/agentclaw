@@ -67,6 +67,25 @@
                 android:textSize="12sp"
                 android:visibility="gone" />
 
+            <VideoView
+                android:id="@+id/generatedVideoView"
+                android:layout_width="240dp"
+                android:layout_height="320dp"
+                android:layout_marginTop="10dp"
+                android:background="#0F000000"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/generatedVideoStatusView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/chat_video_loading"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/streamingView"
                 android:layout_width="wrap_content"

@@ -363,4 +363,8 @@
     <string name="chat_shell_input_hint_video">输入描述你想要的视频</string>
     <string name="chat_entry_image">AI图文</string>
     <string name="chat_entry_video">AI视频</string>
+    <string name="chat_video_loading">视频加载中...</string>
+    <string name="chat_video_load_failed">视频加载失败</string>
+    <string name="chat_video_downloaded">视频下载到 Downloads/InmoClaw</string>
+    <string name="chat_video_download_failed">视频下载失败</string>
 </resources>

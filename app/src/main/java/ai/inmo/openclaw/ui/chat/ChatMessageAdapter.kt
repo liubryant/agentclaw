@@ -15,6 +15,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Typeface
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.util.LruCache
@@ -22,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.VideoView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding
 import io.noties.markwon.AbstractMarkwonPlugin
@@ -68,6 +71,7 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
 ) {
     var onAssistantExportClick: ((messageId: String) -> Unit)? = null
     var onAssistantImageClick: ((imageUrl: String) -> Unit)? = null
+    var onAssistantVideoClick: ((videoUrl: String) -> Unit)? = null
     var onUserNoticeClick: ((messageId: String) -> Unit)? = null
     private var contentWidthPx: Int = 0
     private var firstFrameRender: Boolean = false
@@ -231,10 +235,12 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         } else {
             binding.messageView.setTextIsSelectable(true)
             val markdownStart = System.currentTimeMillis()
-            val imageUrl = extractFirstImageUrl(item.content)
-            val displayContent = stripImageMarkdown(item.content)
+            val imageUrl = ChatMediaUtils.extractFirstImageUrl(item.content)
+            val videoUrl = ChatMediaUtils.extractFirstVideoUrl(item.content)
+            val displayContent = ChatMediaUtils.stripMedia(item.content)
             getMarkwon(binding.root.context).setMarkdown(binding.messageView, displayContent)
             bindGeneratedImage(binding, imageUrl)
+            bindGeneratedVideo(binding, videoUrl)
             val markdownCost = System.currentTimeMillis() - markdownStart
             binding.streamingView.visibility = View.GONE
             binding.messageView.visibility =
@@ -334,13 +340,16 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         binding: ItemChatMessageAssistantBinding,
         item: ChatMessageItem.AssistantMessageItem
     ) {
-        val imageUrl = extractFirstImageUrl(item.content)
-        val displayContent = stripImageMarkdown(item.content)
+        val imageUrl = ChatMediaUtils.extractFirstImageUrl(item.content)
+        val videoUrl = ChatMediaUtils.extractFirstVideoUrl(item.content)
+        val displayContent = ChatMediaUtils.stripMedia(item.content)
+        val hasMedia = imageUrl != null || videoUrl != null
         binding.messageView.setTextIsSelectable(false)
-        binding.messageView.text = if (displayContent.isBlank() && imageUrl == null) "..." else displayContent
+        binding.messageView.text = if (displayContent.isBlank() && !hasMedia) "..." else displayContent
         binding.messageView.visibility =
-            if (displayContent.isBlank() && imageUrl != null) View.GONE else View.VISIBLE
+            if (displayContent.isBlank() && hasMedia) View.GONE else View.VISIBLE
         bindGeneratedImage(binding, imageUrl)
+        bindGeneratedVideo(binding, videoUrl)
         binding.streamingView.visibility = if (item.isStreaming) View.VISIBLE else View.GONE
     }
 
@@ -384,6 +393,42 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
                 }
             }
         )
+    }
+
+    private fun bindGeneratedVideo(
+        binding: ItemChatMessageAssistantBinding,
+        videoUrl: String?
+    ) {
+        val videoView = binding.generatedVideoView
+        val statusView = binding.generatedVideoStatusView
+        videoView.stopPlayback()
+        videoView.tag = videoUrl
+        videoView.setOnClickListener(null)
+
+        if (videoUrl.isNullOrBlank()) {
+            videoView.visibility = View.GONE
+            statusView.visibility = View.GONE
+            return
+        }
+
+        videoView.visibility = View.VISIBLE
+        statusView.visibility = View.VISIBLE
+        statusView.setText(R.string.chat_video_loading)
+        videoView.setVideoURI(Uri.parse(videoUrl))
+        videoView.setOnPreparedListener { player: MediaPlayer ->
+            player.isLooping = true
+            statusView.visibility = View.GONE
+            videoView.start()
+        }
+        videoView.setOnErrorListener { _, _, _ ->
+            statusView.visibility = View.VISIBLE
+            statusView.setText(R.string.chat_video_load_failed)
+            true
+        }
+        videoView.setOnClickListener {
+            onAssistantVideoClick?.invoke(videoUrl)
+        }
+        videoView.start()
     }
 
     private fun showAssistantActions(

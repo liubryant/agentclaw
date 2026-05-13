@@ -254,6 +254,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             onPositive = {
                 shellViewModel.removeSessionDraft(session.id)
                 shellViewModel.removeSessionEntryMode(session.id)
+                chatViewModel.removeSessionEntryMode(session.id)
                 chatViewModel.deleteSession(session.id)
             }
         ).show()

@@ -23,6 +23,8 @@ import java.io.IOException
 class ChatService(private val context: Context) {
     private companion object {
         private const val TAG = "ChatService"
+        private const val IMAGE_MODE_MARKER = "[[OPENCLAW_IMAGE_MODE]]"
+        private const val VIDEO_MODE_MARKER = "[[OPENCLAW_VIDEO_MODE]]"
     }
 
     @Volatile
@@ -32,17 +34,30 @@ class ChatService(private val context: Context) {
         messages: List<ChatMessage>,
         model: String = "openclaw:main"
     ): Flow<String> = callbackFlow {
-        val requestModel = if (isImageGenerationRequest(messages)) "glm-image" else model
+        val hasImageModeMarker = messages.any { it.content.contains(IMAGE_MODE_MARKER) }
+        val hasVideoModeMarker = messages.any { it.content.contains(VIDEO_MODE_MARKER) }
+        val requestModel = if (hasImageModeMarker) {
+            "glm-image"
+        } else if (hasVideoModeMarker) {
+            "cogvideox-3"
+        } else if ("glm-image".equals(model, ignoreCase = true)) {
+            "openclaw:main"
+        } else {
+            model
+        }
         val payload = JSONObject().apply {
             put("model", requestModel)
             put("stream", false)
+            if (hasVideoModeMarker) {
+                put("responseMode", "video_only")
+            }
             put(
                 "messages",
                 JSONArray().apply {
                     messages.forEach { message ->
                         put(JSONObject().apply {
                             put("role", message.role.apiName)
-                            put("content", message.content)
+                            put("content", stripModeMarkers(message.content))
                         })
                     }
                 }
@@ -110,69 +125,12 @@ class ChatService(private val context: Context) {
         activeCall = null
     }
 
-    private fun isImageGenerationRequest(messages: List<ChatMessage>): Boolean {
-        val prompt = messages.lastOrNull { it.role.apiName == "user" }
-            ?.content
-            ?.trim()
-            .orEmpty()
-        if (prompt.isBlank()) return false
-        val lower = prompt.lowercase()
-        if (containsAny(
-                lower,
-                "不要画",
-                "别画",
-                "不用画",
-                "不需要画",
-                "不要生成图",
-                "别生成图"
-            )
-        ) {
-            return false
-        }
-        if (containsAny(
-                lower,
-                "生成图片",
-                "生成一张图",
-                "生成一张图片",
-                "生成图像",
-                "生成照片",
-                "图片生成",
-                "图像生成",
-                "帮我画",
-                "给我画",
-                "画一张",
-                "画一个",
-                "画一只",
-                "画个",
-                "画幅",
-                "画一幅",
-                "绘制",
-                "画出",
-                "设计一张",
-                "做一张海报",
-                "生成海报",
-                "生图",
-                "出图",
-                "作图",
-                "做图",
-                "做张图",
-                "create an image",
-                "generate an image",
-                "generate a picture",
-                "draw an image",
-                "draw me",
-                "image of "
-            )
-        ) {
-            return true
-        }
-        val compact = prompt.replace(Regex("\\s+"), "")
-        return Regex(".*(请|帮我|给我|帮|想要|来|用)?(画|绘制|画出|生成|生图|出图|做图|作图)[\\u4e00-\\u9fa5A-Za-z0-9_\\-]{1,80}.*")
-            .matches(compact)
-    }
-
-    private fun containsAny(text: String, vararg keywords: String): Boolean {
-        return keywords.any { keyword -> text.contains(keyword.lowercase()) }
+    private fun stripModeMarkers(content: String): String {
+        return content
+            .replace(IMAGE_MODE_MARKER, "")
+            .replace(VIDEO_MODE_MARKER, "")
+            .replace(Regex("\\s{2,}"), " ")
+            .trim()
     }
 
     private fun parseSse(source: BufferedSource, onChunk: (String) -> Unit) {

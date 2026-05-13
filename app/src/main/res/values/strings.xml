@@ -190,8 +190,12 @@
     <string name="chat_generated_image">Generated image</string>
     <string name="chat_image_loading">Loading image...</string>
     <string name="chat_image_load_failed">Image failed to load</string>
+    <string name="chat_video_loading">Loading video...</string>
+    <string name="chat_video_load_failed">Video failed to load</string>
     <string name="chat_image_downloaded">Image saved to Downloads/InmoClaw</string>
     <string name="chat_image_download_failed">Failed to save image</string>
+    <string name="chat_video_downloaded">Video saved to Downloads/InmoClaw</string>
+    <string name="chat_video_download_failed">Failed to save video</string>
     <string name="chat_export_no_new_files">No new files available to export</string>
     <string name="chat_export_success_to_downloads">Exported %1$d file(s) to Downloads/InmoClaw</string>
     <string name="chat_export_result_partial">Export finished: %1$d succeeded, %2$d failed</string>

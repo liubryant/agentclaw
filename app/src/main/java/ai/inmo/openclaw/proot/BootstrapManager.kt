@@ -1965,6 +1965,8 @@ if (typeof originalFetch === 'function') {
     const url = typeof args[0] === 'string' ? args[0] : (args[0]?.url || String(args[0]));
     const opts = args[1] || {};
     const is8066Chat = url && /:8066\/v1\/chat\/completions(?:\?|$)/.test(String(url));
+    const IMAGE_MODE_MARKER = '[[OPENCLAW_IMAGE_MODE]]';
+    const VIDEO_MODE_MARKER = '[[OPENCLAW_VIDEO_MODE]]';
     let reqDebugForErr = null;
 
     if (is8066Chat) {
@@ -1972,6 +1974,42 @@ if (typeof originalFetch === 'function') {
       try {
         if (typeof opts.body === 'string' && opts.body.trim().startsWith('{')) {
           const reqJson = JSON.parse(opts.body);
+          const stripModeMarkers = (value) => {
+            if (typeof value !== 'string') return value;
+            return value
+              .split(IMAGE_MODE_MARKER).join('')
+              .split(VIDEO_MODE_MARKER).join('')
+              .replace(/\\s{2,}/g, ' ')
+              .trim();
+          };
+          const hasImageModeMarker = Array.isArray(reqJson?.messages) && reqJson.messages.some((m) => {
+            const content = m?.content;
+            if (typeof content === 'string') return content.includes(IMAGE_MODE_MARKER);
+            if (Array.isArray(content)) {
+              return content.some((part) => {
+                if (typeof part === 'string') return part.includes(IMAGE_MODE_MARKER);
+                if (part && typeof part === 'object') {
+                  return String(part.text || part.content || '').includes(IMAGE_MODE_MARKER);
+                }
+                return false;
+              });
+            }
+            return false;
+          });
+          const hasVideoModeMarker = Array.isArray(reqJson?.messages) && reqJson.messages.some((m) => {
+            const content = m?.content;
+            if (typeof content === 'string') return content.includes(VIDEO_MODE_MARKER);
+            if (Array.isArray(content)) {
+              return content.some((part) => {
+                if (typeof part === 'string') return part.includes(VIDEO_MODE_MARKER);
+                if (part && typeof part === 'object') {
+                  return String(part.text || part.content || '').includes(VIDEO_MODE_MARKER);
+                }
+                return false;
+              });
+            }
+            return false;
+          });
           // 兼容旧版 OpenAI 接口：后端要求 messages[].content 为 string，
           // 但上游可能传数组（多段文本/多模态结构）。这里统一降级为纯文本。
           if (Array.isArray(reqJson?.messages)) {
@@ -1988,13 +2026,38 @@ if (typeof originalFetch === 'function') {
                 }
                 return String(part ?? '');
               }).join('\n');
-              return { ...m, content: text };
+              return { ...m, content: stripModeMarkers(text) };
             });
             if (normalized) {
-              opts.body = JSON.stringify(reqJson);
               console.log('agentclaw REQ_8066_CHAT_NORMALIZED content=array->string');
             }
           }
+          if (Array.isArray(reqJson?.messages)) {
+            reqJson.messages = reqJson.messages.map((m) => {
+              if (!m || typeof m.content !== 'string') return m;
+              return { ...m, content: stripModeMarkers(m.content) };
+            });
+          }
+          if (hasImageModeMarker) {
+            reqJson.model = 'glm-image';
+            delete reqJson.responseMode;
+            console.log('agentclaw REQ_8066_CHAT_IMAGE_ROUTE enabled=marker');
+          } else if (hasVideoModeMarker) {
+            reqJson.model = 'cogvideox-3';
+            reqJson.responseMode = 'video_only';
+            console.log('agentclaw REQ_8066_CHAT_VIDEO_ROUTE enabled=marker');
+          } else if (reqJson?.model === 'glm-image') {
+            reqJson.model = 'glm-4.7';
+            delete reqJson.responseMode;
+            console.log('agentclaw REQ_8066_CHAT_IMAGE_ROUTE disabled=no-marker');
+          } else if (reqJson?.responseMode === 'video_only') {
+            delete reqJson.responseMode;
+            if (reqJson?.model === 'cogvideox-3') {
+              reqJson.model = 'glm-4.7';
+            }
+            console.log('agentclaw REQ_8066_CHAT_VIDEO_ROUTE disabled=no-marker');
+          }
+          opts.body = JSON.stringify(reqJson);
 
           // 文件生成必须保留 gateway 注入的 tools/tool_choice，不能在 Android hook 中禁用。
           // 否则上游只能输出 <tool> 文本，gateway 拿不到可执行 tool_calls，skill 就无法写入 /root/.openclaw/workspace。
