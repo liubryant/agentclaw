@@ -170,10 +170,10 @@
     <string name="chat_switch_cancel">إلغاء</string>
     <string name="chat_dismiss">تجاهل</string>
     <string name="chat_shell_subtitle">محادثة البوابة المتزامنة مع سياق الأفكار والمهام</string>
-    <string name="chat_welcome_title">INMO Claw</string>
+    <string name="chat_welcome_title">Agent Claw</string>
     <string name="chat_welcome_subtitle">مساعدك الذكي على مدار اليوم للمحادثة وأفكار الأتمتة وسير العمل المجدول.</string>
     <string name="chat_disclaimer">المحتوى المُنشأ بالذكاء الاصطناعي هو للإشارة فقط.</string>
-    <string name="chat_empty_brand">INMO Claw</string>
+    <string name="chat_empty_brand">Agent Claw</string>
     <string name="chat_empty_subtitle">مساعدك الذكي على مدار الساعة</string>
     <string name="chat_disclaimer_cn">المحتوى المُنشأ بالذكاء الاصطناعي هو للإشارة فقط</string>
     <string name="chat_shell_input_hint">صِف مهمة أو اطرح أي سؤال</string>

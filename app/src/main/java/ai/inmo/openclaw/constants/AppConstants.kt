@@ -34,9 +34,9 @@ object AppConstants {
     const val BOT_API_URL_TEST = "https://testai.bot.cjym.com"
 
     const val USER_AGREEMENT_URL =
-        "https://cjym.feishu.cn/docx/SyBsdljyQoQmJJxLYTzchVI6nZB"
+        "http://www.cjym123.cn/agreement_agentclaw.html"
     const val PRIVACY_POLICY_URL =
-        "https://cjym.feishu.cn/docx/KSUXdWlgcoKYbYxxtWLcsyXHnmh"
+        "http://www.cjym123.cn/privacy_agentclaw.html"
 
     // Ubuntu rootfs URLs
     private const val UBUNTU_ROOTFS_URL =

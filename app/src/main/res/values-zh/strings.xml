@@ -183,10 +183,10 @@
     <string name="chat_switch_cancel">取消</string>
     <string name="chat_dismiss">关闭</string>
     <string name="chat_shell_subtitle">同步网关聊天，支持灵感和任务上下文</string>
-    <string name="chat_welcome_title">INMO Claw</string>
+    <string name="chat_welcome_title">Agent Claw</string>
     <string name="chat_welcome_subtitle">7x24 小时的 AI 副驾，帮你聊天、启发灵感和管理定时任务。</string>
     <string name="chat_disclaimer">内容由 AI 生成，仅供参考。</string>
-    <string name="chat_empty_brand">INMO Claw</string>
+    <string name="chat_empty_brand">Agent Claw</string>
     <string name="chat_empty_subtitle">7x24小时，随时随地召唤的全能电脑AI助手</string>
     <string name="chat_disclaimer_cn">内容由AI生成，仅供参考</string>
     <string name="chat_shell_input_hint">描述任务或提问任何问题</string>

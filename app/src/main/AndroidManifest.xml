@@ -70,6 +70,7 @@
         <activity android:name=".ui.packages.PackagesActivity" android:exported="false" />
         <activity android:name=".ui.providers.ProviderDetailActivity" android:exported="false" />
         <activity android:name=".ui.providers.ProvidersActivity" android:exported="false" />
+        <activity android:name=".ui.legal.LegalWebActivity" android:exported="false" />
         <activity android:name=".ui.synced_chat.SyncedChatActivity" android:exported="false" />
         <activity
             android:name=".ui.shell.ShellActivity"

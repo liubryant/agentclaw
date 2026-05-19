@@ -170,10 +170,10 @@
     <string name="chat_switch_cancel">Abbrechen</string>
     <string name="chat_dismiss">Schließen</string>
     <string name="chat_shell_subtitle">Synchronisierte Gateway-Unterhaltung mit Ideen und Aufgabenkontext</string>
-    <string name="chat_welcome_title">INMO Claw</string>
+    <string name="chat_welcome_title">Agent Claw</string>
     <string name="chat_welcome_subtitle">Ihr KI-Begleiter für Gespräche, Automatisierungsideen und geplante Arbeitsabläufe – den ganzen Tag.</string>
     <string name="chat_disclaimer">KI-generierte Inhalte dienen nur als Referenz.</string>
-    <string name="chat_empty_brand">INMO Claw</string>
+    <string name="chat_empty_brand">Agent Claw</string>
     <string name="chat_empty_subtitle">Ihr KI-Assistent, rund um die Uhr für Sie da</string>
     <string name="chat_disclaimer_cn">KI-generierte Inhalte dienen nur als Referenz</string>
     <string name="chat_shell_input_hint">Beschreiben Sie eine Aufgabe oder stellen Sie eine beliebige Frage</string>

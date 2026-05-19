@@ -6,8 +6,9 @@
 
     <LinearLayout
         android:id="@+id/settingDialogContainer"
-        android:layout_width="950px"
-        android:layout_height="1000px"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="15dp"
+        android:layout_height="1200px"
         android:background="@drawable/bg_setting_left"
         android:layout_gravity="center"
         android:orientation="vertical"
@@ -248,12 +249,15 @@
                             android:adjustViewBounds="true"
                             android:src="@mipmap/about_icon" />
 
-                        <ImageView
+                        <TextView
+                            android:gravity="center"
+                            android:textStyle="bold"
                             android:layout_width="262px"
                             android:layout_height="80px"
                             android:layout_marginTop="8px"
                             android:adjustViewBounds="true"
-                            android:src="@mipmap/about_title" />
+                            android:textSize="40px"
+                            android:text="@string/app_name" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -268,7 +272,7 @@
                         <LinearLayout
                             android:id="@+id/rowCurrentVersion"
                             android:layout_width="match_parent"
-                            android:layout_height="80px"
+                            android:layout_height="100px"
                             android:layout_marginHorizontal="4dp"
                             android:background="@drawable/bg_about_item"
                             android:gravity="center_vertical"
@@ -280,7 +284,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/setting_current_version"
                                 android:textColor="#222222"
-                                android:textSize="24px" />
+                                android:textSize="28px" />
 
                             <TextView
                                 android:id="@+id/tvVersion"
@@ -289,7 +293,7 @@
                                 android:layout_marginStart="8px"
                                 android:text="V-"
                                 android:textColor="#999999"
-                                android:textSize="20px" />
+                                android:textSize="24px" />
 
                             <View
                                 android:layout_width="0dp"
@@ -308,7 +312,7 @@
                         <LinearLayout
                             android:id="@+id/rowUserAgreement"
                             android:layout_width="match_parent"
-                            android:layout_height="80px"
+                            android:layout_height="100px"
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="20px"
                             android:background="@drawable/bg_about_item"
@@ -322,7 +326,7 @@
                                 android:layout_weight="1"
                                 android:text="@string/setting_user_agreement"
                                 android:textColor="#222222"
-                                android:textSize="24px" />
+                                android:textSize="28px" />
 
                             <ImageView
                                 android:layout_width="40px"
@@ -334,7 +338,7 @@
                         <LinearLayout
                             android:id="@+id/rowPrivacyPolicy"
                             android:layout_width="match_parent"
-                            android:layout_height="80px"
+                            android:layout_height="100px"
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="20px"
                             android:background="@drawable/bg_about_item"
@@ -348,7 +352,7 @@
                                 android:layout_weight="1"
                                 android:text="@string/setting_privacy_policy"
                                 android:textColor="#222222"
-                                android:textSize="24px" />
+                                android:textSize="28px" />
 
                             <ImageView
                                 android:layout_width="40px"
@@ -361,7 +365,7 @@
                             android:id="@+id/rowOpenSourceLicense"
                             android:visibility="gone"
                             android:layout_width="match_parent"
-                            android:layout_height="80px"
+                            android:layout_height="100px"
                             android:layout_marginHorizontal="4dp"
                             android:layout_marginTop="20px"
                             android:background="@drawable/bg_about_item"
@@ -375,7 +379,7 @@
                                 android:layout_weight="1"
                                 android:text="@string/setting_open_source_license"
                                 android:textColor="#222222"
-                                android:textSize="24px" />
+                                android:textSize="28px" />
 
                             <ImageView
                                 android:layout_width="40px"

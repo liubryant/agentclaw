@@ -170,10 +170,10 @@
     <string name="chat_switch_cancel">Cancelar</string>
     <string name="chat_dismiss">Descartar</string>
     <string name="chat_shell_subtitle">Conversación sincronizada con la puerta de enlace que incluye ideas y contexto de tareas</string>
-    <string name="chat_welcome_title">INMO Claw</string>
+    <string name="chat_welcome_title">Agent Claw</string>
     <string name="chat_welcome_subtitle">Tu copiloto de IA para conversaciones, ideas de automatización y flujos de trabajo programados, disponible todo el día.</string>
     <string name="chat_disclaimer">El contenido generado por IA es solo para referencia.</string>
-    <string name="chat_empty_brand">INMO Claw</string>
+    <string name="chat_empty_brand">Agent Claw</string>
     <string name="chat_empty_subtitle">Tu asistente de IA, disponible 24/7</string>
     <string name="chat_disclaimer_cn">El contenido generado por IA es solo para referencia</string>
     <string name="chat_shell_input_hint">Describe una tarea o haz cualquier pregunta</string>

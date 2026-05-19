@@ -3,6 +3,7 @@ package ai.inmo.openclaw
 import ai.inmo.openclaw.constants.AppConstants
 import ai.inmo.openclaw.data.repository.GithubSkillImportService
 import ai.inmo.openclaw.di.AppGraph
+import ai.inmo.openclaw.ui.legal.LegalWebActivity
 import ai.inmo.openclaw.ui.shell.ShellActivity
 import ai.inmo.openclaw.util.hideKeyboard
 import android.app.Activity
@@ -24,7 +25,6 @@ import android.view.ViewOutlineProvider
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.webkit.WebView
-import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -175,14 +175,18 @@ class SettingPanelController(
 
     private fun bindAboutActions() {
         rootView.findViewById<View>(R.id.rowUserAgreement)?.setOnClickListener {
-            showLegalWebPopup(AppConstants.USER_AGREEMENT_URL)
+            openLegalPage(context.getString(R.string.setting_user_agreement), AppConstants.USER_AGREEMENT_URL)
         }
         rootView.findViewById<View>(R.id.rowPrivacyPolicy)?.setOnClickListener {
-            showLegalWebPopup(AppConstants.PRIVACY_POLICY_URL)
+            openLegalPage(context.getString(R.string.setting_privacy_policy), AppConstants.PRIVACY_POLICY_URL)
         }
         rootView.findViewById<View>(R.id.rowOpenSourceLicense)?.setOnClickListener {
-            showLegalWebPopup(AppConstants.PRIVACY_POLICY_URL)
+            openLegalPage(context.getString(R.string.setting_open_source_license), AppConstants.PRIVACY_POLICY_URL)
         }
+    }
+
+    private fun openLegalPage(title: String, url: String) {
+        context.startActivity(LegalWebActivity.createIntent(context, title, url))
     }
 
     private fun initSkills() {

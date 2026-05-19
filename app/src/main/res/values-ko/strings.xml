@@ -170,10 +170,10 @@
     <string name="chat_switch_cancel">취소</string>
     <string name="chat_dismiss">닫기</string>
     <string name="chat_shell_subtitle">아이디어 및 작업 맥락이 포함된 연동 게이트웨이 대화</string>
-    <string name="chat_welcome_title">INMO Claw</string>
+    <string name="chat_welcome_title">Agent Claw</string>
     <string name="chat_welcome_subtitle">대화, 자동화 아이디어, 예약된 작업 흐름을 위한 올데이 AI 코파일럿입니다.</string>
     <string name="chat_disclaimer">AI 생성 콘텐츠는 참고용입니다.</string>
-    <string name="chat_empty_brand">INMO Claw</string>
+    <string name="chat_empty_brand">Agent Claw</string>
     <string name="chat_empty_subtitle">24시간 언제나 함께하는 올데이 AI 어시스턴트</string>
     <string name="chat_disclaimer_cn">AI 생성 콘텐츠는 참고용입니다</string>
     <string name="chat_shell_input_hint">작업을 설명하거나 질문을 입력하세요</string>

@@ -171,10 +171,10 @@
     <string name="chat_switch_cancel">キャンセル</string>
     <string name="chat_dismiss">閉じる</string>
     <string name="chat_shell_subtitle">アイデアやタスクコンテキストを含む同期されたゲートウェイ会話</string>
-    <string name="chat_welcome_title">INMO Claw</string>
+    <string name="chat_welcome_title">Agent Claw</string>
     <string name="chat_welcome_subtitle">会話、自動化アイデア、スケジュールされたワークフローに対応する、終日利用可能なAIコパイロットです。</string>
     <string name="chat_disclaimer">AIによる生成コンテンツは参考情報です。</string>
-    <string name="chat_empty_brand">INMO Claw</string>
+    <string name="chat_empty_brand">Agent Claw</string>
     <string name="chat_empty_subtitle">24時間365日対応のAIアシスタント</string>
     <string name="chat_disclaimer_cn">AIによる生成コンテンツは参考情報です</string>
     <string name="chat_shell_input_hint">タスクを説明するか、質問を入力してください</string>

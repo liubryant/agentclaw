@@ -171,10 +171,10 @@
     <string name="chat_switch_cancel">Cancel</string>
     <string name="chat_dismiss">Dismiss</string>
     <string name="chat_shell_subtitle">Synced gateway conversation with ideas and task context</string>
-    <string name="chat_welcome_title">INMO Claw</string>
+    <string name="chat_welcome_title">Agent Claw</string>
     <string name="chat_welcome_subtitle">Your all-day AI copilot for conversation, automation ideas, and scheduled workflows.</string>
     <string name="chat_disclaimer">AI-generated content is for reference only.</string>
-    <string name="chat_empty_brand">INMO Claw</string>
+    <string name="chat_empty_brand">Agent Claw</string>
     <string name="chat_empty_subtitle">Your all-day AI assistant, available 24/7</string>
     <string name="chat_disclaimer_cn">AI-generated content is for reference only</string>
     <string name="chat_shell_input_hint">Describe a task or ask any question</string>

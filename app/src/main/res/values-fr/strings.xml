@@ -170,10 +170,10 @@
     <string name="chat_switch_cancel">Annuler</string>
     <string name="chat_dismiss">Ignorer</string>
     <string name="chat_shell_subtitle">Conversation synchronisée avec la passerelle, incluant le contexte des idées et des tâches</string>
-    <string name="chat_welcome_title">INMO Claw</string>
+    <string name="chat_welcome_title">Agent Claw</string>
     <string name="chat_welcome_subtitle">Votre assistant IA permanent pour discuter, générer des idées d\’automatisation et orchestrer des workflows programmés.</string>
     <string name="chat_disclaimer">Le contenu généré par l\’IA est fourni à titre indicatif.</string>
-    <string name="chat_empty_brand">INMO Claw</string>
+    <string name="chat_empty_brand">Agent Claw</string>
     <string name="chat_empty_subtitle">Votre assistant IA à toute heure, disponible 24h/24 et 7j/7</string>
     <string name="chat_disclaimer_cn">Le contenu généré par l\’IA est fourni à titre indicatif</string>
     <string name="chat_shell_input_hint">Décrivez une tâche ou posez une question</string>

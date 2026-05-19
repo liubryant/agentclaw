@@ -2,12 +2,12 @@ package ai.inmo.openclaw.ui.widget
 
 import ai.inmo.core_common.ui.dialog.BaseBindingDialog
 import ai.inmo.openclaw.R
+import ai.inmo.openclaw.constants.AppConstants
 import ai.inmo.openclaw.databinding.DialogTermsBinding
+import ai.inmo.openclaw.ui.legal.LegalWebActivity
 import ai.inmo.openclaw.util.toSpannableString
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.view.Gravity
 import kotlinx.coroutines.CompletableDeferred
 
@@ -41,8 +41,14 @@ class TermsDialog(
         binding.contentText.setText(R.string.terms_content)
         binding.contentText.toSpannableString(colorId = R.color.terms_link, isBold = false) { key ->
             when (key) {
-                USER_AGREEMENT_ANNOTATION -> openLink(USER_AGREEMENT_URL)
-                PRIVACY_POLICY_ANNOTATION -> openLink(PRIVACY_POLICY_URL)
+                USER_AGREEMENT_ANNOTATION -> openLegalPage(
+                    context.getString(R.string.terms_user_agreement),
+                    AppConstants.USER_AGREEMENT_URL
+                )
+                PRIVACY_POLICY_ANNOTATION -> openLegalPage(
+                    context.getString(R.string.terms_privacy_policy),
+                    AppConstants.PRIVACY_POLICY_URL
+                )
             }
         }
         binding.contentText.highlightColor = Color.TRANSPARENT
@@ -55,8 +61,8 @@ class TermsDialog(
         }
     }
 
-    private fun openLink(url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    private fun openLegalPage(title: String, url: String) {
+        context.startActivity(LegalWebActivity.createIntent(context, title, url))
     }
 
     private fun completeAndDismiss(value: Boolean) {
@@ -69,9 +75,5 @@ class TermsDialog(
     companion object {
         private const val USER_AGREEMENT_ANNOTATION = "user_agreement"
         private const val PRIVACY_POLICY_ANNOTATION = "privacy_policy"
-        private const val USER_AGREEMENT_URL =
-            "https://cjym.feishu.cn/docx/SyBsdljyQoQmJJxLYTzchVI6nZB"
-        private const val PRIVACY_POLICY_URL =
-            "https://cjym.feishu.cn/docx/KSUXdWlgcoKYbYxxtWLcsyXHnmh"
     }
 }
