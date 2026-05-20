@@ -59,7 +59,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
     private val shellViewModel: ShellSharedViewModel by viewModels()
     private val chatViewModel: ShellChatViewModel by viewModels()
     private val sessionAdapter = ChatSessionAdapter().apply {
-        sessionActionMode = ChatSessionAdapter.SessionActionMode.MORE_ON_SELECTED_HOVER
+        sessionActionMode = ChatSessionAdapter.SessionActionMode.DELETE_ALWAYS
     }
     private val searchLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -162,6 +162,9 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             searchLauncher.launch(Intent(this, ChatSearchActivity::class.java))
         }
         sessionAdapter.onSessionClick = { session -> handleSessionClick(session.id) }
+        sessionAdapter.onDeleteClick = { session ->
+            showDeleteSessionConfirm(session)
+        }
         sessionAdapter.onMoreClick = { session, anchor ->
             showSessionActionPopup(anchor, session)
         }

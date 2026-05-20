@@ -25,12 +25,13 @@
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
         android:textColor="@color/text_primary"
-        android:textSize="12sp" />
+        android:textSize="11sp" />
 
     <ImageButton
         android:id="@+id/actionButton"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="22dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
         android:background="@drawable/bg_shell_delete_button"
         android:contentDescription="@string/chat_delete_confirm"
         android:padding="2dp"

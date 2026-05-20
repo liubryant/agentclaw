@@ -40,6 +40,7 @@ import android.widget.Toast
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
+import android.content.res.ColorStateList
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -49,6 +50,8 @@ import ai.inmo.core_common.utils.coroutine.CoroutineUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.widget.TextViewCompat
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -226,6 +229,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
                 )
             }.collectLatest { (draft, entryMode) ->
                 updateComposerHint(entryMode)
+                updateEntryModeButtons(entryMode)
                 if (!suppressDraftSync && binding.composerInput.text?.toString() != draft) {
                     binding.composerInput.setText(draft)
                     binding.composerInput.setSelection(binding.composerInput.text?.length ?: 0)
@@ -678,6 +682,44 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             ChatEntryMode.VIDEO -> getString(R.string.chat_shell_input_hint_video)
             ChatEntryMode.DEFAULT -> getString(R.string.chat_shell_input_hint)
         }
+    }
+
+    private fun updateEntryModeButtons(entryMode: ChatEntryMode) {
+        renderEntryModeButton(
+            button = binding.imageChatEntryButton,
+            selected = entryMode == ChatEntryMode.IMAGE,
+            startDrawableRes = R.drawable.ic_chat_entry_image
+        )
+        renderEntryModeButton(
+            button = binding.videoChatEntryButton,
+            selected = entryMode == ChatEntryMode.VIDEO,
+            startDrawableRes = R.drawable.ic_chat_entry_video
+        )
+    }
+
+    private fun renderEntryModeButton(
+        button: android.widget.TextView,
+        selected: Boolean,
+        startDrawableRes: Int
+    ) {
+        val context = button.context
+        val tintColor = if (selected) 0xFF3978F3.toInt() else 0xFF111111.toInt()
+        button.isSelected = selected
+        button.background = AppCompatResources.getDrawable(
+            context,
+            if (selected) R.drawable.bg_chat_entry_button_selected else R.drawable.bg_chat_entry_button
+        )
+        button.setTextColor(tintColor)
+        button.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            startDrawableRes,
+            0,
+            0,
+            0
+        )
+        TextViewCompat.setCompoundDrawableTintList(
+            button,
+            ColorStateList.valueOf(tintColor)
+        )
     }
 
     private fun refreshComposerActionButton(state: ChatScreenState = chatViewModel.state.value) {
