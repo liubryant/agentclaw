@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Dedicated splash icon for Android 12+ SplashScreen.
+
+  Note: Android 12 system SplashScreen will always apply a system mask to the icon
+  (typically a circle). To make it look like a normal rounded-corner app icon,
+  we draw a rounded-rect background and inset the foreground inside it.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Rounded rectangle background inside the system mask -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp" />
+            <solid android:color="@color/black" />
+        </shape>
+    </item>
+
+    <!-- App icon foreground (vector). Inset makes it visually closer to launcher icon. -->
+    <item
+        android:drawable="@drawable/ic_launcher_foreground"
+        android:top="18dp"
+        android:bottom="18dp"
+        android:left="18dp"
+        android:right="18dp" />
+
+</layer-list>
