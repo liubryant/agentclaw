@@ -1964,7 +1964,7 @@ if (typeof originalFetch === 'function') {
   global.fetch = async function(...args) {
     const url = typeof args[0] === 'string' ? args[0] : (args[0]?.url || String(args[0]));
     const opts = args[1] || {};
-    const is8066Chat = url && /:8066\/v1\/chat\/completions(?:\?|$)/.test(String(url));
+    const is8066Chat = url && (/:8066\/v1\/chat\/completions(?:\?|$)/.test(String(url)) || /cjym123\.cn\/v1\/chat\/completions(?:\?|$)/.test(String(url)));
     const IMAGE_MODE_MARKER = '[[OPENCLAW_IMAGE_MODE]]';
     const VIDEO_MODE_MARKER = '[[OPENCLAW_VIDEO_MODE]]';
     let reqDebugForErr = null;

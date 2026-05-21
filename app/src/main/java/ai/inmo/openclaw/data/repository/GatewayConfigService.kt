@@ -40,11 +40,11 @@ class GatewayConfigService(
     fun prepareForLaunch(): PreparedGatewayConfig {
         val existing = readMutableConfig()
         Logger.d(TAG, "agentclaw CONFIG_BEFORE ${summarizeInmoProvider(existing)}")
-        val merged = GatewayConfigDefaults.mergeConfig(existing)
+        val merged = GatewayConfigDefaults.mergeConfig(existing, baseUrl = preferencesManager.inmoclawBaseUrl)
         bootstrapManager.writeRootfsFile(CONFIG_PATH, gson.toJson(merged.config))
         bootstrapManager.writeRootfsFile(
             MAIN_AGENT_AUTH_PATH,
-            gson.toJson(GatewayConfigDefaults.createMainAgentAuthProfiles())
+            gson.toJson(GatewayConfigDefaults.createMainAgentAuthProfiles(baseUrl = preferencesManager.inmoclawBaseUrl))
         )
         logGatewayAuthDiagnostics(merged.config)
         deployBundledSkills()
@@ -106,7 +106,7 @@ class GatewayConfigService(
     }
 
     fun syncDashboardUrlFromConfig(): String? {
-        val merged = GatewayConfigDefaults.mergeConfig(readMutableConfig(), generateToken = false)
+        val merged = GatewayConfigDefaults.mergeConfig(readMutableConfig(), generateToken = false, baseUrl = preferencesManager.inmoclawBaseUrl)
         merged.dashboardUrl?.let { preferencesManager.dashboardUrl = it }
         return merged.dashboardUrl
     }
@@ -226,7 +226,8 @@ object GatewayConfigDefaults {
 
     fun mergeConfig(
         existing: MutableMap<String, Any?>,
-        generateToken: Boolean = true
+        generateToken: Boolean = true,
+        baseUrl: String = PreferencesManager.DEFAULT_AGENTCLAW_BASE_URL
     ): MergeResult {
         val gateway = existing.mutableChild("gateway")
         val nodes = gateway.mutableChild("nodes")
@@ -257,7 +258,7 @@ object GatewayConfigDefaults {
         auth.putIfAbsent("mode", "token")
 
         val inmoProvider = providers.mutableChild(AiProvider.INMOCLAW.id)
-        inmoProvider["baseUrl"] = AiProvider.INMOCLAW.baseUrl
+        inmoProvider["baseUrl"] = baseUrl
         inmoProvider["api"] = "openai-completions"
         inmoProvider["apiKey"] = resolveInmoClawApiKey()
         // 修复：openclaw 当前配置 schema 不支持 timeoutMs，若存在会导致网关启动失败。
@@ -281,9 +282,10 @@ object GatewayConfigDefaults {
         )
     }
 
-    fun createMainAgentAuthProfiles(): MutableMap<String, Any?> {
+    fun createMainAgentAuthProfiles(
+        baseUrl: String = PreferencesManager.DEFAULT_AGENTCLAW_BASE_URL
+    ): MutableMap<String, Any?> {
         val apiKey = resolveInmoClawApiKey()
-        val baseUrl = AiProvider.INMOCLAW.baseUrl
         val providerId = AiProvider.INMOCLAW.id
         val profile = mutableMapOf<String, Any?>(
             "id" to providerId,
