@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'ai.inmo.openclaw'
+    namespace 'ai.cjym.agentclaw'
     compileSdkVersion 34
 
     defaultConfig {
-        applicationId "ai.inmo.openclaw"
+        applicationId "ai.cjym.agentclaw"
         minSdk 24
         targetSdk 34
         versionCode 6
@@ -61,8 +61,9 @@ android {
 
         release {
             signingConfig signingConfigs.release
-            minifyEnabled = false
-            shrinkResources = false
+            minifyEnabled = true
+            shrinkResources = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 

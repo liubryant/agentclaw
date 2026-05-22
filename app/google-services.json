@@ -28,7 +28,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:23299047557:android:7db2e8de6385d73ac5e9ec",
         "android_client_info": {
-          "package_name": "ai.inmo.openclaw"
+          "package_name": "ai.cjym.agentclaw"
         }
       },
       "oauth_client": [],

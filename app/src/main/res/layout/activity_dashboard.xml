@@ -13,11 +13,11 @@
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/dashboard_title" android:textColor="@color/text_primary" android:textSize="28sp" android:textStyle="bold" />
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="@string/dashboard_phase3_subtitle" android:textColor="@color/text_secondary" />
 
-        <ai.inmo.openclaw.ui.widget.StatusCardView android:id="@+id/gatewayStatusCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" />
-        <ai.inmo.openclaw.ui.widget.StatusCardView android:id="@+id/nodeStatusCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" />
+        <ai.cjym.agentclaw.ui.widget.StatusCardView android:id="@+id/gatewayStatusCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" />
+        <ai.cjym.agentclaw.ui.widget.StatusCardView android:id="@+id/nodeStatusCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" />
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/dashboard_gateway_controls" android:textColor="@color/text_secondary" android:textStyle="bold" />
-        <ai.inmo.openclaw.ui.widget.GatewayControlsView android:id="@+id/gatewayControls" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" />
+        <ai.cjym.agentclaw.ui.widget.GatewayControlsView android:id="@+id/gatewayControls" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" />
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/dashboard_quick_actions" android:textColor="@color/text_secondary" android:textStyle="bold" />
 

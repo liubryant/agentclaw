@@ -43,19 +43,19 @@
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
-        <ai.inmo.openclaw.ui.widget.ProgressStepView
+        <ai.cjym.agentclaw.ui.widget.ProgressStepView
             android:id="@+id/stepOne"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp" />
 
-        <ai.inmo.openclaw.ui.widget.ProgressStepView
+        <ai.cjym.agentclaw.ui.widget.ProgressStepView
             android:id="@+id/stepTwo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp" />
 
-        <ai.inmo.openclaw.ui.widget.ProgressStepView
+        <ai.cjym.agentclaw.ui.widget.ProgressStepView
             android:id="@+id/stepThree"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

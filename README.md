@@ -61,7 +61,7 @@ INMOClaw 是一个运行在 Android 设备上的 AI Gateway 客户端与本地�
 
 ### `app`
 
-主应用模块，应用 ID 为 `ai.inmo.openclaw`。包含：
+主应用模块，应用 ID 为 `ai.cjym.agentclaw`。包含：
 
 - AndroidManifest、页面布局、资源文件
 - 聊天、Shell、终端、Node、Providers、Packages、SSH、Settings、Dashboard 等页面

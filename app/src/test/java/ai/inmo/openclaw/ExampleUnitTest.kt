@@ -1,4 +1,4 @@
-package ai.inmo.openclaw
+package ai.cjym.agentclaw
 
 import org.junit.Test
 

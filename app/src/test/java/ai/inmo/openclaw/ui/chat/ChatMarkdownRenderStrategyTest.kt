@@ -1,4 +1,4 @@
-package ai.inmo.openclaw.ui.chat
+package ai.cjym.agentclaw.ui.chat
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame

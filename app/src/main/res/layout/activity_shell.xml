@@ -117,7 +117,7 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
-            <ai.inmo.openclaw.ui.widget.SidebarNavItemView
+            <ai.cjym.agentclaw.ui.widget.SidebarNavItemView
                 android:id="@+id/navIdeas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                 app:navIconTint="@color/black"
                 app:navText="@string/ideas_title" />
 
-            <ai.inmo.openclaw.ui.widget.SidebarNavItemView
+            <ai.cjym.agentclaw.ui.widget.SidebarNavItemView
                 android:id="@+id/navAgentclawDocs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
                 app:navIconTint="@color/black"
                 app:navText="@string/agentclaw_docs_title" />
 
-<!--            <ai.inmo.openclaw.ui.widget.SidebarNavItemView-->
+<!--            <ai.cjym.agentclaw.ui.widget.SidebarNavItemView-->
 <!--                android:id="@+id/navSchedule"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="wrap_content"-->
@@ -141,7 +141,7 @@
 <!--                app:navIcon="@drawable/ic_shell_clock"-->
 <!--                app:navText="@string/schedule_title" />-->
 
-            <ai.inmo.openclaw.ui.widget.SidebarNavItemView
+            <ai.cjym.agentclaw.ui.widget.SidebarNavItemView
                 android:id="@+id/navSetting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

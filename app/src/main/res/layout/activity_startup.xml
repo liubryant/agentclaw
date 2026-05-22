@@ -34,7 +34,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline_start"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ai.inmo.openclaw.ui.widget.LoopingVideoView
+        <ai.cjym.agentclaw.ui.widget.LoopingVideoView
             android:id="@+id/startupVideoView"
             android:layout_width="100dp"
             android:layout_height="80dp"

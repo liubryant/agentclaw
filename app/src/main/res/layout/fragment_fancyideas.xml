@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="ai.inmo.openclaw.ui.fancyideas.FancyIdeasViewModel" />
+            type="ai.cjym.agentclaw.ui.fancyideas.FancyIdeasViewModel" />
     </data>
 
     <LinearLayout

@@ -1,6 +1,6 @@
-package ai.inmo.openclaw
+package ai.cjym.agentclaw
 
-import ai.inmo.openclaw.data.repository.NodeIdentityService
+import ai.cjym.agentclaw.data.repository.NodeIdentityService
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals

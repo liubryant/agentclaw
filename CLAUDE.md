@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-INMOClaw (package: `ai.inmo.openclaw`) is an Android app that runs an OpenClaw gateway inside a PRoot-based Linux container (Ubuntu 24.04), providing terminal access, node connectivity via WebSocket, and AI chat capabilities. Built by INMO.
+INMOClaw (package: `ai.cjym.agentclaw`) is an Android app that runs an OpenClaw gateway inside a PRoot-based Linux container (Ubuntu 24.04), providing terminal access, node connectivity via WebSocket, and AI chat capabilities. Built by INMO.
 
 ## Build Commands
 

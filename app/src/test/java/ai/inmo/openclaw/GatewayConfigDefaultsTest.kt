@@ -1,6 +1,6 @@
-package ai.inmo.openclaw
+package ai.cjym.agentclaw
 
-import ai.inmo.openclaw.data.repository.GatewayConfigDefaults
+import ai.cjym.agentclaw.data.repository.GatewayConfigDefaults
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull

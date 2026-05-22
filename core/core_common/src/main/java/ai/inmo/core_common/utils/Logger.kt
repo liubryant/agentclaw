@@ -14,7 +14,7 @@ import java.io.File
 object Logger {
 
     init {
-        val packageName = "ai.inmo.openclaw"
+        val packageName = "ai.cjym.agentclaw"
 
         INMOLog.getConfig().apply {
             setBorderSwitch(false)

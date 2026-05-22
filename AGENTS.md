@@ -3,7 +3,7 @@
 ## Project Structure & Module Organization
 This is a multi-module Android project (Groovy Gradle DSL).
 
-- `app/`: main Android app (`ai.inmo.openclaw`), XML layouts + ViewBinding, Room schemas in `app/schemas/`.
+- `app/`: main Android app (`ai.cjym.agentclaw`), XML layouts + ViewBinding, Room schemas in `app/schemas/`.
 - `core/core_common/`: shared base library (`ai.inmo.core_common`) for base activities, view models, adapters, utils, and logging.
 - `gradle/libs.versions.toml`: centralized dependency and plugin versions.
 - `doc/`: project documentation (for example, migration notes).
@@ -25,7 +25,7 @@ Run from repository root:
 - Language: Kotlin + Android XML (no Compose currently).
 - Indentation: 4 spaces, no tabs.
 - Class/object names: `PascalCase`; methods/vars: `camelCase`; constants: `UPPER_SNAKE_CASE`.
-- Package names remain lowercase under `ai.inmo.openclaw` / `ai.inmo.core_common`.
+- Package names remain lowercase under `ai.cjym.agentclaw` / `ai.inmo.core_common`.
 - Keep module boundaries clear: reusable primitives go to `core_common`, feature-specific logic stays in `app`.
 - Prefer existing base classes/utilities in `core_common` before introducing new abstractions.
 
