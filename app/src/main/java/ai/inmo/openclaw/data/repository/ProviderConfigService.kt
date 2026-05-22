@@ -65,9 +65,9 @@ class ProviderConfigService(
             }
         }
 
-//        val isInmoClaw = (provider.id == AiProvider.INMOCLAW.id)
-//        val effectiveApiKey = if (isInmoClaw) "\${${AiProvider.ENV_INMOCLAW_API_KEY}}" else apiKey
-//        val effectiveBaseUrl = if (isInmoClaw) "\${${AiProvider.ENV_INMOCLAW_BASE_URL}}" else provider.baseUrl
+//        val isAgentClaw = (provider.id == AiProvider.AGENTCLAW.id)
+//        val effectiveApiKey = if (isAgentClaw) "\${${AiProvider.ENV_AGENTCLAW_API_KEY}}" else apiKey
+//        val effectiveBaseUrl = if (isAgentClaw) "\${${AiProvider.ENV_AGENTCLAW_BASE_URL}}" else provider.baseUrl
 //
 //        providers[provider.id] = mutableMapOf(
 //            "apiKey" to effectiveApiKey,

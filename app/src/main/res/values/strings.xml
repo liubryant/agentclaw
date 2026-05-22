@@ -5,14 +5,14 @@
     <string name="common_copied">Copied</string>
     <string name="splash_subtitle">AI Gateway for Android</string>
     <string name="splash_loading">Loading local environment...</string>
-    <string name="setup_title">Setup INMOClaw</string>
+    <string name="setup_title">Setup AgentClaw</string>
     <string name="setup_subtitle">Prepare rootfs, runtime compatibility, and validation before startup.</string>
     <string name="setup_action">Run setup</string>
     <string name="setup_skip">Skip for now</string>
-    <string name="startup_title">Starting INMOClaw</string>
-    <string name="startup_loading_title">INMOClaw is starting up</string>
+    <string name="startup_title">Starting AgentClaw</string>
+    <string name="startup_loading_title">AgentClaw is starting up</string>
     <string name="startup_loading_subtitle">First load may take a few minutes, please wait</string>
-    <string name="dashboard_title">INMOClaw</string>
+    <string name="dashboard_title">AgentClaw</string>
     <string name="dashboard_phase3_subtitle">Gateway control, terminal tools, and service status live here during the current migration stages.</string>
     <string name="dashboard_gateway_controls">Gateway Controls</string>
     <string name="dashboard_gateway_subtitle_ready">Dashboard: %1$s</string>
@@ -74,7 +74,7 @@
     <string name="settings_proot_path">proot path</string>
     <string name="settings_rootfs">Rootfs</string>
     <string name="settings_node_js">Node.js</string>
-    <string name="settings_openclaw">INMOClaw</string>
+    <string name="settings_openclaw">AgentClaw</string>
     <string name="settings_go">Go</string>
     <string name="settings_homebrew">Homebrew</string>
     <string name="settings_openssh">OpenSSH</string>
@@ -192,12 +192,12 @@
     <string name="chat_image_load_failed">Image failed to load</string>
     <string name="chat_video_loading">Loading video...</string>
     <string name="chat_video_load_failed">Video failed to load</string>
-    <string name="chat_image_downloaded">Image saved to Downloads/InmoClaw</string>
+    <string name="chat_image_downloaded">Image saved to Downloads/AgentClaw</string>
     <string name="chat_image_download_failed">Failed to save image</string>
-    <string name="chat_video_downloaded">Video saved to Downloads/InmoClaw</string>
+    <string name="chat_video_downloaded">Video saved to Downloads/AgentClaw</string>
     <string name="chat_video_download_failed">Failed to save video</string>
     <string name="chat_export_no_new_files">No new files available to export</string>
-    <string name="chat_export_success_to_downloads">Exported %1$d file(s) to Downloads/InmoClaw</string>
+    <string name="chat_export_success_to_downloads">Exported %1$d file(s) to Downloads/AgentClaw</string>
     <string name="chat_export_result_partial">Export finished: %1$d succeeded, %2$d failed</string>
     <string name="chat_export_failed_retry">Export failed, please try again later</string>
     <string name="setting_title">Settings</string>
@@ -298,9 +298,9 @@
     <string name="schedule_carry_to_chat">Carry Into Chat</string>
     <string name="terms_title">User Agreement and Privacy Policy</string>
     <string name="terms_message">Review the agreement and privacy policy before using the AI gateway features.</string>
-    <string name="terms_user_agreement">INMOClaw User Agreement</string>
-    <string name="terms_privacy_policy">INMOClaw Privacy Policy</string>
-    <string name="terms_content">Dear user, welcome to INMOClaw! To better protect your rights and provide safer, more convenient services, please read and agree to the following agreements.\nPlease read carefully and fully understand\n<annotation user_agreement="user_agreement">INMOClaw User Agreement</annotation> and <annotation privacy_policy="privacy_policy">INMOClaw Privacy Policy</annotation>. Tap the agreement names to view the full text;\n\nBy tapping \"Agree\", you confirm that you have fully read, understood, and voluntarily accepted all terms of the two agreements above, and can continue using this feature. By tapping \"Back\", you will not be able to use the INMOClaw feature, but other core device features will not be affected.</string>
+    <string name="terms_user_agreement">AgentClaw User Agreement</string>
+    <string name="terms_privacy_policy">AgentClaw Privacy Policy</string>
+    <string name="terms_content">Dear user, welcome to AgentClaw! To better protect your rights and provide safer, more convenient services, please read and agree to the following agreements.\nPlease read carefully and fully understand\n<annotation user_agreement="user_agreement">AgentClaw User Agreement</annotation> and <annotation privacy_policy="privacy_policy">AgentClaw Privacy Policy</annotation>. Tap the agreement names to view the full text;\n\nBy tapping \"Agree\", you confirm that you have fully read, understood, and voluntarily accepted all terms of the two agreements above, and can continue using this feature. By tapping \"Back\", you will not be able to use the AgentClaw feature, but other core device features will not be affected.</string>
     <string name="terms_consent_tip">I have read and agree to all the agreements above</string>
     <string name="terms_reject">Back</string>
     <string name="terms_accept">Agree</string>
@@ -354,6 +354,6 @@
     <string name="ssh_command_template">ssh root@%1$s -p %2$d</string>
     <string name="ssh_command_placeholder">ssh root@&lt;device-ip&gt; -p %1$d</string>
     <string name="rate_limit_fallback_tip">提问过于频繁，请稍后再试～</string>
-    <string name="api_call_quota_exhausted">今日【INMOClaw】功能的 API 调用额度已耗尽，请明天再来试试吧~</string>
+    <string name="api_call_quota_exhausted">今日【AgentClaw】功能的 API 调用额度已耗尽，请明天再来试试吧~</string>
     <string name="content_generation_timed_out">生成内容超时，请稍后重试</string>
 </resources>

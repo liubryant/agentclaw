@@ -232,8 +232,8 @@ class GatewayService : Service() {
                     emitLog("agentclaw GATEWAY_SPAWN command=openclaw gateway")
                     gatewayProcess = pm.startProotProcess("openclaw gateway")
 //                    val gatewayEnv = mapOf(
-//                        AiProvider.ENV_INMOCLAW_API_KEY to "YM00FCE5600128",
-//                        AiProvider.ENV_INMOCLAW_BASE_URL to AiProvider.INMOCLAW.baseUrl
+//                        AiProvider.ENV_AGENTCLAW_API_KEY to "YM00FCE5600128",
+//                        AiProvider.ENV_AGENTCLAW_BASE_URL to AiProvider.AGENTCLAW.baseUrl
 //                    )
 //                    gatewayProcess = pm.startProotProcess("openclaw gateway --verbose", gatewayEnv)
                 }

@@ -362,7 +362,7 @@ class ArtifactExportRepository(context: Context) {
     private fun writeToDownloads(fileName: String, bytes: ByteArray, mimeType: String): String {
         val resolvedMimeType = mimeType.ifBlank { guessMimeType(fileName) }
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val relativePath = Environment.DIRECTORY_DOWNLOADS + "/InmoClaw/"
+            val relativePath = Environment.DIRECTORY_DOWNLOADS + "/AgentClaw/"
             val existingUri = findExistingDownloadUri(fileName, relativePath)
             val values = ContentValues().apply {
                 put(MediaStore.Downloads.DISPLAY_NAME, fileName)
@@ -383,7 +383,7 @@ class ArtifactExportRepository(context: Context) {
         } else {
             @Suppress("DEPRECATION")
             val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            val targetDir = File(downloadDir, "InmoClaw").apply { mkdirs() }
+            val targetDir = File(downloadDir, "AgentClaw").apply { mkdirs() }
             val targetFile = File(targetDir, fileName)
             targetFile.writeBytes(bytes)
             targetFile.absolutePath

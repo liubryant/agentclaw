@@ -275,7 +275,7 @@ class GithubSkillImportService(
         val request = Request.Builder()
             .url(url)
             .header("Accept", "application/vnd.github+json")
-            .header("User-Agent", "INMOClawX-SkillImporter")
+            .header("User-Agent", "AgentClawX-SkillImporter")
             .build()
 
         client.newCall(request).execute().use { response ->
@@ -289,7 +289,7 @@ class GithubSkillImportService(
     private fun getBytes(url: String): ByteArray {
         val request = Request.Builder()
             .url(url)
-            .header("User-Agent", "INMOClawX-SkillImporter")
+            .header("User-Agent", "AgentClawX-SkillImporter")
             .build()
 
         client.newCall(request).execute().use { response ->

@@ -11,7 +11,7 @@ class TerminalViewModel(context: Context) : BaseTerminalViewModel(context) {
             subtitle = "Interactive proot shell session",
             command = "exec /bin/bash -l",
             mode = TerminalExecutionMode.SHELL,
-            preamble = "INMOClaw terminal session started. Commands run inside the proot Ubuntu environment.\n\n"
+            preamble = "AgentClaw terminal session started. Commands run inside the proot Ubuntu environment.\n\n"
         )
     }
 }

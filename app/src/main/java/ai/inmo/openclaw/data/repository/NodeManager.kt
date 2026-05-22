@@ -299,7 +299,7 @@ class NodeManager(
                 put("maxProtocol", 3)
                 put("client", mapOf(
                     "id" to clientId,
-                    "displayName" to "INMOClaw Node",
+                    "displayName" to "AgentClaw Node",
                     "version" to AppConstants.VERSION,
                     "platform" to platform,
                     "deviceFamily" to deviceFamily,
@@ -383,7 +383,7 @@ class NodeManager(
             "node.pair.request",
             buildMap<String, Any?> {
                 put("nodeId", identityService.deviceId)
-                put("displayName", "INMOClaw Node")
+                put("displayName", "AgentClaw Node")
                 put("platform", "android")
                 put("version", AppConstants.VERSION)
                 put("deviceFamily", "Android")

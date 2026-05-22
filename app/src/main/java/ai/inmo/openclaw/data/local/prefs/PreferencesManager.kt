@@ -79,10 +79,10 @@ class PreferencesManager(context: Context) {
         }
 
     /** 后台接口地址，切换测试/正式环境用。默认正式服，改为测试服: http://192.168.110.67:8066/v1 */
-    var inmoclawBaseUrl: String
-        get() = prefs.decodeString(KEY_INMOCLAW_BASE_URL, DEFAULT_AGENTCLAW_BASE_URL) ?: DEFAULT_AGENTCLAW_BASE_URL
+    var agentclawBaseUrl: String
+        get() = prefs.decodeString(KEY_AGENTCLAW_BASE_URL, DEFAULT_AGENTCLAW_BASE_URL) ?: DEFAULT_AGENTCLAW_BASE_URL
         set(value) {
-            prefs.encode(KEY_INMOCLAW_BASE_URL, value.trim().trimEnd('/'))
+            prefs.encode(KEY_AGENTCLAW_BASE_URL, value.trim().trimEnd('/'))
         }
 
     var termsAccepted: Boolean
@@ -120,7 +120,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_LAST_APP_VERSION = "last_app_version"
         private const val KEY_LAST_SELECTED_CHAT_SESSION_KEY = "last_selected_chat_session_key"
         private const val KEY_TERMS_ACCEPTED = "terms_accepted"
-        private const val KEY_INMOCLAW_BASE_URL = "inmoclaw_base_url"
+        private const val KEY_AGENTCLAW_BASE_URL = "inmoclaw_base_url"
         const val DEFAULT_AGENTCLAW_BASE_URL = "https://www.cjym123.cn/v1"
 
         /**

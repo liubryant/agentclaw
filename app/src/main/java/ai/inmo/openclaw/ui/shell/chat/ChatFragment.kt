@@ -271,7 +271,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         binding.exportSessionFilesButton.setOnClickListener {
             chatViewModel.rememberExportButtonVisibleForCurrentSession()
             chatViewModel.exportCurrentSessionArtifacts()
-            binding.shellChatRoot.postDelayed({ openInmoClawDirectory() }, 300L)
+            binding.shellChatRoot.postDelayed({ openAgentClawDirectory() }, 300L)
         }
         binding.sendButton.setOnClickListener {
             val text = binding.composerInput.text?.toString().orEmpty().trim()
@@ -313,7 +313,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
                     Toast.LENGTH_SHORT
                 ).show()
                 if (saved) {
-                    binding.shellChatRoot.postDelayed({ openInmoClawDirectory() }, 300L)
+                    binding.shellChatRoot.postDelayed({ openAgentClawDirectory() }, 300L)
                 }
             }
         }
@@ -326,7 +326,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
                     Toast.LENGTH_SHORT
                 ).show()
                 if (saved) {
-                    binding.shellChatRoot.postDelayed({ openInmoClawDirectory() }, 300L)
+                    binding.shellChatRoot.postDelayed({ openAgentClawDirectory() }, 300L)
                 }
             }
         }
@@ -431,8 +431,8 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         ).show()
     }
 
-    private fun openInmoClawDirectory() {
-        val folderDocUri = Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload%2FInmoClaw")
+    private fun openAgentClawDirectory() {
+        val folderDocUri = Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload%2FAgentClaw")
 
         val openFolderIntent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(folderDocUri, DocumentsContract.Document.MIME_TYPE_DIR)
@@ -508,7 +508,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         mimeType: String
     ): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val relativePath = Environment.DIRECTORY_DOWNLOADS + "/InmoClaw/"
+            val relativePath = Environment.DIRECTORY_DOWNLOADS + "/AgentClaw/"
             val values = ContentValues().apply {
                 put(MediaStore.Downloads.DISPLAY_NAME, fileName)
                 put(MediaStore.Downloads.MIME_TYPE, mimeType)
@@ -525,7 +525,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         } else {
             @Suppress("DEPRECATION")
             val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            val targetDir = File(downloadDir, "InmoClaw").apply { mkdirs() }
+            val targetDir = File(downloadDir, "AgentClaw").apply { mkdirs() }
             val targetFile = File(targetDir, fileName)
             targetFile.writeBytes(bytes)
             targetFile.absolutePath

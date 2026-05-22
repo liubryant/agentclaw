@@ -10,7 +10,7 @@ class OnboardingViewModel(context: Context) : BaseTerminalViewModel(context) {
         return TerminalSessionSpec(
             title = "Onboarding",
             subtitle = "Run openclaw onboard and capture the dashboard token URL",
-            command = "printf '=== INMOClaw Onboarding ===\\nSelect loopback (127.0.0.1) when prompted.\\n\\n'; openclaw onboard; printf '\\nOnboarding finished.\\n'",
+            command = "printf '=== AgentClaw Onboarding ===\\nSelect loopback (127.0.0.1) when prompted.\\n\\n'; openclaw onboard; printf '\\nOnboarding finished.\\n'",
             mode = TerminalExecutionMode.SHELL,
             completionMarkers = listOf("Onboarding finished.", "successfully onboarded", "setup complete"),
             finishOnExit = true,

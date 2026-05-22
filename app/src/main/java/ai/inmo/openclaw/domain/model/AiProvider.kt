@@ -17,8 +17,8 @@ data class AiProvider(
     val authHeader: Boolean = false
 ) {
     companion object {
-        const val ENV_INMOCLAW_API_KEY = "INMOCLAW_LLM_API_KEY"
-        const val ENV_INMOCLAW_BASE_URL = "INMOCLAW_LLM_BASE_URL"
+        const val ENV_AGENTCLAW_API_KEY = "INMOCLAW_LLM_API_KEY"
+        const val ENV_AGENTCLAW_BASE_URL = "INMOCLAW_LLM_BASE_URL"
 
         val ANTHROPIC = AiProvider(
             id = "anthropic",
@@ -162,9 +162,9 @@ data class AiProvider(
             authHeader = true
         )
 
-        val INMOCLAW = AiProvider(
-            id = "inmoclaw",
-            name = "INMOClaw",
+        val AGENTCLAW = AiProvider(
+            id = "agentclaw",
+            name = "AgentClaw",
             description = "clawbootdo OpenAI-compatible chat service",
             iconResName = "ic_hub",
             color = 0xFF4F46E5.toInt(),
@@ -174,6 +174,6 @@ data class AiProvider(
             apiType = "openai-completions"
         )
 
-        val ALL = listOf(INMOCLAW)
+        val ALL = listOf(AGENTCLAW)
     }
 }

@@ -583,10 +583,10 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
     }
 
     private fun openAgentclawDocsDirectory() {
-        // Target directory: /sdcard/Download/inmoclaw
+        // Target directory: /sdcard/Download/agentclaw
         // Use SAF Document URI to open the folder in a file manager.
         val folderDocUri = Uri.parse(
-            "content://com.android.externalstorage.documents/document/primary%3ADownload%2Finmoclaw"
+            "content://com.android.externalstorage.documents/document/primary%3ADownload%2Fagentclaw"
         )
 
         val openFolderIntent = Intent(Intent.ACTION_VIEW).apply {

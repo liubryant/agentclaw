@@ -171,8 +171,8 @@ class StartupViewModel : BaseViewModel() {
 //                model = "glm-4.7"
 //            )
             AppGraph.providerConfigService.saveProviderConfig(
-                provider = AiProvider.INMOCLAW,
-                apiKey = GatewayConfigDefaults.resolveInmoClawApiKey(),
+                provider = AiProvider.AGENTCLAW,
+                apiKey = GatewayConfigDefaults.resolveAgentClawApiKey(),
                 model = "glm-4.7"
             )
         }

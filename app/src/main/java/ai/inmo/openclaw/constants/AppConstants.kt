@@ -3,7 +3,7 @@ package ai.inmo.openclaw.constants
 import java.util.Locale
 
 object AppConstants {
-    const val APP_NAME = "INMOClaw"
+    const val APP_NAME = "AgentClaw"
     const val VERSION = "1.0.0"
     const val PACKAGE_NAME = "ai.inmo.openclaw"
 
@@ -34,9 +34,9 @@ object AppConstants {
     const val BOT_API_URL_TEST = "https://testai.bot.cjym.com"
 
     const val USER_AGREEMENT_URL =
-        "http://www.cjym123.cn/agreement_agentclaw.html"
+        "https://www.cjym123.cn/agreement_agentclaw.html"
     const val PRIVACY_POLICY_URL =
-        "http://www.cjym123.cn/privacy_agentclaw.html"
+        "https://www.cjym123.cn/privacy_agentclaw.html"
 
     // Ubuntu rootfs URLs
     private const val UBUNTU_ROOTFS_URL =

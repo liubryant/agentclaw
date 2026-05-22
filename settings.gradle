@@ -38,6 +38,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "INMOClaw"
+rootProject.name = "AgentClaw"
 include ':app'
 include ':core:core_common'

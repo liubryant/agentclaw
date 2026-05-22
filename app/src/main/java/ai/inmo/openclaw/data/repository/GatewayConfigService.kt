@@ -40,11 +40,11 @@ class GatewayConfigService(
     fun prepareForLaunch(): PreparedGatewayConfig {
         val existing = readMutableConfig()
         Logger.d(TAG, "agentclaw CONFIG_BEFORE ${summarizeInmoProvider(existing)}")
-        val merged = GatewayConfigDefaults.mergeConfig(existing, baseUrl = preferencesManager.inmoclawBaseUrl)
+        val merged = GatewayConfigDefaults.mergeConfig(existing, baseUrl = preferencesManager.agentclawBaseUrl)
         bootstrapManager.writeRootfsFile(CONFIG_PATH, gson.toJson(merged.config))
         bootstrapManager.writeRootfsFile(
             MAIN_AGENT_AUTH_PATH,
-            gson.toJson(GatewayConfigDefaults.createMainAgentAuthProfiles(baseUrl = preferencesManager.inmoclawBaseUrl))
+            gson.toJson(GatewayConfigDefaults.createMainAgentAuthProfiles(baseUrl = preferencesManager.agentclawBaseUrl))
         )
         logGatewayAuthDiagnostics(merged.config)
         deployBundledSkills()
@@ -52,7 +52,7 @@ class GatewayConfigService(
         val upstreamSummary = runCatching {
             val models = merged.config["models"] as? Map<*, *>
             val providers = models?.get("providers") as? Map<*, *>
-            val inmo = providers?.get(AiProvider.INMOCLAW.id) as? Map<*, *>
+            val inmo = providers?.get(AiProvider.AGENTCLAW.id) as? Map<*, *>
             val baseUrl = inmo?.get("baseUrl")?.toString().orEmpty()
             val api = inmo?.get("api")?.toString().orEmpty()
             val primaryModel = (((merged.config["agents"] as? Map<*, *>)
@@ -78,7 +78,7 @@ class GatewayConfigService(
         Logger.d(
             TAG,
             "agentclaw CONFIG_FILE path=$CONFIG_PATH, len=${persistedConfig.length}, " +
-                "hasInmoclaw=${persistedConfig.contains(AiProvider.INMOCLAW.id)}, " +
+                "hasAgentclaw=${persistedConfig.contains(AiProvider.AGENTCLAW.id)}, " +
                 "hasApiKeyField=${persistedConfig.contains("\"apiKey\"")}, " +
                 "apiKeyBlank=${persistedConfig.contains("\"apiKey\": \"\"") || persistedConfig.contains("\"apiKey\":\"\"")}"
         )
@@ -87,7 +87,7 @@ class GatewayConfigService(
         Logger.d(
             TAG,
             "agentclaw AGENT_AUTH_FILE path=$MAIN_AGENT_AUTH_PATH, exists=${authProfiles != null}, " +
-                "len=${authProfiles?.length ?: 0}, hasInmoclaw=${authProfiles?.contains(AiProvider.INMOCLAW.id) == true}, " +
+                "len=${authProfiles?.length ?: 0}, hasAgentclaw=${authProfiles?.contains(AiProvider.AGENTCLAW.id) == true}, " +
                 "hasApiKeyField=${authProfiles?.contains("\"apiKey\"") == true}"
         )
     }
@@ -95,7 +95,7 @@ class GatewayConfigService(
     private fun summarizeInmoProvider(config: Map<String, Any?>): String {
         val models = config["models"] as? Map<*, *>
         val providers = models?.get("providers") as? Map<*, *>
-        val inmo = providers?.get(AiProvider.INMOCLAW.id) as? Map<*, *>
+        val inmo = providers?.get(AiProvider.AGENTCLAW.id) as? Map<*, *>
         val agents = config["agents"] as? Map<*, *>
         val defaults = agents?.get("defaults") as? Map<*, *>
         val model = defaults?.get("model") as? Map<*, *>
@@ -106,7 +106,7 @@ class GatewayConfigService(
     }
 
     fun syncDashboardUrlFromConfig(): String? {
-        val merged = GatewayConfigDefaults.mergeConfig(readMutableConfig(), generateToken = false, baseUrl = preferencesManager.inmoclawBaseUrl)
+        val merged = GatewayConfigDefaults.mergeConfig(readMutableConfig(), generateToken = false, baseUrl = preferencesManager.agentclawBaseUrl)
         merged.dashboardUrl?.let { preferencesManager.dashboardUrl = it }
         return merged.dashboardUrl
     }
@@ -161,7 +161,7 @@ object GatewayConfigDefaults {
         val dashboardUrl: String?
     )
 
-    const val FALLBACK_INMOCLAW_API_KEY = "YM00FCE5600128"
+    const val FALLBACK_AGENTCLAW_API_KEY = "YM00FCE5600128"
 
     private val secureRandom = SecureRandom()
 
@@ -252,15 +252,15 @@ object GatewayConfigDefaults {
         defaults.putIfAbsent("timeoutSeconds", DEFAULT_AGENT_TIMEOUT_SECONDS)
         // clawbootdo 当前联调基线固定 glm-4.7（Postman 已验证可用），
         // 这里显式覆盖，避免历史配置残留为 glm-5.1 导致网关侧超时/异常。
-        model["primary"] = "${AiProvider.INMOCLAW.id}/glm-4.7"
+        model["primary"] = "${AiProvider.AGENTCLAW.id}/glm-4.7"
         chatCompletions["enabled"] = true
         gateway.putIfAbsent("mode", "local")
         auth.putIfAbsent("mode", "token")
 
-        val inmoProvider = providers.mutableChild(AiProvider.INMOCLAW.id)
+        val inmoProvider = providers.mutableChild(AiProvider.AGENTCLAW.id)
         inmoProvider["baseUrl"] = baseUrl
         inmoProvider["api"] = "openai-completions"
-        inmoProvider["apiKey"] = resolveInmoClawApiKey()
+        inmoProvider["apiKey"] = resolveAgentClawApiKey()
         // 修复：openclaw 当前配置 schema 不支持 timeoutMs，若存在会导致网关启动失败。
         inmoProvider.remove("timeoutMs")
         inmoProvider["models"] = listOf(
@@ -285,8 +285,8 @@ object GatewayConfigDefaults {
     fun createMainAgentAuthProfiles(
         baseUrl: String = PreferencesManager.DEFAULT_AGENTCLAW_BASE_URL
     ): MutableMap<String, Any?> {
-        val apiKey = resolveInmoClawApiKey()
-        val providerId = AiProvider.INMOCLAW.id
+        val apiKey = resolveAgentClawApiKey()
+        val providerId = AiProvider.AGENTCLAW.id
         val profile = mutableMapOf<String, Any?>(
             "id" to providerId,
             "provider" to providerId,
@@ -297,7 +297,7 @@ object GatewayConfigDefaults {
         )
 
         // 兼容不同 openclaw 版本可能使用的 auth-profiles.json 结构。
-        // 当前报错只说明 agent lane 读取该文件并按 provider=inmoclaw 查 key，
+        // 当前报错只说明 agent lane 读取该文件并按 provider=agentclaw 查 key，
         // 因此同时写入 profiles/providers 顶层映射与 active/default 指针，避免只满足某一种 schema。
         return mutableMapOf(
             "version" to 1,
@@ -310,8 +310,8 @@ object GatewayConfigDefaults {
         )
     }
 
-    fun resolveInmoClawApiKey(): String {
-        return DeviceInfo.sn.trim().ifBlank { FALLBACK_INMOCLAW_API_KEY }
+    fun resolveAgentClawApiKey(): String {
+        return DeviceInfo.sn.trim().ifBlank { FALLBACK_AGENTCLAW_API_KEY }
     }
 
     private fun MutableMap<String, Any?>.mutableChild(key: String): MutableMap<String, Any?> {

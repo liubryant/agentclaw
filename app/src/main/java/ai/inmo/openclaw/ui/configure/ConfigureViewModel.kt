@@ -10,7 +10,7 @@ class ConfigureViewModel(context: Context) : BaseTerminalViewModel(context) {
         return TerminalSessionSpec(
             title = "Configure",
             subtitle = "Run openclaw configure inside proot",
-            command = "printf '=== INMOClaw Configure ===\\n\\n'; openclaw configure; printf '\\nConfiguration finished.\\n'",
+            command = "printf '=== AgentClaw Configure ===\\n\\n'; openclaw configure; printf '\\nConfiguration finished.\\n'",
             mode = TerminalExecutionMode.SHELL,
             completionMarkers = listOf("Configuration finished."),
             finishOnExit = true,
