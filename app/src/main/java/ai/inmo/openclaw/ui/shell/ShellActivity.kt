@@ -149,7 +149,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
 //        binding.navSchedule.setOnClickListener { navigateTo(ShellDestination.SCHEDULE) }
         binding.navAgentclawDocs.setOnClickListener {
             shellViewModel.requestClearChatComposerFocus()
-            openAgentclawDocsDirectory()
+            showExportedFilesDialog()
         }
         binding.navSetting.setOnClickListener {
             shellViewModel.requestClearChatComposerFocus()
@@ -580,6 +580,13 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         handleSessionClick(targetSessionKey)
         intent?.removeExtra(EXTRA_TARGET_SESSION_KEY)
         intent?.removeExtra(EXTRA_TARGET_MESSAGE_INDEX)
+    }
+
+    private fun showExportedFilesDialog() {
+        val tag = ai.inmo.openclaw.ui.shell.chat.ExportedFilesDialogFragment.TAG
+        if (supportFragmentManager.findFragmentByTag(tag) != null) return
+        ai.inmo.openclaw.ui.shell.chat.ExportedFilesDialogFragment.newInstance()
+            .show(supportFragmentManager, tag)
     }
 
     private fun openAgentclawDocsDirectory() {

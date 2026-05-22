@@ -433,19 +433,21 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
 
     private fun openAgentClawDirectory() {
         val folderDocUri = Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload%2FAgentClaw")
-
         val openFolderIntent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(folderDocUri, DocumentsContract.Document.MIME_TYPE_DIR)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         val fallbackIntent = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
-
-        val opened = tryStartActivity(openFolderIntent) ||
-            tryStartActivity(fallbackIntent)
-
+        val opened = tryStartActivity(openFolderIntent) || tryStartActivity(fallbackIntent)
         if (!opened) {
             Toast.makeText(requireContext(), "No file manager available", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showExportedFilesDialog() {
+        if (childFragmentManager.findFragmentByTag(ExportedFilesDialogFragment.TAG) != null) return
+        ExportedFilesDialogFragment.newInstance()
+            .show(childFragmentManager, ExportedFilesDialogFragment.TAG)
     }
 
     private fun tryStartActivity(intent: Intent): Boolean {

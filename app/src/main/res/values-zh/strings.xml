@@ -6,16 +6,16 @@
     <string name="splash_subtitle">Android AI 网关</string>
     <string name="splash_loading">正在加载本地环境...</string>
 
-    <string name="setup_title">设置 INMOClaw</string>
+    <string name="setup_title">设置 AgentClaw</string>
     <string name="setup_subtitle">在启动前准备 rootfs、运行时兼容层和环境校验。</string>
     <string name="setup_action">执行安装</string>
     <string name="setup_skip">暂时跳过</string>
 
-    <string name="startup_title">正在启动 INMOClaw</string>
+    <string name="startup_title">正在启动 AgentClaw</string>
     <string name="startup_loading_title">AgentClaw启动中，正在唤醒您的专属小龙虾</string>
     <string name="startup_loading_subtitle">首次加载需要几分钟时间，请稍等</string>
 
-    <string name="dashboard_title">INMOClaw</string>
+    <string name="dashboard_title">AgentClaw</string>
     <string name="dashboard_phase3_subtitle">当前迁移阶段的 Dashboard 负责网关控制、终端工具入口和服务状态展示。</string>
     <string name="dashboard_gateway_controls">网关控制</string>
     <string name="dashboard_gateway_subtitle_ready">控制台地址：%1$s</string>
@@ -81,7 +81,7 @@
     <string name="settings_proot_path">proot 路径</string>
     <string name="settings_rootfs">Rootfs</string>
     <string name="settings_node_js">Node.js</string>
-    <string name="settings_openclaw">INMOClaw</string>
+    <string name="settings_openclaw">AgentClaw</string>
     <string name="settings_go">Go</string>
     <string name="settings_homebrew">Homebrew</string>
     <string name="settings_openssh">OpenSSH</string>
@@ -196,7 +196,7 @@
     <string name="chat_export_session_files">导出会话文件</string>
     <string name="chat_click_to_download_file">点击查看文件</string>
     <string name="chat_export_no_new_files">未发现可导出的新文件</string>
-    <string name="chat_export_success_to_downloads">已导出 %1$d 个文件到下载目录/InmoClaw</string>
+    <string name="chat_export_success_to_downloads">已导出 %1$d 个文件到下载目录/AgentClaw</string>
     <string name="chat_export_result_partial">导出完成：成功 %1$d，失败 %2$d</string>
     <string name="chat_export_failed_retry">导出失败，请稍后重试</string>
 
@@ -301,9 +301,9 @@
 
     <string name="terms_title">用户协议与隐私政策</string>
     <string name="terms_message">使用 AI 网关能力前，请先阅读并同意用户协议和隐私政策。</string>
-    <string name="terms_user_agreement">INMOClaw 用户协议</string>
-    <string name="terms_privacy_policy">INMOClaw 隐私政策</string>
-    <string name="terms_content">亲爱的用户,欢迎使用INMOClaw!为了更好地保障你的权益,为你提供安全、便捷的服务,请你阅读并同意以下相关协议。\n请你仔细阅读并理解\n<annotation user_agreement="user_agreement">INMOClaw 用户协议</annotation>与<annotation privacy_policy="privacy_policy">INMOClaw 隐私政策</annotation>,点击协议名称可查看全文;\n你点击"同意",即视为已完整阅读、充分理解并自愿接受上述两个协议的全部条款,可正常使用本功能;点击"上一步",将无法使用INMOClaw功能,不影响设备其他核心功能。</string>
+    <string name="terms_user_agreement">AgentClaw 用户协议</string>
+    <string name="terms_privacy_policy">AgentClaw 隐私政策</string>
+    <string name="terms_content">亲爱的用户,欢迎使用agentClaw!为了更好地保障你的权益,为你提供安全、便捷的服务,请你阅读并同意以下相关协议。\n请你仔细阅读并理解\n<annotation user_agreement="user_agreement">INMOClaw 用户协议</annotation>与<annotation privacy_policy="privacy_policy">INMOClaw 隐私政策</annotation>,点击协议名称可查看全文;\n你点击"同意",即视为已完整阅读、充分理解并自愿接受上述两个协议的全部条款,可正常使用本功能;点击"上一步",将无法使用INMOClaw功能,不影响设备其他核心功能。</string>
     <string name="terms_consent_tip">我已阅读并同意上述全部协议</string>
     <string name="terms_reject">上一步</string>
     <string name="terms_accept">同意</string>

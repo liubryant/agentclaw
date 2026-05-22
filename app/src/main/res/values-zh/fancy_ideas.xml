@@ -104,8 +104,8 @@
         🎓学习实践：学习量化交易知识时，通过模拟回测实操演练，加深对交易策略的理解与应用。</string>
 
     <string name="fancy_ideas_prompt_01">创建每日「8:00」定时任务，自动抓取当日「AI科技」领域全网热点、重要资讯及要闻摘要，整理成简洁的内容，准时推送至我的眼前。</string>
-    <string name="fancy_ideas_prompt_02">验证“AR眼镜办公场景自动化助手”这个创业点子，从市场需求、竞争格局、成本投入、盈利模式四个维度分析，生成简易可行性报告。</string>
-    <string name="fancy_ideas_prompt_03">挖掘“AR眼镜办公场景”的核心用户痛点，抓取相关社交平台用户评论和行业数据，分类整理并生成调研简报，支持导出。</string>
+    <string name="fancy_ideas_prompt_02">验证“办公场景自动化助手”这个创业点子，从市场需求、竞争格局、成本投入、盈利模式四个维度分析，生成简易可行性报告。</string>
+    <string name="fancy_ideas_prompt_03">挖掘“办公场景”的核心用户痛点，抓取相关社交平台用户评论和行业数据，分类整理并生成调研简报，支持导出。</string>
     <string name="fancy_ideas_prompt_04">我的运动目标是“每天跑步30分钟、每周3次”，生成明日运动计划，设置「18:30」提醒，支持语音打卡，计划可根据反馈调整。</string>
     <string name="fancy_ideas_prompt_05">推荐今日午餐和晚餐，偏好清淡、不辣、低脂，适合日常居家做法，提供每道菜的简易做法指引，兼顾营养均衡。</string>
     <string name="fancy_ideas_prompt_06">我觉得当前的运动计划太累，时间也不够，调整明日运动计划，将跑步30分钟改为快走20分钟，调整提醒时间为「19:00」。</string>
@@ -113,16 +113,16 @@
     <string name="fancy_ideas_prompt_08">我想养成“每天读书30分钟”的习惯，发起21天打卡挑战，设置「21:00」提醒，支持语音打卡，每日给出鼓励建议，生成打卡数据报表。</string>
     <string name="fancy_ideas_prompt_09">查询北京今日实时天气、未来7天天气预报，结合今日天气给出穿衣建议，若有极端天气及时预警，语音播报结果。</string>
     <string name="fancy_ideas_prompt_10">制定“备考雅思”的每周学习规划，每日学习1.5小时，重点覆盖听力和阅读，每周日进行一次复盘，计划可灵活调整。</string>
-    <string name="fancy_ideas_prompt_11">深度讲解“AR眼镜的光学显示原理”，拆解核心卡点，用通俗语言说明，举2个实际应用例子，延伸相关技术发展趋势。</string>
-    <string name="fancy_ideas_prompt_12">设置每日「9:00」的自动定时任务，自动抓取“AR/VR领域”的最新论文和行业报告，提炼核心观点生成研究简报，推送到我的眼前。</string>
-    <string name="fancy_ideas_prompt_13">每日推送“AI、AR/VR领域”的精选科技资讯，简洁提炼核心内容，支持语音朗读，每日更新10条。</string>
+    <string name="fancy_ideas_prompt_11">深度讲解“的光学显示原理”，拆解核心卡点，用通俗语言说明，举2个实际应用例子，延伸相关技术发展趋势。</string>
+    <string name="fancy_ideas_prompt_12">设置每日「9:00」的自动定时任务，自动抓取“AI领域”的最新论文和行业报告，提炼核心观点生成研究简报，推送到我的眼前。</string>
+    <string name="fancy_ideas_prompt_13">每日推送“AI领域”的精选科技资讯，简洁提炼核心内容，支持语音朗读，每日更新10条。</string>
     <string name="fancy_ideas_prompt_14">规划“周末2天北京亲子游”，偏好亲子景点、清淡餐饮，交通优先选择地铁，生成详细路线。</string>
     <string name="fancy_ideas_prompt_15">我纠结“周末要不要去短途旅行”，触发塔罗抽牌，生成1张塔罗牌，给出趣味指引，语气轻松，不涉及封建迷信。</string>
     <string name="fancy_ideas_prompt_16">输入我的生辰信息（1998年5月10日），给出趣味解读，内容轻松有趣，规避封建迷信表述，保护我的隐私。</string>
     <string name="fancy_ideas_prompt_17">我是INFJ，对方是ESTP，分析我们的性格契合度，给出客观温和的相处建议，仅作娱乐参考，不绝对化。</string>
     <string name="fancy_ideas_prompt_18">推荐“豆瓣8分以上、悬疑类型”的影视，优先选择近两年上映的，提供合规观看指引，推荐10部并简要介绍剧情。</string>
     <string name="fancy_ideas_prompt_19">查询中国最新GDP数据、1年期LPR利率，给出通俗解读，对比上月数据，说明变化趋势，语音播报结果。</string>
-    <string name="fancy_ideas_prompt_20">启动量化策略模拟回测，输入“均线交叉交易策略”（5日均线金叉买入、死叉卖出），用近1年的股票历史数据进行回测，生成简洁适配AR镜片的回测报告，重点展示收益率、风险系数，完成后推送至我的AR镜片。</string>
+    <string name="fancy_ideas_prompt_20">启动量化策略模拟回测，输入“均线交叉交易策略”（5日均线金叉买入、死叉卖出），用近1年的股票历史数据进行回测，生成简洁适配的回测报告，重点展示收益率、风险系数，完成后推送至我的AR镜片。</string>
 
     <string-array name="fancy_ideas_titles">
         <item>@string/fancy_ideas_title_01</item>

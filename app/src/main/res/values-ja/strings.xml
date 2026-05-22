@@ -12,7 +12,7 @@
     <string name="startup_title">INMOClawを起動中</string>
     <string name="startup_loading_title">INMOClawを起動しています</string>
     <string name="startup_loading_subtitle">初回起動時は数分かかることがあります。しばらくお待ちください</string>
-    <string name="dashboard_title">INMOClaw</string>
+    <string name="dashboard_title">AgentClaw</string>
     <string name="dashboard_phase3_subtitle">現在の移行段階では、ゲートウェイ制御、ターミナルツール、サービスステータスがここに表示されます。</string>
     <string name="dashboard_gateway_controls">ゲートウェイ制御</string>
     <string name="dashboard_gateway_subtitle_ready">ダッシュボード: %1$s</string>
@@ -74,7 +74,7 @@
     <string name="settings_proot_path">prootパス</string>
     <string name="settings_rootfs">Rootfs</string>
     <string name="settings_node_js">Node.js</string>
-    <string name="settings_openclaw">INMOClaw</string>
+    <string name="settings_openclaw">AgentClaw</string>
     <string name="settings_go">Go</string>
     <string name="settings_homebrew">Homebrew</string>
     <string name="settings_openssh">OpenSSH</string>
@@ -282,9 +282,9 @@
     <string name="schedule_carry_to_chat">チャットに引き継ぐ</string>
     <string name="terms_title">利用規約およびプライバシーポリシー</string>
     <string name="terms_message">AIゲートウェイ機能をご利用になる前に、規約とプライバシーポリシーをご確認ください。</string>
-    <string name="terms_user_agreement">INMOClaw利用規約</string>
-    <string name="terms_privacy_policy">INMOClawプライバシーポリシー</string>
-    <string name="terms_content">ユーザーの皆様へ、ようこそINMOClawへ！お客様の権利をより良く保護し、より安全で便利なサービスを提供するために、以下の規約をお読みいただき、同意をお願いします。\n\n以下の内容を注意深くお読みになり、十分にご理解ください。\n<annotation user_agreement="user_agreement">INMOClaw利用規約</annotation> および <annotation privacy_policy="privacy_policy">INMOClawプライバシーポリシー</annotation>。規約名をタップすると全文を表示できます。\n「同意する」をタップすることで、上記2つの規約のすべての条項を十分に読み、理解し、自発的に受け入れたことになり、本機能を引き続きご利用いただけます。「戻る」をタップすると、INMOClaw機能はご利用いただけませんが、その他のコアデバイス機能に影響はありません。</string>
+    <string name="terms_user_agreement">AgentClaw利用規約</string>
+    <string name="terms_privacy_policy">AgentClawプライバシーポリシー</string>
+    <string name="terms_content">ユーザーの皆様へ、ようこそAgentClawへ！お客様の権利をより良く保護し、より安全で便利なサービスを提供するために、以下の規約をお読みいただき、同意をお願いします。\n\n以下の内容を注意深くお読みになり、十分にご理解ください。\n<annotation user_agreement="user_agreement">INMOClaw利用規約</annotation> および <annotation privacy_policy="privacy_policy">INMOClawプライバシーポリシー</annotation>。規約名をタップすると全文を表示できます。\n「同意する」をタップすることで、上記2つの規約のすべての条項を十分に読み、理解し、自発的に受け入れたことになり、本機能を引き続きご利用いただけます。「戻る」をタップすると、INMOClaw機能はご利用いただけませんが、その他のコアデバイス機能に影響はありません。</string>
     <string name="terms_consent_tip">上記のすべての規約を読み、同意します</string>
     <string name="terms_reject">戻る</string>
     <string name="terms_accept">同意する</string>
