@@ -44,20 +44,20 @@
         android:layout_marginTop="12dp"
         android:orientation="vertical">
 
-        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:orientation="vertical">
-            <TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/package_go" />
+        <LinearLayout style="@style/Widget.AgentClaw.CardRow" android:orientation="vertical">
+            <TextView style="@style/Widget.AgentClaw.CardTitle" android:text="@string/package_go" />
             <TextView android:id="@+id/goStatusView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="@color/text_secondary" />
             <Button android:id="@+id/goActionButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" />
         </LinearLayout>
 
-        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical">
-            <TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/package_homebrew" />
+        <LinearLayout style="@style/Widget.AgentClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical">
+            <TextView style="@style/Widget.AgentClaw.CardTitle" android:text="@string/package_homebrew" />
             <TextView android:id="@+id/brewStatusView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="@color/text_secondary" />
             <Button android:id="@+id/brewActionButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" />
         </LinearLayout>
 
-        <LinearLayout style="@style/Widget.INMOClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical">
-            <TextView style="@style/Widget.INMOClaw.CardTitle" android:text="@string/package_openssh" />
+        <LinearLayout style="@style/Widget.AgentClaw.CardRow" android:layout_marginTop="8dp" android:orientation="vertical">
+            <TextView style="@style/Widget.AgentClaw.CardTitle" android:text="@string/package_openssh" />
             <TextView android:id="@+id/sshStatusView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="@color/text_secondary" />
             <Button android:id="@+id/sshActionButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" />
         </LinearLayout>

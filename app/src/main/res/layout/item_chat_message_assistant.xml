@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
+        android:layout_marginEnd="0dp"
         android:background="@drawable/bg_chat_message_assistant"
         android:gravity="top"
         android:orientation="horizontal">
@@ -46,14 +47,14 @@
 
             <ImageView
                 android:id="@+id/generatedImageView"
-                android:layout_width="240dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:adjustViewBounds="true"
                 android:background="#0F000000"
                 android:contentDescription="@string/chat_generated_image"
                 android:maxHeight="360dp"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 android:visibility="gone" />
 
             <TextView
@@ -69,8 +70,8 @@
 
             <VideoView
                 android:id="@+id/generatedVideoView"
-                android:layout_width="240dp"
-                android:layout_height="320dp"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
                 android:layout_marginTop="10dp"
                 android:background="#0F000000"
                 android:visibility="gone" />

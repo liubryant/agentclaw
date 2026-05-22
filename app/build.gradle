@@ -6,6 +6,12 @@ plugins {
     id("com.google.firebase.crashlytics")
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace 'ai.cjym.agentclaw'
     compileSdkVersion 34
@@ -19,6 +25,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        ndk {
+            abiFilters "arm64-v8a"
+        }
+
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
@@ -26,18 +36,18 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('../keystore/InmoClaw.jks')
-            storePassword '123456'
-            keyAlias 'INMOClaw'
-            keyPassword '123456'
+            storeFile file(keystoreProperties['storeFile'] ?: '../keystore/InmoClaw.jks')
+            storePassword keystoreProperties['storePassword'] ?: ''
+            keyAlias keystoreProperties['keyAlias'] ?: ''
+            keyPassword keystoreProperties['keyPassword'] ?: ''
             enableV3Signing = true
             enableV4Signing = true
         }
         debug {
-            storeFile file('../keystore/InmoClaw.jks')
-            storePassword '123456'
-            keyAlias 'INMOClaw'
-            keyPassword '123456'
+            storeFile file(keystoreProperties['storeFile'] ?: '../keystore/InmoClaw.jks')
+            storePassword keystoreProperties['storePassword'] ?: ''
+            keyAlias keystoreProperties['keyAlias'] ?: ''
+            keyPassword keystoreProperties['keyPassword'] ?: ''
             enableV3Signing = true
             enableV4Signing = true
         }

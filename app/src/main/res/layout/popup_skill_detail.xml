@@ -67,8 +67,8 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:focusable="true"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
                 android:text="@string/setting_remove"
                 android:textColor="#FF6C6C"
                 android:textSize="24px" />

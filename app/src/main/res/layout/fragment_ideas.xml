@@ -26,24 +26,24 @@
 
             <RadioButton
                 android:id="@+id/filterAll"
-                style="@style/Widget.INMOClaw.FilterChip"
+                style="@style/Widget.AgentClaw.FilterChip"
                 android:text="@string/ideas_filter_all" />
 
             <RadioButton
                 android:id="@+id/filterWork"
-                style="@style/Widget.INMOClaw.FilterChip"
+                style="@style/Widget.AgentClaw.FilterChip"
                 android:layout_marginStart="8dp"
                 android:text="@string/ideas_filter_work" />
 
             <RadioButton
                 android:id="@+id/filterAutomation"
-                style="@style/Widget.INMOClaw.FilterChip"
+                style="@style/Widget.AgentClaw.FilterChip"
                 android:layout_marginStart="8dp"
                 android:text="@string/ideas_filter_automation" />
 
             <RadioButton
                 android:id="@+id/filterLife"
-                style="@style/Widget.INMOClaw.FilterChip"
+                style="@style/Widget.AgentClaw.FilterChip"
                 android:layout_marginStart="8dp"
                 android:text="@string/ideas_filter_life" />
         </LinearLayout>

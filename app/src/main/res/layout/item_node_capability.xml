@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Widget.INMOClaw.CardRow"
+    style="@style/Widget.AgentClaw.CardRow"
     android:layout_marginTop="8dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
@@ -21,7 +21,7 @@
 
         <TextView
             android:id="@+id/capabilityName"
-            style="@style/Widget.INMOClaw.CardTitle"
+            style="@style/Widget.AgentClaw.CardTitle"
             android:text="@string/node_capability_label" />
 
         <TextView

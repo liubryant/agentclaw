@@ -10,21 +10,18 @@ object AppConstants {
     /** Matches ANSI escape sequences (e.g. color codes in terminal output). */
     val ANSI_ESCAPE = Regex("\u001b\\[[0-9;]*[a-zA-Z]")
 
-    const val AUTHOR_NAME = "Mithun Gowda B"
-    const val AUTHOR_EMAIL = "mithungowda.b7411@gmail.com"
-    const val GITHUB_URL = "https://github.com/mithun50/openclaw-termux"
+    const val AUTHOR_NAME = "AgentClaw Team"
+    const val AUTHOR_EMAIL = "support@cjym123.cn"
+    const val GITHUB_URL = "https://www.cjym123.cn"
     const val LICENSE = "MIT"
 
-    const val GITHUB_API_LATEST_RELEASE =
-        "https://api.github.com/repos/mithun50/openclaw-termux/releases/latest"
+    const val GITHUB_API_LATEST_RELEASE = ""
 
-    // NextGenX
-    const val ORG_NAME = "NextGenX"
-    const val ORG_EMAIL = "nxgextra@gmail.com"
-    const val INSTAGRAM_URL = "https://www.instagram.com/nexgenxplorer_nxg"
-    const val YOUTUBE_URL = "https://youtube.com/@nexgenxplorer?si=UG-wBC8UIyeT4bbw"
-    const val PLAY_STORE_URL =
-        "https://play.google.com/store/apps/dev?id=8262374975871504599"
+    const val ORG_NAME = "AgentClaw"
+    const val ORG_EMAIL = "support@cjym123.cn"
+    const val INSTAGRAM_URL = ""
+    const val YOUTUBE_URL = ""
+    const val PLAY_STORE_URL = ""
 
     const val GATEWAY_HOST = "127.0.0.1"
     const val GATEWAY_PORT = 18789

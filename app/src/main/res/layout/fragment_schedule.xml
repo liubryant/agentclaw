@@ -62,24 +62,24 @@
 
             <RadioButton
                 android:id="@+id/filterAll"
-                style="@style/Widget.INMOClaw.FilterChip"
+                style="@style/Widget.AgentClaw.FilterChip"
                 android:text="@string/schedule_filter_all" />
 
             <RadioButton
                 android:id="@+id/filterRunning"
-                style="@style/Widget.INMOClaw.FilterChip"
+                style="@style/Widget.AgentClaw.FilterChip"
                 android:layout_marginStart="8dp"
                 android:text="@string/schedule_filter_running" />
 
             <RadioButton
                 android:id="@+id/filterPaused"
-                style="@style/Widget.INMOClaw.FilterChip"
+                style="@style/Widget.AgentClaw.FilterChip"
                 android:layout_marginStart="8dp"
                 android:text="@string/schedule_filter_paused" />
 
             <RadioButton
                 android:id="@+id/filterCompleted"
-                style="@style/Widget.INMOClaw.FilterChip"
+                style="@style/Widget.AgentClaw.FilterChip"
                 android:layout_marginStart="8dp"
                 android:text="@string/schedule_filter_completed" />
         </LinearLayout>

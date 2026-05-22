@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/providerName"
-        style="@style/Widget.INMOClaw.CardTitle"
+        style="@style/Widget.AgentClaw.CardTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
