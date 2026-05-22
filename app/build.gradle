@@ -110,6 +110,9 @@ android {
 }
 
 dependencies {
+    // 穿山甲融合广告 SDK（GroMore）
+    implementation 'com.pangle.cn:mediation-sdk:7.6.1.1'
+
     // 友盟统计 SDK
     implementation 'com.umeng.umsdk:common:9.4.7'
     implementation 'com.umeng.umsdk:asms:1.4.0'
