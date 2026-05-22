@@ -11,6 +11,21 @@ def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
+def signingStoreFile = keystoreProperties['storeFile']
+def signingStorePassword = keystoreProperties['storePassword']
+def signingKeyAlias = keystoreProperties['keyAlias']
+def signingKeyPassword = keystoreProperties['keyPassword']
+def hasSigningConfig = signingStoreFile && signingStorePassword && signingKeyAlias && signingKeyPassword
+def releaseTaskRequested = gradle.startParameter.taskNames.any {
+    it.toLowerCase(Locale.ROOT).contains("release")
+}
+
+if (releaseTaskRequested && !hasSigningConfig) {
+    throw new GradleException(
+            "Release signing requires keystore.properties with storeFile, storePassword, keyAlias, and keyPassword. " +
+                    "Debug builds use the default Android debug keystore when this file is missing."
+    )
+}
 
 android {
     namespace 'ai.cjym.agentclaw'
@@ -35,21 +50,23 @@ android {
     }
 
     signingConfigs {
-        release {
-            storeFile file(keystoreProperties['storeFile'] ?: '../keystore/InmoClaw.jks')
-            storePassword keystoreProperties['storePassword'] ?: ''
-            keyAlias keystoreProperties['keyAlias'] ?: ''
-            keyPassword keystoreProperties['keyPassword'] ?: ''
-            enableV3Signing = true
-            enableV4Signing = true
-        }
-        debug {
-            storeFile file(keystoreProperties['storeFile'] ?: '../keystore/InmoClaw.jks')
-            storePassword keystoreProperties['storePassword'] ?: ''
-            keyAlias keystoreProperties['keyAlias'] ?: ''
-            keyPassword keystoreProperties['keyPassword'] ?: ''
-            enableV3Signing = true
-            enableV4Signing = true
+        if (hasSigningConfig) {
+            release {
+                storeFile file(signingStoreFile)
+                storePassword signingStorePassword
+                keyAlias signingKeyAlias
+                keyPassword signingKeyPassword
+                enableV3Signing = true
+                enableV4Signing = true
+            }
+            debug {
+                storeFile file(signingStoreFile)
+                storePassword signingStorePassword
+                keyAlias signingKeyAlias
+                keyPassword signingKeyPassword
+                enableV3Signing = true
+                enableV4Signing = true
+            }
         }
     }
 
@@ -64,13 +81,17 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            if (hasSigningConfig) {
+                signingConfig signingConfigs.debug
+            }
             minifyEnabled = false
             shrinkResources = false
         }
 
         release {
-            signingConfig signingConfigs.release
+            if (hasSigningConfig) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled = true
             shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
