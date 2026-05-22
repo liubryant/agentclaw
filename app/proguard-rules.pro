@@ -128,6 +128,21 @@
 }
 
 # ============================================================
+# 友盟统计 SDK
+# ============================================================
+-keep class com.umeng.** { *; }
+-keep class com.uc.** { *; }
+-keep class com.ut.** { *; }
+-keep class com.ta.** { *; }
+-keep class anet.** { *; }
+-keep class anetwork.** { *; }
+-keep class org.android.agoo.** { *; }
+-keep class org.android.spdy.** { *; }
+-keep class com.zui.** { *; }
+-dontwarn com.umeng.**
+-dontwarn com.ut.**
+
+# ============================================================
 # 抑制常见无害警告
 # ============================================================
 -dontwarn javax.annotation.**

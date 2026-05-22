@@ -107,6 +107,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- 友盟集成测试唤起配置，YOUR_UMENG_APPKEY 替换为实际 AppKey -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="um.6a1010366f259537c7ad0122" />
+            </intent-filter>
         </activity>
 
         <service android:name=".service.gateway.GatewayService" android:exported="false" android:foregroundServiceType="dataSync" />

@@ -110,6 +110,11 @@ android {
 }
 
 dependencies {
+    // 友盟统计 SDK
+    implementation 'com.umeng.umsdk:common:9.4.7'
+    implementation 'com.umeng.umsdk:asms:1.4.0'
+    implementation 'com.umeng.umsdk:abtest:1.0.0'
+
     implementation libs.androidx.core.ktx
     implementation libs.androidx.core.splashscreen
     implementation libs.androidx.appcompat

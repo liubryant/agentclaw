@@ -12,6 +12,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.umeng.commonsdk.UMConfigure
 import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
@@ -38,6 +39,11 @@ class SplashActivity : AppCompatActivity() {
                     return@launch
                 }
                 AppGraph.preferences.termsAccepted = true
+                // 用户首次同意隐私政策，正式初始化友盟 SDK 开始采数
+                initUmengSdk()
+            } else {
+                // 老用户已同意过，直接初始化
+                initUmengSdk()
             }
 
             resolveDestination()
@@ -56,6 +62,16 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             }
         ).show()
+    }
+
+    private fun initUmengSdk() {
+        UMConfigure.init(
+            this,
+            "6a1010366f259537c7ad0122",
+            "agentclaw",
+            UMConfigure.DEVICE_TYPE_PHONE,
+            null
+        )
     }
 
     private fun resolveDestination() {
