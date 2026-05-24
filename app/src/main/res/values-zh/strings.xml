@@ -12,7 +12,7 @@
     <string name="setup_skip">暂时跳过</string>
 
     <string name="startup_title">正在启动 AgentClaw</string>
-    <string name="startup_loading_title">AgentClaw启动中，正在唤醒您的专属小龙虾</string>
+    <string name="startup_loading_title">AgentClaw启动中，\n正在唤醒您的专属小龙虾</string>
     <string name="startup_loading_subtitle">首次加载需要几分钟时间，请稍等</string>
 
     <string name="dashboard_title">AgentClaw</string>
@@ -187,7 +187,7 @@
     <string name="chat_welcome_subtitle">7x24 小时的 AI 副驾，帮你聊天、启发灵感和管理定时任务。</string>
     <string name="chat_disclaimer">内容由 AI 生成，仅供参考。</string>
     <string name="chat_empty_brand">Agent Claw</string>
-    <string name="chat_empty_subtitle">7x24小时，随时随地召唤的全能电脑AI助手</string>
+    <string name="chat_empty_subtitle">7x24小时，随时随地召唤的全能AI助手</string>
     <string name="chat_disclaimer_cn">内容由AI生成，仅供参考</string>
     <string name="chat_shell_input_hint">描述任务或提问任何问题</string>
     <string name="chat_usage_hint">已用%1$s万，剩余%2$s%%</string>
@@ -247,9 +247,9 @@
 
     <string name="shell_open_sidebar">打开侧边栏</string>
     <string name="shell_collapse_sidebar">收起侧栏</string>
-    <string name="shell_search_hint">搜索</string>
+    <string name="shell_search_hint">搜索历史</string>
     <string name="shell_sections">功能分区</string>
-    <string name="shell_session_empty">暂无历史对话</string>
+    <string name="shell_session_empty">暂无对话</string>
     <string name="shell_delete_confirm_title">确认删除</string>
     <string name="shell_delete_confirm_message">该对话内容将被删除无法恢复</string>
     <string name="shell_delete_confirm_negative">不同意</string>
@@ -299,11 +299,11 @@
     <string name="schedule_next_run">下次执行：%1$s</string>
     <string name="schedule_carry_to_chat">带入聊天</string>
 
-    <string name="terms_title">用户协议与隐私政策</string>
+    <string name="terms_title">个人信息保护提示</string>
     <string name="terms_message">使用 AI 网关能力前，请先阅读并同意用户协议和隐私政策。</string>
     <string name="terms_user_agreement">AgentClaw 用户协议</string>
     <string name="terms_privacy_policy">AgentClaw 隐私政策</string>
-    <string name="terms_content">亲爱的用户,欢迎使用agentClaw!为了更好地保障你的权益,为你提供安全、便捷的服务,请你阅读并同意以下相关协议。\n请你仔细阅读并理解\n<annotation user_agreement="user_agreement">AgentClaw 用户协议</annotation>与<annotation privacy_policy="privacy_policy">AgentClaw 隐私政策</annotation>,点击协议名称可查看全文;\n你点击"同意",即视为已完整阅读、充分理解并自愿接受上述两个协议的全部条款,可正常使用本功能;点击"上一步",将无法使用INMOClaw功能,不影响设备其他核心功能。</string>
+    <string name="terms_content">亲爱的用户，欢迎使用AgentClaw！为了更好地保障您的权益，为您提供安全、便捷的服务，请您阅读并同意以下相关协议。请您仔细阅读并理解\n<annotation user_agreement="user_agreement">AgentClaw 用户协议</annotation>与<annotation privacy_policy="privacy_policy">AgentClaw 隐私政策</annotation>，点击协议名称可查看全文；\n您点击"同意"，即视为已完整阅读、充分理解并自愿接受上述两个协议的全部条款，可正常使用本功能；点击"不同意"，将无法使用AgentClaw功能，不影响设备其他核心功能。</string>
     <string name="terms_consent_tip">我已阅读并同意上述全部协议</string>
     <string name="terms_reject">不同意</string>
     <string name="terms_accept">同意</string>
@@ -365,6 +365,6 @@
     <string name="chat_entry_video">AI视频</string>
     <string name="chat_video_loading">视频加载中...</string>
     <string name="chat_video_load_failed">视频加载失败</string>
-    <string name="chat_video_downloaded">视频下载到 Downloads/InmoClaw</string>
+    <string name="chat_video_downloaded">视频下载到 Downloads/AgentClaw</string>
     <string name="chat_video_download_failed">视频下载失败</string>
 </resources>

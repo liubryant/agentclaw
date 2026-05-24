@@ -2,7 +2,7 @@
 
 ## Context
 
-当前 `ProviderConfigService.saveProviderConfig()` 将 apiKey 和 baseUrl 明文写入 `openclaw.json`。openclaw gateway 已原生支持 `${VAR_NAME}` 环境变量替换语法。本次改动：对 INMOCLAW 提供者写入占位符 `${INMOCLAW_LLM_API_KEY}` / `${INMOCLAW_LLM_BASE_URL}`，实际值通过 PRoot 进程环境变量注入，gateway 启动时自动解析。
+当前 `ProviderConfigService.saveProviderConfig()` 将 apiKey 和 baseUrl 明文写入 `openclaw.json`。openclaw gateway 已原生支持 `${VAR_NAME}` 环境变量替换语法。本次改动：对 AgentClaw 提供者写入占位符 `${INMOCLAW_LLM_API_KEY}` / `${INMOCLAW_LLM_BASE_URL}`，实际值通过 PRoot 进程环境变量注入，gateway 启动时自动解析。
 
 ## 修改文件（5 个）
 

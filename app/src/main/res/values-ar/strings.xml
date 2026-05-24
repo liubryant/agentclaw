@@ -4,14 +4,14 @@
     <string name="common_copied">تم النسخ</string>
     <string name="splash_subtitle">بوابة الذكاء الاصطناعي لأنظمة أندرويد</string>
     <string name="splash_loading">جاري تحميل البيئة المحلية...</string>
-    <string name="setup_title">إعداد INMOClaw</string>
+    <string name="setup_title">إعداد AgentClaw</string>
     <string name="setup_subtitle">تحضير نظام الجذور، وتوافقية بيئة التشغيل، والتحقق من الصحة قبل البدء.</string>
     <string name="setup_action">تشغيل الإعداد</string>
     <string name="setup_skip">تخطي الآن</string>
-    <string name="startup_title">بدء تشغيل INMOClaw</string>
-    <string name="startup_loading_title">INMOClaw جارٍ بدء التشغيل</string>
+    <string name="startup_title">بدء تشغيل AgentClaw</string>
+    <string name="startup_loading_title">AgentClaw جارٍ بدء التشغيل</string>
     <string name="startup_loading_subtitle">قد يستغرق التحميل الأول بضع دقائق، يُرجى الانتظار</string>
-    <string name="dashboard_title">INMOClaw</string>
+    <string name="dashboard_title">AgentClaw</string>
     <string name="dashboard_phase3_subtitle">توجد هنا أدوات التحكم بالبوابة، وأدوات الطرفية، وحالة الخدمة خلال مراحل النقل الحالية.</string>
     <string name="dashboard_gateway_controls">أدوات التحكم بالبوابة</string>
     <string name="dashboard_gateway_subtitle_ready">لوحة المعلومات: %1$s</string>
@@ -73,7 +73,7 @@
     <string name="settings_proot_path">مسار proot</string>
     <string name="settings_rootfs">نظام الجذور</string>
     <string name="settings_node_js">Node.js</string>
-    <string name="settings_openclaw">INMOClaw</string>
+    <string name="settings_openclaw">AgentClaw</string>
     <string name="settings_go">Go</string>
     <string name="settings_homebrew">Homebrew</string>
     <string name="settings_openssh">OpenSSH</string>
@@ -183,7 +183,7 @@
     <string name="chat_export_session_files">تصدير ملفات الجلسة</string>
     <string name="chat_click_to_download_file">انقر لتنزيل الملف</string>
     <string name="chat_export_no_new_files">لم يتم العثور على ملفات جديدة قابلة للتصدير</string>
-    <string name="chat_export_success_to_downloads">تم تصدير %1$d ملف(ات) إلى Downloads/InmoClaw</string>
+    <string name="chat_export_success_to_downloads">تم تصدير %1$d ملف(ات) إلى Downloads/AgentClaw</string>
     <string name="chat_export_result_partial">اكتمل التصدير: نجح %1$d، وفشل %2$d</string>
     <string name="chat_export_failed_retry">فشل التصدير، يُرجى المحاولة لاحقًا</string>
     <string name="setting_title">الإعدادات</string>
@@ -281,9 +281,9 @@
     <string name="schedule_carry_to_chat">نقل إلى المحادثة</string>
     <string name="terms_title">اتفاقية المستخدم وسياسة الخصوصية</string>
     <string name="terms_message">يُرجى مراجعة الاتفاقية وسياسة الخصوصية قبل استخدام ميزات بوابة الذكاء الاصطناعي.</string>
-    <string name="terms_user_agreement">اتفاقية مستخدم INMOClaw</string>
-    <string name="terms_privacy_policy">سياسة خصوصية INMOClaw</string>
-    <string name="terms_content">عزيزي المستخدم، مرحبًا بك في INMOClaw! لحماية حقوقك بشكل أفضل وتقديم خدمات أكثر أمانًا وملاءمة، يُرجى قراءة الاتفاقيات التالية والموافقة عليها.\nيُرجى القراءة بعناية والفهم الكامل\n<annotation user_agreement="user_agreement">اتفاقية مستخدم INMOClaw</annotation> و <annotation privacy_policy="privacy_policy">سياسة خصوصية INMOClaw</annotation>. انقر على اسم الاتفاقية لعرض النص الكامل؛\n\nبالنقر على \"موافق\"، فإنك تؤكد أنك قد قرأت وفهمت وقبلت طواعية جميع شروط الاتفاقيتين أعلاه بشكل كامل، ويمكنك متابعة استخدام هذه الميزة. بالنقر على \"رجوع\"، لن تتمكن من استخدام ميزة INMOClaw، لكن الميزات الأساسية الأخرى للجهاز لن تتأثر.</string>
+    <string name="terms_user_agreement">اتفاقية مستخدم AgentClaw</string>
+    <string name="terms_privacy_policy">سياسة خصوصية AgentClaw</string>
+    <string name="terms_content">عزيزي المستخدم، مرحبًا بك في AgentClaw! لحماية حقوقك بشكل أفضل وتقديم خدمات أكثر أمانًا وملاءمة، يُرجى قراءة الاتفاقيات التالية والموافقة عليها.\nيُرجى القراءة بعناية والفهم الكامل\n<annotation user_agreement="user_agreement">اتفاقية مستخدم AgentClaw</annotation> و <annotation privacy_policy="privacy_policy">سياسة خصوصية AgentClaw</annotation>. انقر على اسم الاتفاقية لعرض النص الكامل؛\n\nبالنقر على \"موافق\"، فإنك تؤكد أنك قد قرأت وفهمت وقبلت طواعية جميع شروط الاتفاقيتين أعلاه بشكل كامل، ويمكنك متابعة استخدام هذه الميزة. بالنقر على \"رجوع\"، لن تتمكن من استخدام ميزة AgentClaw، لكن الميزات الأساسية الأخرى للجهاز لن تتأثر.</string>
     <string name="terms_consent_tip">لقد قرأت وأوافق على جميع الاتفاقيات أعلاه</string>
     <string name="terms_reject">رجوع</string>
     <string name="terms_accept">موافق</string>

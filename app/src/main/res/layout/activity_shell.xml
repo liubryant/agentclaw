@@ -18,13 +18,34 @@
         android:paddingBottom="16dp">
 
         <TextView
+            android:id="@+id/newChatButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_shell_session_item"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_vertical"
+            android:maxHeight="45dp"
+            android:minHeight="37dp"
+            android:paddingStart="14dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="4dp"
+            android:paddingBottom="8dp"
+            android:text="@string/chat_new"
+            android:textColor="@color/text_primary"
+            android:textSize="11sp"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/sidebarSearchInput"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="@drawable/bg_shell_search_field"
             android:clickable="true"
-            android:drawableStart="@drawable/ic_shell_search"
-            android:drawablePadding="2dp"
+            android:drawableStart="@drawable/ic_shell_search_small"
+            android:drawablePadding="4dp"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:fontFamily="sans-serif"
@@ -37,27 +58,7 @@
             android:paddingEnd="2dp"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/sidebar_muted"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/newChatButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_shell_new_chat"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:minHeight="56dp"
-            android:paddingStart="18dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="18dp"
-            android:paddingBottom="16dp"
-            android:text="@string/chat_new"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp" />
+            android:textSize="11sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -129,6 +130,7 @@
                 android:id="@+id/navAgentclawDocs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 app:navIcon="@mipmap/file"
                 app:navIconTint="@color/black"
                 app:navText="@string/agentclaw_docs_title" />
@@ -145,6 +147,7 @@
                 android:id="@+id/navSetting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 app:navIcon="@drawable/ic_shell_setting"
                 app:navIconTint="@color/black"
                 app:navText="@string/settings_title" />

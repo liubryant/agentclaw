@@ -1,6 +1,6 @@
-# INMOClaw
+# AgentClaw
 
-INMOClaw 是一个运行在 Android 设备上的 AI Gateway 客户端与本地执行容器。它不是单纯的聊天界面，而是把本地 Ubuntu rootfs、Node/OpenClaw 运行时、网关控制、聊天会话、终端、设备能力暴露、技能管理、可选包安装和 SSH 工具整合在同一个 App 中，目标是在移动设备上提供持续可用的 AI 协作与自动化能力。
+AgentClaw 是一个运行在 Android 设备上的 AI Gateway 客户端与本地执行容器。它不是单纯的聊天界面，而是把本地 Ubuntu rootfs、Node/OpenClaw 运行时、网关控制、聊天会话、终端、设备能力暴露、技能管理、可选包安装和 SSH 工具整合在同一个 App 中，目标是在移动设备上提供持续可用的 AI 协作与自动化能力。
 
 当前仓库是一个基于 Kotlin + Android XML + ViewBinding/DataBinding 的多模块 Android 工程，主要面向内部开发者维护与迭代。
 
@@ -35,7 +35,7 @@ INMOClaw 是一个运行在 Android 设备上的 AI Gateway 客户端与本地�
 - 语言：Kotlin
 - UI：Android XML、ViewBinding、DataBinding
 - 构建：Gradle Groovy DSL
-- Android Gradle Plugin：`8.10.1`
+- Android Gradle Plugin：`8.7.3`
 - Kotlin：`2.2.10`
 - 最低系统版本：`minSdk 24`
 - 目标版本：`targetSdk 34`

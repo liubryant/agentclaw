@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-INMOClaw (package: `ai.cjym.agentclaw`) is an Android app that runs an OpenClaw gateway inside a PRoot-based Linux container (Ubuntu 24.04), providing terminal access, node connectivity via WebSocket, and AI chat capabilities. Built by INMO.
+AgentClaw (package: `ai.cjym.agentclaw`) is an Android app that runs an OpenClaw gateway inside a PRoot-based Linux container (Ubuntu 24.04), providing terminal access, node connectivity via WebSocket, and AI chat capabilities. Built by INMO.
 
 ## Build Commands
 
@@ -95,11 +95,11 @@ Managers expose `StateFlow` for state (e.g., `GatewayState`, `NodeState`, `Setup
 - **Build files**: Groovy DSL (`build.gradle`, not `.kts`)
 - **Version catalog**: `gradle/libs.versions.toml`
 - **compileSdk / targetSdk**: 34, **minSdk**: 24
-- **Java**: 11, **Kotlin**: 2.2.10, **AGP**: 8.10.1
+- **Java**: 11, **Kotlin**: 2.2.10, **AGP**: 8.7.3
 - **Room schemas**: exported to `app/schemas/` via KSP arg
 - **ViewBinding + BuildConfig + AIDL**: enabled in `:app`
 - APK naming: `INMOOpenClaw-{buildType}-v{version}-{timestamp}.apk`
-- Signing: `keystore/InmoClaw.jks` for both debug and release
+- Signing: `keystore/AgentClaw.jks` for both debug and release
 - `aaptOptions.noCompress`: `gz`, `xz`, `bin` etc. — required for `openFd()` on large assets
 - `jniLibs.useLegacyPackaging = true` — native libs uncompressed in APK
 - Maven repos: Google, Maven Central, Aliyun mirror, JitPack, Gitee-hosted INMO common libs

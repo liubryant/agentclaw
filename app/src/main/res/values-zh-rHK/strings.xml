@@ -6,16 +6,16 @@
     <string name="splash_subtitle">Android AI 閘道</string>
     <string name="splash_loading">正在加載本地環境...</string>
 
-    <string name="setup_title">設置 INMOClaw</string>
+    <string name="setup_title">設置 AgentClaw</string>
     <string name="setup_subtitle">在啟動前準備 rootfs、執行時兼容層和環境校驗。</string>
     <string name="setup_action">執行安裝</string>
     <string name="setup_skip">暫時跳過</string>
 
-    <string name="startup_title">正在啟動 INMOClaw</string>
-    <string name="startup_loading_title">INMOClaw啟動中，正在喚醒您的專屬小龍蝦</string>
+    <string name="startup_title">正在啟動 AgentClaw</string>
+    <string name="startup_loading_title">AgentClaw啟動中，正在喚醒您的專屬小龍蝦</string>
     <string name="startup_loading_subtitle">首次加載需要幾分鐘時間，請稍等</string>
 
-    <string name="dashboard_title">INMOClaw</string>
+    <string name="dashboard_title">AgentClaw</string>
     <string name="dashboard_phase3_subtitle">當前遷移階段的 Dashboard 負責閘道控制、終端工具入口和服務狀態展示。</string>
     <string name="dashboard_gateway_controls">閘道控制</string>
     <string name="dashboard_gateway_subtitle_ready">控制台地址：%1$s</string>
@@ -81,7 +81,7 @@
     <string name="settings_proot_path">proot 路徑</string>
     <string name="settings_rootfs">Rootfs</string>
     <string name="settings_node_js">Node.js</string>
-    <string name="settings_openclaw">INMOClaw</string>
+    <string name="settings_openclaw">AgentClaw</string>
     <string name="settings_go">Go</string>
     <string name="settings_homebrew">Homebrew</string>
     <string name="settings_openssh">OpenSSH</string>
@@ -196,7 +196,7 @@
     <string name="chat_export_session_files">導出會話文件</string>
     <string name="chat_click_to_download_file">點擊下載文件</string>
     <string name="chat_export_no_new_files">未發現可導出的新文件</string>
-    <string name="chat_export_success_to_downloads">已導出 %1$d 個文件到下載目錄/InmoClaw</string>
+    <string name="chat_export_success_to_downloads">已導出 %1$d 個文件到下載目錄/AgentClaw</string>
     <string name="chat_export_result_partial">導出完成：成功 %1$d，失敗 %2$d</string>
     <string name="chat_export_failed_retry">導出失敗，請稍後重試</string>
 
@@ -247,9 +247,9 @@
 
     <string name="shell_open_sidebar">開啟側邊欄</string>
     <string name="shell_collapse_sidebar">收起側欄</string>
-    <string name="shell_search_hint">搜尋會話</string>
+    <string name="shell_search_hint">搜尋歷史</string>
     <string name="shell_sections">功能分區</string>
-    <string name="shell_session_empty">暫無歷史對話</string>
+    <string name="shell_session_empty">暫無對話</string>
     <string name="shell_delete_confirm_title">確認刪除</string>
     <string name="shell_delete_confirm_message">該對話內容將被刪除且無法恢復。</string>
     <string name="shell_delete_confirm_negative">不同意</string>
@@ -299,9 +299,9 @@
 
     <string name="terms_title">用戶協議與私隱政策</string>
     <string name="terms_message">使用 AI 閘道功能前，請先閱讀並同意用戶協議和私隱政策。</string>
-    <string name="terms_user_agreement">INMOClaw 用戶協議</string>
-    <string name="terms_privacy_policy">INMOClaw 私隱政策</string>
-    <string name="terms_content">親愛的用戶，歡迎使用INMOClaw！為了更好地保障您的權益，為您提供安全、便捷的服務，請您閱讀並同意以下相關協議。\n請您仔細閱讀並理解\n<annotation user_agreement="user_agreement">INMOClaw 用戶協議</annotation>與<annotation privacy_policy="privacy_policy">INMOClaw 私隱政策</annotation>，點擊協議名稱可查看全文；\n您點擊「同意」，即視為已完整閱讀、充分理解並自願接受上述兩個協議的全部條款，可正常使用本功能；點擊「返回」，將無法使用INMOClaw功能，不影響設備其他核心功能。</string>
+    <string name="terms_user_agreement">AgentClaw 用戶協議</string>
+    <string name="terms_privacy_policy">AgentClaw 私隱政策</string>
+    <string name="terms_content">親愛的用戶，歡迎使用AgentClaw！為了更好地保障您的權益，為您提供安全、便捷的服務，請您閱讀並同意以下相關協議。\n請您仔細閱讀並理解\n<annotation user_agreement="user_agreement">AgentClaw 用戶協議</annotation>與<annotation privacy_policy="privacy_policy">AgentClaw 私隱政策</annotation>，點擊協議名稱可查看全文；\n您點擊「同意」，即視為已完整閱讀、充分理解並自願接受上述兩個協議的全部條款，可正常使用本功能；點擊「返回」，將無法使用AgentClaw功能，不影響設備其他核心功能。</string>
     <string name="terms_consent_tip">我已閱讀並同意上述全部協議</string>
     <string name="terms_reject">返回</string>
     <string name="terms_accept">同意</string>
@@ -363,6 +363,6 @@
     <string name="chat_entry_video">AI視頻</string>
     <string name="chat_video_loading">影片載入中...</string>
     <string name="chat_video_load_failed">影片載入失敗</string>
-    <string name="chat_video_downloaded">视频下载到 Downloads/InmoClaw</string>
+    <string name="chat_video_downloaded">视频下载到 Downloads/AgentClaw</string>
     <string name="chat_video_download_failed">视频下载失败</string>
 </resources>

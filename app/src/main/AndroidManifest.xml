@@ -93,7 +93,11 @@
         <activity android:name=".ui.logs.LogsActivity" android:exported="false" />
         <activity android:name=".ui.placeholder.FeaturePlaceholderActivity" android:exported="false" />
         <activity android:name=".ui.dashboard.DashboardActivity" android:exported="false" />
-        <activity android:name=".ui.startup.StartupActivity" android:exported="false" />
+        <activity
+            android:name=".ui.startup.StartupActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AgentClaw.Startup" />
         <activity android:name=".MainActivity" android:exported="false" />
         <activity
             android:name=".SettingActivity"
@@ -102,6 +106,7 @@
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AgentClaw.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

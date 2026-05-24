@@ -4,14 +4,14 @@
     <string name="common_copied">Copié</string>
     <string name="splash_subtitle">Passerelle IA pour Android</string>
     <string name="splash_loading">Chargement de l\’environnement local…</string>
-    <string name="setup_title">Configuration d\’INMOClaw</string>
+    <string name="setup_title">Configuration d\’AgentClaw</string>
     <string name="setup_subtitle">Préparez le système de fichiers racine, la compatibilité d\’exécution et la validation avant le démarrage.</string>
     <string name="setup_action">Configurer</string>
     <string name="setup_skip">Ignorer pour l\’instant</string>
-    <string name="startup_title">Démarrage d\’INMOClaw</string>
-    <string name="startup_loading_title">INMOClaw se lance</string>
+    <string name="startup_title">Démarrage d\’AgentClaw</string>
+    <string name="startup_loading_title">AgentClaw se lance</string>
     <string name="startup_loading_subtitle">Le premier chargement peut prendre quelques minutes, veuillez patienter</string>
-    <string name="dashboard_title">INMOClaw</string>
+    <string name="dashboard_title">AgentClaw</string>
     <string name="dashboard_phase3_subtitle">Pendant les phases de migration actuelles, le contrôle de la passerelle, les outils en ligne de commande et l\’état des services s\’affichent ici.</string>
     <string name="dashboard_gateway_controls">Commandes de la passerelle</string>
     <string name="dashboard_gateway_subtitle_ready">Tableau de bord : %1$s</string>
@@ -73,7 +73,7 @@
     <string name="settings_proot_path">Chemin de proot</string>
     <string name="settings_rootfs">Système de fichiers racine</string>
     <string name="settings_node_js">Node.js</string>
-    <string name="settings_openclaw">INMOClaw</string>
+    <string name="settings_openclaw">AgentClaw</string>
     <string name="settings_go">Go</string>
     <string name="settings_homebrew">Homebrew</string>
     <string name="settings_openssh">OpenSSH</string>
@@ -183,7 +183,7 @@
     <string name="chat_export_session_files">Exporter les fichiers de la session</string>
     <string name="chat_click_to_download_file">Cliquez pour télécharger le fichier</string>
     <string name="chat_export_no_new_files">Aucun nouveau fichier à exporter</string>
-    <string name="chat_export_success_to_downloads">%1$d fichier(s) exporté(s) vers Downloads/InmoClaw</string>
+    <string name="chat_export_success_to_downloads">%1$d fichier(s) exporté(s) vers Downloads/AgentClaw</string>
     <string name="chat_export_result_partial">Export terminé : %1$d réussi(s), %2$d échec(s)</string>
     <string name="chat_export_failed_retry">Échec de l’exportation, veuillez réessayer plus tard</string>
     <string name="setting_title">Paramètres</string>
@@ -281,9 +281,9 @@
     <string name="schedule_carry_to_chat">Transmettre à la discussion</string>
     <string name="terms_title">Conditions d\’utilisation et politique de confidentialité</string>
     <string name="terms_message">Veuillez consulter les conditions d\’utilisation et la politique de confidentialité avant d\’utiliser les fonctionnalités de la passerelle IA.</string>
-    <string name="terms_user_agreement">Conditions d\’utilisation d\’INMOClaw</string>
-    <string name="terms_privacy_policy">Politique de confidentialité d\’INMOClaw</string>
-    <string name="terms_content">Cher utilisateur, bienvenue sur INMOClaw ! Pour mieux protéger vos droits et vous offrir des services plus sûrs et pratiques, veuillez lire et accepter les accords suivants.\nVeuillez lire attentivement et comprendre pleinement\n<annotation user_agreement="user_agreement">les Conditions d\’utilisation d\’INMOClaw</annotation> et <annotation privacy_policy="privacy_policy">la Politique de confidentialité d\’INMOClaw</annotation>. Appuyez sur le nom de l\’accord pour en consulter le texte intégral ;\n\nEn appuyant sur « Accepter », vous confirmez avoir lu, compris et accepté volontairement l\’intégralité des deux accords ci-dessus, et vous pouvez continuer à utiliser cette fonctionnalité. En appuyant sur « Retour », vous ne pourrez pas utiliser la fonctionnalité INMOClaw, mais les autres fonctionnalités essentielles de l\’appareil ne seront pas affectées.</string>
+    <string name="terms_user_agreement">Conditions d\’utilisation d\’AgentClaw</string>
+    <string name="terms_privacy_policy">Politique de confidentialité d\’AgentClaw</string>
+    <string name="terms_content">Cher utilisateur, bienvenue sur AgentClaw ! Pour mieux protéger vos droits et vous offrir des services plus sûrs et pratiques, veuillez lire et accepter les accords suivants.\nVeuillez lire attentivement et comprendre pleinement\n<annotation user_agreement="user_agreement">les Conditions d\’utilisation d\’AgentClaw</annotation> et <annotation privacy_policy="privacy_policy">la Politique de confidentialité d\’AgentClaw</annotation>. Appuyez sur le nom de l\’accord pour en consulter le texte intégral ;\n\nEn appuyant sur « Accepter », vous confirmez avoir lu, compris et accepté volontairement l\’intégralité des deux accords ci-dessus, et vous pouvez continuer à utiliser cette fonctionnalité. En appuyant sur « Retour », vous ne pourrez pas utiliser la fonctionnalité AgentClaw, mais les autres fonctionnalités essentielles de l\’appareil ne seront pas affectées.</string>
     <string name="terms_consent_tip">J\’ai lu et j\’accepte l\’intégralité des accords ci-dessus</string>
     <string name="terms_reject">Retour</string>
     <string name="terms_accept">Accepter</string>

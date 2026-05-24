@@ -23,6 +23,8 @@ class TermsDialog(
     gravity = Gravity.CENTER
 ) {
 
+    private var isConsentChecked = false
+
     override fun onStart() {
         super.onStart()
         window?.attributes = window?.attributes?.apply {
@@ -60,6 +62,12 @@ class TermsDialog(
             }
         }
         binding.contentText.highlightColor = Color.TRANSPARENT
+        updateConsentState()
+
+        binding.consentRow.setOnClickListener {
+            isConsentChecked = !isConsentChecked
+            updateConsentState()
+        }
 
         binding.rejectButton.setOnClickListener {
             completeAndDismiss(false)
@@ -71,6 +79,12 @@ class TermsDialog(
 
     private fun openLegalPage(title: String, url: String) {
         context.startActivity(LegalWebActivity.createIntent(context, title, url))
+    }
+
+    private fun updateConsentState() {
+        binding.consentCheckIcon.isSelected = isConsentChecked
+        binding.acceptButton.isEnabled = isConsentChecked
+        binding.acceptButton.alpha = if (isConsentChecked) 1f else 0.4f
     }
 
     private fun completeAndDismiss(value: Boolean) {

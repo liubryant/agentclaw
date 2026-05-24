@@ -3,35 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
-
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/guideline_start"
-        app:layout_constraintGuide_percent="0.17"
-        android:layout_height="wrap_content"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/guideline_end"
-        app:layout_constraintGuide_percent="0.83"
-        android:layout_height="wrap_content"/>
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/startupCard"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_startup_card"
-        android:clipToOutline="true"
+        android:background="@color/white"
         android:minHeight="350dp"
         android:paddingHorizontal="24dp"
         android:paddingTop="36dp"
         android:paddingBottom="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/guideline_end"
-        app:layout_constraintStart_toStartOf="@+id/guideline_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ai.cjym.agentclaw.ui.widget.LoopingVideoView

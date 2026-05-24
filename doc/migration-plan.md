@@ -1,8 +1,8 @@
-# Flutter → Android 原生迁移方案：openclaw-termux → InmoClaw
+# Flutter → Android 原生迁移方案：openclaw-termux → AgentClaw
 
 ## Context
 
-将 `E:\BaiduNetdiskDownload\openclaw-termux\flutter_app` (Flutter/Dart) 完全改造为纯 Android 原生项目 `D:\WorkFiles\Android\AndroidProjects\company\InmoClaw`，使用 MVVM 架构、Kotlin、XML 布局、ViewBinding，复用 core_common 模块基类，保留 Termux/proot 能力，19 个屏幕全部复刻，中英文双语。
+将 `E:\BaiduNetdiskDownload\openclaw-termux\flutter_app` (Flutter/Dart) 完全改造为纯 Android 原生项目 `D:\WorkFiles\Android\AndroidProjects\company\AgentClaw`，使用 MVVM 架构、Kotlin、XML 布局、ViewBinding，复用 core_common 模块基类，保留 Termux/proot 能力，19 个屏幕全部复刻，中英文双语。
 
 ---
 
@@ -294,9 +294,9 @@ DashboardActivity (主页)
 ## 10. 关键文件路径
 
 ### 需修改的文件
-- `D:\WorkFiles\Android\AndroidProjects\company\InmoClaw\gradle\libs.versions.toml`
-- `D:\WorkFiles\Android\AndroidProjects\company\InmoClaw\app\build.gradle`
-- `D:\WorkFiles\Android\AndroidProjects\company\InmoClaw\app\src\main\AndroidManifest.xml`
+- `D:\WorkFiles\Android\AndroidProjects\company\AgentClaw\gradle\libs.versions.toml`
+- `D:\WorkFiles\Android\AndroidProjects\company\AgentClaw\app\build.gradle`
+- `D:\WorkFiles\Android\AndroidProjects\company\AgentClaw\app\src\main\AndroidManifest.xml`
 
 ### 需复制的源文件（从 Flutter native 层）
 - `E:\BaiduNetdiskDownload\openclaw-termux\flutter_app\android\app\src\main\kotlin\ai\inmo\openclaw\ProcessManager.kt`
