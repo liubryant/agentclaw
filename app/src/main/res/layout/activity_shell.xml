@@ -25,7 +25,7 @@
             android:background="@drawable/bg_shell_session_item"
             android:clickable="true"
             android:focusable="true"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/misans_medium"
             android:gravity="center_vertical"
             android:maxHeight="45dp"
             android:minHeight="37dp"
@@ -48,7 +48,7 @@
             android:drawablePadding="4dp"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/misans_medium"
             android:gravity="center_vertical"
             android:hint="@string/shell_search_hint"
             android:importantForAutofill="no"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:visibility="gone"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/misans_medium"
             android:text="@string/chat_sessions"
             android:textColor="@color/sidebar_muted"
             android:textSize="12sp"
@@ -104,7 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="@font/misans_medium"
                     android:gravity="center"
                     android:text="@string/shell_session_empty"
                     android:textColor="@color/sidebar_muted"
@@ -204,6 +204,17 @@
                     android:layout_height="1dp"
                     android:layout_weight="1" />
 
+                <ImageButton
+                    android:id="@+id/headerSettingButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_chat_icon_button"
+                    android:contentDescription="@string/settings_title"
+                    android:padding="6dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_shell_setting"
+                    app:tint="@color/black" />
+
                 <LinearLayout
                     android:id="@+id/usageChip"
                     android:layout_width="wrap_content"
@@ -274,7 +285,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:fontFamily="sans-serif"
+                android:fontFamily="@font/misans_medium"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:maxLines="1"

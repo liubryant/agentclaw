@@ -370,7 +370,7 @@ SSH 页面与服务用于在设备内部 rootfs 环境中启动 SSH server，便
 - `applicationId`
 - `minSdk/targetSdk/compileSdk`
 - `versionCode = 6`
-- `versionName = 1.1.0`
+- `versionName = 1.0.0`
 - Room schema 导出
 - DataBinding / ViewBinding / AIDL
 - APK 输出命名规则

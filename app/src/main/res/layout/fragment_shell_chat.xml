@@ -99,21 +99,22 @@
                 <ImageView
                     android:id="@+id/lobsterView"
                     android:layout_width="100dp"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="@null"
-                    android:src="@drawable/img_chat_lobster" />
+                    android:src="@mipmap/ic_launcher" />
 
                 <TextView
                     android:id="@+id/welcomeTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="22dp"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/misans_medium"
                     android:text="@string/chat_empty_brand"
                     android:textColor="#333333"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/welcomeSubtitle"
@@ -266,7 +267,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="10dp"
                 android:background="@android:color/transparent"
-                android:fontFamily="sans-serif"
+                android:fontFamily="@font/misans_medium"
                 android:gravity="top|start"
                 android:hint="@string/chat_shell_input_hint"
                 android:importantForAutofill="no"

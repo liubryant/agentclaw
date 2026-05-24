@@ -22,7 +22,7 @@
         android:layout_marginStart="12dp"
         android:layout_weight="1"
         android:ellipsize="end"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="@font/misans_medium"
         android:maxLines="1"
         android:textColor="@color/text_primary"
         android:textSize="11sp" />
@@ -38,4 +38,3 @@
         android:src="@drawable/ic_shell_delete"
         android:visibility="invisible" />
 </LinearLayout>
-

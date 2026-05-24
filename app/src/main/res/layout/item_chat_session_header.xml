@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="14dp"
     android:layout_marginBottom="8dp"
-    android:fontFamily="sans-serif-medium"
+    android:fontFamily="@font/misans_medium"
     android:paddingStart="8dp"
     android:paddingEnd="8dp"
     android:textColor="@color/sidebar_muted"

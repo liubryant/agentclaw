@@ -8,20 +8,18 @@
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Rounded rectangle background inside the system mask -->
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="18dp" />
-            <solid android:color="@color/black" />
+            <solid android:color="@color/white" />
         </shape>
     </item>
 
-    <!-- App icon foreground (vector). Inset makes it visually closer to launcher icon. -->
     <item
-        android:drawable="@drawable/ic_launcher_foreground"
-        android:top="18dp"
-        android:bottom="18dp"
-        android:left="18dp"
-        android:right="18dp" />
+        android:drawable="@mipmap/ic_launcher_foreground"
+        android:top="10dp"
+        android:bottom="10dp"
+        android:left="10dp"
+        android:right="10dp" />
 
 </layer-list>

@@ -3,7 +3,6 @@ package ai.cjym.agentclaw.ui.widget
 import ai.cjym.agentclaw.R
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -37,8 +36,6 @@ class SidebarNavItemView @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.view_sidebar_nav_item, this, true)
         iconView = requireNotNull(findViewById<ImageView>(R.id.navIconView))
         textView = requireNotNull(findViewById<TextView>(R.id.navTextView))
-        textView.typeface = Typeface.DEFAULT_BOLD
-
         context.obtainStyledAttributes(
             attrs,
             R.styleable.SidebarNavItemView,

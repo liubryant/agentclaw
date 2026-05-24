@@ -19,10 +19,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ai.cjym.agentclaw.ui.widget.LoopingVideoView
-            android:id="@+id/startupVideoView"
+        <ImageView
+            android:id="@+id/startupIconView"
             android:layout_width="100dp"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
+            android:contentDescription="@null"
+            android:src="@mipmap/ic_launcher"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="46dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/misans_medium"
             android:gravity="center"
             android:lineSpacingExtra="0dp"
             android:text="@string/startup_loading_title"
@@ -40,7 +42,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/startupVideoView" />
+            app:layout_constraintTop_toBottomOf="@id/startupIconView" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -63,7 +65,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/misans_medium"
             android:gravity="center"
             android:text="@string/startup_loading_subtitle"
             android:textColor="#8C8C8C"
@@ -103,5 +105,21 @@
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/startupTipsView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="64dp"
+        android:fontFamily="@font/misans_medium"
+        android:gravity="center"
+        android:lineSpacingExtra="3dp"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

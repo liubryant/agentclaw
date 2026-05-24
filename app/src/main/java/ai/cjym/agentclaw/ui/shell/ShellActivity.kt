@@ -138,6 +138,10 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         binding.newConversationButton.setOnClickListener {
             handleCreateSessionClick()
         }
+        binding.headerSettingButton.setOnClickListener {
+            shellViewModel.requestClearChatComposerFocus()
+            showSettingDialogPopup()
+        }
 
         lifecycleScope.launch {
             chatViewModel.exportMessages.collectLatest { message ->
@@ -175,6 +179,10 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         bindHeaderHoverTooltip(
             view = binding.newConversationButton,
             textProvider = { getString(R.string.chat_new) }
+        )
+        bindHeaderHoverTooltip(
+            view = binding.headerSettingButton,
+            textProvider = { getString(R.string.settings_title) }
         )
     }
 

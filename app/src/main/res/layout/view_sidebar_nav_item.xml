@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_weight="1"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="@font/misans_medium"
         android:textColor="@color/text_primary"
         android:textSize="12sp" />
 </merge>

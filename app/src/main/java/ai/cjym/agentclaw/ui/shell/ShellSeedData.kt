@@ -22,7 +22,7 @@ object ShellSeedData {
                 id = "idea_life_assistant",
                 title = "自动化生活助手",
                 subtitle = "自动下载应用、淘宝购物",
-                promptTemplate = "打开应用宝帮我下载 应用名称：",
+                promptTemplate = "打开抖音播放世界杯视频",
                 tags = listOf("生活", "执行"),
                 category = IdeaCategory.LIFE,
                 accentColorRes = R.color.idea_soft_orange

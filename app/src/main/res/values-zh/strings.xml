@@ -14,6 +14,16 @@
     <string name="startup_title">正在启动 AgentClaw</string>
     <string name="startup_loading_title">AgentClaw启动中，\n正在唤醒您的专属小龙虾</string>
     <string name="startup_loading_subtitle">首次加载需要几分钟时间，请稍等</string>
+    <string-array name="startup_tips">
+        <item>AgentClaw内置了Linux系统虚拟机，首次加载比较慢请耐心等待</item>
+        <item>建议文档使用HTML格式生成，显示效果会更精致</item>
+        <item>精美的HTML文档生成会略缓慢，请耐心等待</item>
+        <item>AgentClaw内置了多种文档格式的Skills高级技能</item>
+        <item>AgentClaw会在通知栏实时显示任务加载与执行进度，即使切换到后台也能随时查看运行状态</item>
+        <item>AgentClaw深度集成完整的OpenClaw小龙虾能力体系，不仅支持AI对话，还覆盖代码生成、文档处理、技能调用、自动化执行等多种智能能力</item>
+        <item>后台任务支持持续运行，长时间生成内容时无需停留在当前页面，可边使用手机边等待结果完成</item>
+        <item>相比传统聊天式AI，AgentClaw更偏向智能工作流平台，可通过Skills扩展多领域能力与自动化任务</item>
+    </string-array>
 
     <string name="dashboard_title">AgentClaw</string>
     <string name="dashboard_phase3_subtitle">当前迁移阶段的 Dashboard 负责网关控制、终端工具入口和服务状态展示。</string>

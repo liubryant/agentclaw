@@ -247,7 +247,7 @@
                             android:layout_width="200px"
                             android:layout_height="140px"
                             android:adjustViewBounds="true"
-                            android:src="@mipmap/about_icon" />
+                            android:src="@mipmap/ic_launcher" />
 
                         <TextView
                             android:gravity="center"

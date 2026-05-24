@@ -12,6 +12,18 @@
     <string name="startup_title">Starting AgentClaw</string>
     <string name="startup_loading_title">AgentClaw is starting up</string>
     <string name="startup_loading_subtitle">First load may take a few minutes, please wait</string>
+    <string-array name="startup_tips">
+        <item>AgentClaw includes a Linux virtual machine, so the first load may be slow. Please wait patiently.</item>
+        <item>HTML is recommended for documents because it gives a more refined display.</item>
+        <item>Beautiful HTML documents may take a little longer to generate. Please wait patiently.</item>
+        <item>AgentClaw includes advanced Skills for multiple document formats.</item>
+        <item>Skill management in Settings supports importing useful Skills from GitHub.</item>
+        <item>If a Skill gets stuck, tell the AI “generate directly” to get the answer immediately.</item>
+        <item>AgentClaw shows task loading and execution progress in notifications, so you can check status even in the background.</item>
+        <item>AgentClaw deeply integrates the full OpenClaw capability system, covering AI chat, code generation, document processing, Skill calls, and automation.</item>
+        <item>Background tasks can keep running, so long content generation does not require staying on the current page.</item>
+        <item>Compared with traditional chat AI, AgentClaw is closer to an intelligent workflow platform that extends capabilities through Skills.</item>
+    </string-array>
     <string name="dashboard_title">AgentClaw</string>
     <string name="dashboard_phase3_subtitle">Gateway control, terminal tools, and service status live here during the current migration stages.</string>
     <string name="dashboard_gateway_controls">Gateway Controls</string>

@@ -79,8 +79,8 @@ class CommonMessageDialog(
     }
 
     companion object {
-        private const val WIDTH_PERCENTAGE = 0.82f
-        private const val HEIGHT_PERCENTAGE = 0.3f
+        private const val WIDTH_PERCENTAGE = 0.72f
+        private const val HEIGHT_PERCENTAGE = 0.24f
 
         fun createSingleAction(
             context: Context,

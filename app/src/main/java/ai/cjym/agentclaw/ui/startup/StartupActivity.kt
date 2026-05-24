@@ -1,16 +1,19 @@
 package ai.cjym.agentclaw.ui.startup
 
-import ai.inmo.core_common.ui.activity.BaseBindingActivity
 import ai.cjym.agentclaw.R
+import ai.inmo.core_common.ui.activity.BaseBindingActivity
 import ai.cjym.agentclaw.databinding.ActivityStartupBinding
 import ai.cjym.agentclaw.di.AppGraph
 import ai.cjym.agentclaw.ui.shell.ShellActivity
 import android.content.Intent
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class StartupActivity :
     BaseBindingActivity<ActivityStartupBinding>(ActivityStartupBinding::inflate) {
@@ -21,9 +24,9 @@ class StartupActivity :
     }
 
     override fun initView() {
-        binding.startupVideoView.setVideoResource(R.raw.claw)
         // 走过一次流程后，就不需要显示了
         binding.subtitleView.isVisible = !AppGraph.preferences.setupComplete
+        startTipsCarousel()
 
         lifecycleScope.launch {
             viewModel.state.collect { state ->
@@ -44,6 +47,25 @@ class StartupActivity :
         }
     }
 
+    private fun startTipsCarousel() {
+        val tips = resources.getStringArray(R.array.startup_tips)
+        if (tips.isEmpty()) {
+            binding.startupTipsView.visibility = View.GONE
+            return
+        }
+        binding.startupTipsView.text = formatTip(tips.random())
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) {
+                    delay(TIP_INTERVAL_MS)
+                    binding.startupTipsView.text = formatTip(tips.random(Random.Default))
+                }
+            }
+        }
+    }
+
+    private fun formatTip(tip: String): String = "tips：$tip"
+
     override fun initEvent() {
         binding.retryButton.setOnClickListener {
             viewModel.runStartup {
@@ -54,16 +76,6 @@ class StartupActivity :
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        binding.startupVideoView.play()
-    }
-
-    override fun onStop() {
-        binding.startupVideoView.release()
-        super.onStop()
-    }
-
     private fun openShell() {
         startActivity(
             Intent(this, ShellActivity::class.java).apply {
@@ -71,5 +83,9 @@ class StartupActivity :
             }
         )
         finish()
+    }
+
+    companion object {
+        private const val TIP_INTERVAL_MS = 3_000L
     }
 }
