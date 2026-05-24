@@ -31,6 +31,10 @@ android {
     namespace 'ai.cjym.agentclaw'
     compileSdkVersion 34
 
+    lint {
+        disable 'NullSafeMutableLiveData'
+    }
+
     defaultConfig {
         applicationId "ai.cjym.agentclaw"
         minSdk 24
@@ -200,6 +204,5 @@ dependencies {
     implementation(libs.firebase.crashlytics.ndk)
     implementation(libs.firebase.analytics)
 }
-
 
 

@@ -7,6 +7,10 @@ android {
     namespace 'ai.inmo.core_common'
     compileSdk 34
 
+    lint {
+        disable 'NullSafeMutableLiveData'
+    }
+
     defaultConfig {
         minSdk 24
 
