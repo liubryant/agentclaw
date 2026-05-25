@@ -4,7 +4,7 @@
       "inmoclaw": {
         "api": "openai-completions",
         "apiKey": "",
-        "baseUrl": "http://39.108.144.196:8066/v1",
+        "baseUrl": "https://www.cjym123.cn/v1",
         "models": [
           {
             "id": "glm-4.7",

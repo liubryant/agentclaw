@@ -80,9 +80,17 @@ class PreferencesManager(context: Context) {
 
     /** 后台接口地址，切换测试/正式环境用。默认正式服，改为测试服: http://192.168.110.67:8066/v1 */
     var agentclawBaseUrl: String
-        get() = prefs.decodeString(KEY_AGENTCLAW_BASE_URL, DEFAULT_AGENTCLAW_BASE_URL) ?: DEFAULT_AGENTCLAW_BASE_URL
+        get() {
+            val stored = prefs.decodeString(KEY_AGENTCLAW_BASE_URL, DEFAULT_AGENTCLAW_BASE_URL)
+                ?: DEFAULT_AGENTCLAW_BASE_URL
+            val normalized = normalizeAgentclawBaseUrl(stored)
+            if (normalized != stored) {
+                prefs.encode(KEY_AGENTCLAW_BASE_URL, normalized)
+            }
+            return normalized
+        }
         set(value) {
-            prefs.encode(KEY_AGENTCLAW_BASE_URL, value.trim().trimEnd('/'))
+            prefs.encode(KEY_AGENTCLAW_BASE_URL, normalizeAgentclawBaseUrl(value))
         }
 
     var termsAccepted: Boolean
@@ -106,6 +114,10 @@ class PreferencesManager(context: Context) {
         }
 
     companion object {
+        private const val LEGACY_PROD_BASE_URL = "http://39.108.144.196:8066/v1"
+        private const val LEGACY_PROD_BASE_URL_NO_V1 = "http://39.108.144.196:8066"
+        private const val LEGACY_PROD_HTTPS_BASE_URL = "https://39.108.144.196:8066/v1"
+        private const val LEGACY_PROD_HTTPS_BASE_URL_NO_V1 = "https://39.108.144.196:8066"
         private const val KEY_AUTO_START = "auto_start_gateway"
         private const val KEY_SETUP_COMPLETE = "setup_complete"
         private const val KEY_FIRST_RUN = "first_run"
@@ -142,6 +154,17 @@ class PreferencesManager(context: Context) {
             }
 
             return null
+        }
+    }
+
+    private fun normalizeAgentclawBaseUrl(value: String): String {
+        val trimmed = value.trim().trimEnd('/')
+        return when (trimmed.lowercase()) {
+            LEGACY_PROD_BASE_URL,
+            LEGACY_PROD_BASE_URL_NO_V1,
+            LEGACY_PROD_HTTPS_BASE_URL,
+            LEGACY_PROD_HTTPS_BASE_URL_NO_V1 -> DEFAULT_AGENTCLAW_BASE_URL
+            else -> trimmed
         }
     }
 }
