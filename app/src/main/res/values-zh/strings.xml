@@ -313,7 +313,7 @@
     <string name="terms_message">使用 AI 网关能力前，请先阅读并同意用户协议和隐私政策。</string>
     <string name="terms_user_agreement">AgentClaw 用户协议</string>
     <string name="terms_privacy_policy">AgentClaw 隐私政策</string>
-    <string name="terms_content">亲爱的用户，欢迎使用AgentClaw！为了更好地保障您的权益，为您提供安全、便捷的服务，请您阅读并同意以下相关协议。请您仔细阅读并理解\n<annotation user_agreement="user_agreement">AgentClaw 用户协议</annotation>与<annotation privacy_policy="privacy_policy">AgentClaw 隐私政策</annotation>，点击协议名称可查看全文；\n您点击"同意"，即视为已完整阅读、充分理解并自愿接受上述两个协议的全部条款，可正常使用本功能；点击"不同意"，将无法使用AgentClaw功能，不影响设备其他核心功能。</string>
+    <string name="terms_content">亲爱的用户，欢迎使用AgentClaw！为了更好地保障您的权益，为您提供安全、便捷的服务，请您阅读并同意以下相关协议。\n\n为正常提供服务，应用及其第三方SDK（穿山甲/GroMore广告SDK、友盟SDK）可能收集您的设备MAC地址、已安装应用列表（软件安装列表）等信息，详情请见隐私政策第1.8条及第3条。\n\n请您仔细阅读并理解\n<annotation user_agreement="user_agreement">AgentClaw 用户协议</annotation>与<annotation privacy_policy="privacy_policy">AgentClaw 隐私政策</annotation>，点击协议名称可查看全文；\n您点击"同意"，即视为已完整阅读、充分理解并自愿接受上述两个协议的全部条款，可正常使用本功能；点击"不同意"，将无法使用AgentClaw功能，不影响设备其他核心功能。</string>
     <string name="terms_consent_tip">我已阅读并同意上述全部协议</string>
     <string name="terms_reject">不同意</string>
     <string name="terms_accept">同意</string>

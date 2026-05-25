@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="6dp"
             android:textColor="@color/terms_body"
-            android:textSize="13sp" />
+            android:textSize="12sp" />
     </ScrollView>
 
     <LinearLayout

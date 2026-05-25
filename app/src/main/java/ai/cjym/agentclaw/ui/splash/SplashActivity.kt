@@ -8,13 +8,8 @@ import ai.cjym.agentclaw.ui.shell.ShellActivity
 import ai.cjym.agentclaw.ui.startup.StartupActivity
 import ai.cjym.agentclaw.ui.widget.TermsDialog
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -46,7 +41,6 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        configureImmersiveFullscreen()
         setContentView(R.layout.activity_splash_ad)
         splashContainer = findViewById<FrameLayout>(R.id.splashAdContainer)!!
         lifecycle.addObserver(viewModel)
@@ -71,18 +65,10 @@ class SplashActivity : AppCompatActivity() {
     // 注意事项⑦：onResume 判断是否强制跳主页
     override fun onResume() {
         super.onResume()
-        configureImmersiveFullscreen()
         Log.d(TAG, "onResume forceGoMain=$forceGoMain hasNavigated=$hasNavigated")
         if (forceGoMain) {
             Log.d(TAG, "onResume: forceGoMain=true, navigating immediately")
             navigateToDestination()
-        }
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            configureImmersiveFullscreen()
         }
     }
 
@@ -98,24 +84,6 @@ class SplashActivity : AppCompatActivity() {
     private fun initSdksAndLoadAd() {
         initUmengSdk()
         initGroMoreSdk() // 注意事项②：init 成功后才加载广告
-    }
-
-    private fun configureImmersiveFullscreen() {
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-            window.insetsController?.let { controller ->
-                controller.hide(WindowInsets.Type.statusBars())
-                controller.systemBarsBehavior =
-                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        }
     }
 
     private fun initUmengSdk() {
