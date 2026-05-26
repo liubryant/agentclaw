@@ -257,7 +257,8 @@
                             android:layout_marginTop="8px"
                             android:adjustViewBounds="true"
                             android:textSize="40px"
-                            android:text="@string/app_name" />
+                            android:text="@string/app_name"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <LinearLayout

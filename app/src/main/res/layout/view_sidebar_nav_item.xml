@@ -3,18 +3,34 @@
 
     <ImageView
         android:id="@+id/navIconView"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_gravity="center"
         android:contentDescription="@null" />
 
-    <TextView
-        android:id="@+id/navTextView"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
+        android:layout_marginStart="10dp"
         android:layout_weight="1"
-        android:fontFamily="@font/misans_medium"
-        android:textColor="@color/text_primary"
-        android:textSize="12sp" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/navTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/misans_medium"
+            android:textColor="@color/text_primary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/navSubtitleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/misans_medium"
+            android:textColor="@color/sidebar_muted"
+            android:textSize="9sp" />
+    </LinearLayout>
 </merge>

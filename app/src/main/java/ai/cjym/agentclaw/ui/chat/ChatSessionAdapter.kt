@@ -130,6 +130,7 @@ class ChatSessionAdapter : ListAdapter<ChatSessionListItem, RecyclerView.ViewHol
         ) {
             binding.titleView.text = item.title
             binding.root.isSelected = selected
+            binding.messageIcon.isSelected = selected
             binding.root.setOnClickListener { click?.invoke(item) }
             binding.actionButton.setImageResource(
                 when (actionMode) {

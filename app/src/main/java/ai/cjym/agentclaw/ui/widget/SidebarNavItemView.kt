@@ -22,20 +22,22 @@ class SidebarNavItemView @JvmOverloads constructor(
 
     private val iconView: ImageView
     private val textView: TextView
+    private val subtitleView: TextView
 
     init {
         orientation = HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
         // Keep the bottom nav compact; spacing between items should be tight.
-        minimumHeight = 36.dp
+        minimumHeight = 40.dp
         isClickable = true
         isFocusable = true
         background = AppCompatResources.getDrawable(context, R.drawable.bg_sidebar_nav_item)
-        setPaddingRelative(6.dp, 0, 6.dp, 0)
+        setPaddingRelative(10.dp, 0, 10.dp, 0)
 
         LayoutInflater.from(context).inflate(R.layout.view_sidebar_nav_item, this, true)
         iconView = requireNotNull(findViewById<ImageView>(R.id.navIconView))
         textView = requireNotNull(findViewById<TextView>(R.id.navTextView))
+        subtitleView = requireNotNull(findViewById<TextView>(R.id.navSubtitleView))
         context.obtainStyledAttributes(
             attrs,
             R.styleable.SidebarNavItemView,
@@ -51,6 +53,9 @@ class SidebarNavItemView @JvmOverloads constructor(
             typedArray.getText(R.styleable.SidebarNavItemView_navText)?.let { text ->
                 setText(text)
             }
+            typedArray.getText(R.styleable.SidebarNavItemView_navSubtitle)?.let { subtitle ->
+                setSubtitle(subtitle)
+            }
             if (typedArray.hasValue(R.styleable.SidebarNavItemView_navIconTint)) {
                 iconView.imageTintList =
                     typedArray.getColorStateList(R.styleable.SidebarNavItemView_navIconTint)
@@ -64,6 +69,14 @@ class SidebarNavItemView @JvmOverloads constructor(
 
     fun setText(textResId: Int) {
         textView.setText(textResId)
+    }
+
+    fun setSubtitle(subtitle: CharSequence) {
+        subtitleView.text = subtitle
+    }
+
+    fun setSubtitle(subtitleResId: Int) {
+        subtitleView.setText(subtitleResId)
     }
 
     fun setIcon(drawable: Drawable?) {

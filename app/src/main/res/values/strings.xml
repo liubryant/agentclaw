@@ -284,6 +284,11 @@
     <string name="ideas_subtitle">Prompt starter cards you can carry directly into chat</string>
 
     <string name="agentclaw_docs_title">claw docs</string>
+    <string name="agentclaw_docs_subtitle">文件与分享</string>
+
+    <string name="nav_ideas_subtitle">提示词模板</string>
+    <string name="nav_settings_subtitle">技能和关于</string>
+
     <string name="ideas_heading">Pick an idea, then refine it with chat</string>
     <string name="ideas_filter_all">All</string>
     <string name="ideas_filter_work">Work</string>

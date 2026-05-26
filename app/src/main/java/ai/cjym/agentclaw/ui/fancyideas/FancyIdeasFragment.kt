@@ -44,10 +44,22 @@ class FancyIdeasFragment :
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         binding.skillRecyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(), 3).apply {
+            layoutManager = GridLayoutManager(requireContext(), 2).apply {
                 spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int =
-                        if (this@FancyIdeasFragment.adapter.isHeader(position)) 3 else 1
+                    override fun getSpanSize(position: Int): Int {
+                        // Header占满2列
+                        if (this@FancyIdeasFragment.adapter.isHeader(position)) return 2
+
+                        // 计算当前分组内的item索引（排除header）
+                        var itemIndexInGroup = 0
+                        for (index in position - 1 downTo 0) {
+                            if (this@FancyIdeasFragment.adapter.isHeader(index)) break
+                            itemIndexInGroup++
+                        }
+
+                        // 第三个卡片（索引为2）占满2列，其他占1列
+                        return if (itemIndexInGroup == 2) 2 else 1
+                    }
                 }
             }
             adapter = this@FancyIdeasFragment.adapter
@@ -63,7 +75,7 @@ class FancyIdeasFragment :
             addItemDecoration(
                 GridSpacingItemDecoration(
                     adapter = this@FancyIdeasFragment.adapter,
-                    spanCount = 3,
+                    spanCount = 2,
                     spacingPx = dp(10f)
                 )
             )
@@ -100,7 +112,17 @@ class FancyIdeasFragment :
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)
             .create()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.window?.apply {
+            setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+            // 设置弹窗宽度为屏幕宽度的90%，高度自适应，最大1200dp
+            val displayMetrics = context.resources.displayMetrics
+            val width = (displayMetrics.widthPixels * 0.9f).toInt()
+            val maxHeight = (1200 * displayMetrics.density).toInt()
+            attributes = attributes?.apply {
+                this.width = width
+                this.height = android.view.WindowManager.LayoutParams.WRAP_CONTENT
+            }
+        }
 
         detailDialogBinding = dialogBinding
         detailDialog = dialog

@@ -3,6 +3,7 @@
     <declare-styleable name="SidebarNavItemView">
         <attr name="navIcon" format="reference" />
         <attr name="navText" format="string|reference" />
+        <attr name="navSubtitle" format="string|reference" />
         <attr name="navIconTint" format="color|reference" />
     </declare-styleable>
 </resources>

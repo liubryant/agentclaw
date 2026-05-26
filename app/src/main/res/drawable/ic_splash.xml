@@ -17,9 +17,9 @@
 
     <item
         android:drawable="@mipmap/ic_launcher_foreground"
-        android:top="10dp"
-        android:bottom="10dp"
-        android:left="10dp"
-        android:right="10dp" />
+        android:top="85dp"
+        android:bottom="85dp"
+        android:left="85dp"
+        android:right="85dp" />
 
 </layer-list>

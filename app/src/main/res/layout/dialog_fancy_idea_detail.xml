@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="640dp"
-    android:layout_height="666.6dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_terms_dialog"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingHorizontal="32dp"
-    android:paddingVertical="26.6dp">
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,17 +16,17 @@
 
         <ImageView
             android:id="@+id/ideaIconView"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:padding="12dp"
-            android:scaleX="2"
-            android:scaleY="2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
             android:scaleType="fitCenter" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18.6dp"
+            android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -35,81 +35,80 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#FF1E1E1C"
-                android:textSize="22sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ideaSubtitleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:textColor="#FF8B8B8B"
-                android:textSize="16sp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="28dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fillViewport="false"
+        android:maxHeight="400dp"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fancy_idea_detail_scenario"
-            android:textColor="#FF1E1E1C"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/ideaScenarioContentView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:gravity="top"
-            android:lineSpacingExtra="6dp"
-            android:textColor="#FF8B8B8B"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fancy_idea_detail_scenario"
+                android:textColor="#FF1E1E1C"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/fancy_idea_detail_prompt"
-            android:textColor="#FF1E1E1C"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/ideaScenarioContentView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="top"
+                android:lineSpacingExtra="4dp"
+                android:textColor="#FF8B8B8B"
+                android:textSize="12sp" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="18dp"
-            android:layout_weight="1"
-            android:fillViewport="true"
-            android:overScrollMode="ifContentScrolls"
-            android:scrollbars="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/fancy_idea_detail_prompt"
+                android:textColor="#FF1E1E1C"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ideaPromptContentView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lineSpacingExtra="6dp"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
                 android:textColor="#FF8B8B8B"
-                android:textSize="16sp" />
-        </ScrollView>
-    </LinearLayout>
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/useNowButton"
-        android:layout_width="213.3dp"
-        android:layout_height="53.3dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="180dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/bg_terms_button_primary"
         android:text="@string/fancy_idea_detail_use_now"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:textSize="18.6sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 </LinearLayout>

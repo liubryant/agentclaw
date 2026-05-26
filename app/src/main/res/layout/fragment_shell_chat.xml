@@ -98,8 +98,8 @@
 
                 <ImageView
                     android:id="@+id/lobsterView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="@null"
                     android:src="@mipmap/ic_launcher" />
@@ -112,7 +112,7 @@
                     android:fontFamily="@font/misans_medium"
                     android:text="@string/chat_empty_brand"
                     android:textColor="#333333"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
@@ -120,7 +120,7 @@
                     android:id="@+id/welcomeSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="25dp"
                     android:gravity="center"
                     android:text="@string/chat_empty_subtitle"
                     android:textColor="@color/gray"
@@ -131,7 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="30dp"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
                     android:paddingStart="16dp"
