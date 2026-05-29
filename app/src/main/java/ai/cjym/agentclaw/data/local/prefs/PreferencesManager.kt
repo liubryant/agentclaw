@@ -78,6 +78,21 @@ class PreferencesManager(context: Context) {
             prefs.encodeOrRemove(KEY_LAST_SELECTED_CHAT_SESSION_KEY, value)
         }
 
+    var sidebarVisible: Boolean
+        get() = prefs.decodeBool(KEY_SIDEBAR_VISIBLE, true)
+        set(value) {
+            prefs.encode(KEY_SIDEBAR_VISIBLE, value)
+        }
+
+    fun getSessionEntryModeRaw(sessionKey: String): String? =
+        prefs.decodeString("$KEY_PREFIX_SESSION_ENTRY_MODE$sessionKey", null)
+
+    fun setSessionEntryModeRaw(sessionKey: String, modeRaw: String?) {
+        val key = "$KEY_PREFIX_SESSION_ENTRY_MODE$sessionKey"
+        if (modeRaw.isNullOrEmpty()) prefs.removeValueForKey(key)
+        else prefs.encode(key, modeRaw)
+    }
+
     /** 后台接口地址，切换测试/正式环境用。默认正式服，改为测试服: http://192.168.110.67:8066/v1 */
     var agentclawBaseUrl: String
         get() {
@@ -133,6 +148,8 @@ class PreferencesManager(context: Context) {
         private const val KEY_LAST_SELECTED_CHAT_SESSION_KEY = "last_selected_chat_session_key"
         private const val KEY_TERMS_ACCEPTED = "terms_accepted"
         private const val KEY_AGENTCLAW_BASE_URL = "inmoclaw_base_url"
+        private const val KEY_SIDEBAR_VISIBLE = "sidebar_visible"
+        private const val KEY_PREFIX_SESSION_ENTRY_MODE = "session_entry_mode:"
         const val DEFAULT_AGENTCLAW_BASE_URL = "https://www.cjym123.cn/v1"
 
         /**

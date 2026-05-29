@@ -302,12 +302,31 @@ class SyncedChatWsManager(
         val trimmedSessionId = sessionId.trim()
         if (trimmedSessionId.isBlank()) return
         sessionEntryModes[trimmedSessionId] = entryMode
+        preferencesManager.setSessionEntryModeRaw(
+            trimmedSessionId,
+            if (entryMode == ChatEntryMode.DEFAULT) null else entryMode.name
+        )
     }
 
     fun removeSessionEntryMode(sessionId: String) {
         val trimmedSessionId = sessionId.trim()
         if (trimmedSessionId.isBlank()) return
         sessionEntryModes.remove(trimmedSessionId)
+        preferencesManager.setSessionEntryModeRaw(trimmedSessionId, null)
+    }
+
+    private fun resolveSessionEntryMode(sessionKey: String): ChatEntryMode {
+        return sessionEntryModes[sessionKey]
+            ?: preferencesManager.getSessionEntryModeRaw(sessionKey)
+                ?.let { raw ->
+                    when (raw) {
+                        ChatEntryMode.IMAGE.name -> ChatEntryMode.IMAGE
+                        ChatEntryMode.VIDEO.name -> ChatEntryMode.VIDEO
+                        else -> null
+                    }
+                }
+                ?.also { sessionEntryModes[sessionKey] = it }
+            ?: ChatEntryMode.DEFAULT
     }
 
     suspend fun retryMessage(messageId: String) {
@@ -368,7 +387,7 @@ class SyncedChatWsManager(
             clearTransientRunState()
             currentRunId = transportRunId
             draftSessionKeys.remove(sessionKey)
-            val outboundMessage = when (sessionEntryModes[sessionKey] ?: ChatEntryMode.DEFAULT) {
+            val outboundMessage = when (resolveSessionEntryMode(sessionKey)) {
                 ChatEntryMode.IMAGE -> "$IMAGE_MODE_MARKER ${text.trim()}"
                 ChatEntryMode.VIDEO -> "$VIDEO_MODE_MARKER ${text.trim()}"
                 else -> text.trim()

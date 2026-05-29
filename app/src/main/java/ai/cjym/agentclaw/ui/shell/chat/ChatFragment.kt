@@ -217,6 +217,16 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
                 }
         }
         viewLifecycleOwner.lifecycleScope.launch {
+            chatViewModel.state
+                .map { it.selectedSessionId }
+                .distinctUntilChanged()
+                .collect { sessionId ->
+                    if (!sessionId.isNullOrBlank()) {
+                        shellViewModel.restoreSessionEntryModeIfNeeded(sessionId)
+                    }
+                }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
             combine(
                 chatViewModel.state.map { it.selectedSessionId }.distinctUntilChanged(),
                 shellViewModel.uiState.map { state ->

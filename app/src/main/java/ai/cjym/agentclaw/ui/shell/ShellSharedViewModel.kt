@@ -138,6 +138,19 @@ class ShellSharedViewModel : BaseViewModel() {
         }
     }
 
+    fun restoreSessionEntryModeIfNeeded(sessionId: String) {
+        val trimmedSessionId = sessionId.trim()
+        if (trimmedSessionId.isBlank()) return
+        if (_uiState.value.chatEntryModes.containsKey(trimmedSessionId)) return
+        val raw = AppGraph.preferences.getSessionEntryModeRaw(trimmedSessionId) ?: return
+        val mode = when (raw) {
+            ChatEntryMode.IMAGE.name -> ChatEntryMode.IMAGE
+            ChatEntryMode.VIDEO.name -> ChatEntryMode.VIDEO
+            else -> return
+        }
+        bindSessionEntryMode(trimmedSessionId, mode)
+    }
+
     fun loadTokenUsage() {
         launchIo {
             Logger.d("token-usage api disabled temporarily, skip /im/bot/token-usage request")

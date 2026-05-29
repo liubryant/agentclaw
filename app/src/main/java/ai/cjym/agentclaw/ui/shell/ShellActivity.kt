@@ -6,6 +6,7 @@ import ai.inmo.core_common.utils.Logger
 import ai.inmo.core_common.utils.WifiNetworkMonitor
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.SettingPanelController
+import ai.cjym.agentclaw.di.AppGraph
 import ai.cjym.agentclaw.databinding.ActivityShellBinding
 import ai.cjym.agentclaw.ui.chat.ChatScreenState
 import ai.cjym.agentclaw.ui.chat.ChatSessionAdapter
@@ -88,7 +89,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
     }
 
     override fun initView() {
-        setSidebarVisible(true)
+        setSidebarVisible(AppGraph.preferences.sidebarVisible)
         updateShellTopNoticeVisibility(isVisible = false)
         binding.sidebarSessionsRecycler.layoutManager = LinearLayoutManager(this)
         binding.sidebarSessionsRecycler.adapter = sessionAdapter
@@ -360,8 +361,8 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
     }
 
     override fun setSidebarVisible(visible: Boolean) {
-        val visibility = if (visible) View.VISIBLE else View.GONE
-        binding.sidebarContainer.visibility = visibility
+        binding.sidebarContainer.visibility = if (visible) View.VISIBLE else View.GONE
+        AppGraph.preferences.sidebarVisible = visible
     }
 
     override fun setTopBarVisible(visible: Boolean) {
