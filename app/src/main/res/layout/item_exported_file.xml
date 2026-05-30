@@ -18,7 +18,8 @@
         android:background="@drawable/bg_skill_tag"
         android:gravity="center"
         android:textColor="@color/brand_primary"
-        android:textSize="10sp"
+        android:textSize="9sp"
+        android:fontFamily="@font/misans_medium"
         android:textStyle="bold" />
 
     <!-- 文件信息 -->
@@ -36,7 +37,8 @@
             android:ellipsize="middle"
             android:maxLines="1"
             android:textColor="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="12sp"
+            android:fontFamily="@font/misans_medium"
             android:textStyle="bold" />
 
         <TextView
@@ -45,7 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
+            android:textSize="11sp"
+            android:fontFamily="@font/misans_normal" />
 
     </LinearLayout>
 
@@ -59,7 +62,8 @@
         android:padding="8dp"
         android:text="预览"
         android:textColor="@color/brand_primary"
-        android:textSize="13sp" />
+        android:textSize="11sp"
+        android:fontFamily="@font/misans_normal" />
 
     <!-- 分享按钮 -->
     <TextView
@@ -71,6 +75,7 @@
         android:padding="8dp"
         android:text="分享"
         android:textColor="@color/brand_primary"
-        android:textSize="13sp" />
+        android:textSize="11sp"
+        android:fontFamily="@font/misans_normal" />
 
 </LinearLayout>

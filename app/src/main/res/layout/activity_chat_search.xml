@@ -50,7 +50,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/chat_search_title"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <ImageButton
                 android:id="@+id/closeButton"
@@ -89,7 +89,7 @@
                 android:paddingEnd="12dp"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/sidebar_muted"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
 
             <ImageButton
                 android:id="@+id/clearButton"
@@ -122,7 +122,7 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:textColor="@color/text_secondary"
-            android:textSize="13sp" />
+            android:textSize="12sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchResultsRecycler"

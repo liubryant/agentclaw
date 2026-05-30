@@ -357,6 +357,7 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         binding: ItemChatMessageAssistantBinding,
         imageUrl: String?
     ) {
+        val imageCard = binding.generatedImageCard
         val imageView = binding.generatedImageView
         val statusView = binding.generatedImageStatusView
         imageView.setImageDrawable(null)
@@ -364,12 +365,12 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         imageView.setOnClickListener(null)
 
         if (imageUrl.isNullOrBlank()) {
-            imageView.visibility = View.GONE
+            imageCard.visibility = View.GONE
             statusView.visibility = View.GONE
             return
         }
 
-        imageView.visibility = View.VISIBLE
+        imageCard.visibility = View.VISIBLE
         statusView.visibility = View.VISIBLE
         statusView.setText(R.string.chat_image_loading)
         imageView.setOnClickListener {
@@ -399,6 +400,7 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         binding: ItemChatMessageAssistantBinding,
         videoUrl: String?
     ) {
+        val videoCard = binding.generatedVideoCard
         val videoView = binding.generatedVideoView
         val statusView = binding.generatedVideoStatusView
         videoView.stopPlayback()
@@ -406,12 +408,12 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         videoView.setOnClickListener(null)
 
         if (videoUrl.isNullOrBlank()) {
-            videoView.visibility = View.GONE
+            videoCard.visibility = View.GONE
             statusView.visibility = View.GONE
             return
         }
 
-        videoView.visibility = View.VISIBLE
+        videoCard.visibility = View.VISIBLE
         statusView.visibility = View.VISIBLE
         statusView.setText(R.string.chat_video_loading)
         videoView.setVideoURI(Uri.parse(videoUrl))
