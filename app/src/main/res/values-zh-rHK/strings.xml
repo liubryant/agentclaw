@@ -301,7 +301,7 @@
     <string name="terms_message">使用 AI 閘道功能前，請先閱讀並同意用戶協議和私隱政策。</string>
     <string name="terms_user_agreement">AgentClaw 用戶協議</string>
     <string name="terms_privacy_policy">AgentClaw 私隱政策</string>
-    <string name="terms_content">親愛的用戶，歡迎使用AgentClaw！為了更好地保障您的權益，為您提供安全、便捷的服務，請您閱讀並同意以下相關協議。\n\n為正常提供服務，應用及其第三方SDK（穿山甲/GroMore廣告SDK、友盟SDK）可能收集您的設備IP地址、設備MAC地址、已安裝應用列表（軟件安裝列表）等信息，詳情請見私隱政策第1.8條及第3條。\n\n請您仔細閱讀並理解\n<annotation user_agreement="user_agreement">AgentClaw 用戶協議</annotation>與<annotation privacy_policy="privacy_policy">AgentClaw 私隱政策</annotation>，點擊協議名稱可查看全文；\n您點擊「同意」，即視為已完整閱讀、充分理解並自願接受上述兩個協議的全部條款，可正常使用本功能；點擊「返回」，將無法使用AgentClaw功能，不影響設備其他核心功能。</string>
+    <string name="terms_content">親愛的用戶，歡迎使用AgentClaw！為了更好地保障您的權益，為您提供安全、便捷的服務，請您閱讀並同意以下相關協議。\n\n為正常提供服務，我們將收集以下個人信息，目的、方式和範圍如下：\n\n【軟件安裝列表（已安裝應用包名）】\n收集目的：用於安全風控、廣告歸因及應用功能適配；\n收集方式：由應用及第三方SDK（穿山甲/GroMore廣告SDK、友盟SDK）通過系統API自動獲取；\n收集範圍：您設備上已安裝的應用包名列表。\n\n【設備MAC地址】\n收集目的：用於設備唯一標識、廣告精準投放及統計分析；\n收集方式：由應用及第三方SDK（穿山甲/GroMore廣告SDK、友盟SDK）通過系統API自動獲取；\n收集範圍：設備網絡硬件MAC地址。\n\n【設備IP地址】\n收集目的：用於網絡連接保障及安全風控；\n收集方式：由應用通過系統API自動獲取；\n收集範圍：設備當前網絡IP地址。\n\n詳情請見私隱政策第1.8條及第3條。\n\n請您仔細閱讀並理解\n<annotation user_agreement="user_agreement">AgentClaw 用戶協議</annotation>與<annotation privacy_policy="privacy_policy">AgentClaw 私隱政策</annotation>，點擊協議名稱可查看全文；\n您點擊「同意」，即視為已完整閱讀、充分理解並自願接受上述兩個協議的全部條款，可正常使用本功能；點擊「返回」，將無法使用AgentClaw功能，不影響設備其他核心功能。</string>
     <string name="terms_consent_tip">我已閱讀並同意上述全部協議</string>
     <string name="terms_reject">返回</string>
     <string name="terms_accept">同意</string>
