@@ -104,6 +104,10 @@ android {
             }
             minifyEnabled = true
             shrinkResources = true
+            firebaseCrashlytics {
+                mappingFileUploadEnabled = false
+                nativeSymbolUploadEnabled = false
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

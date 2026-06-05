@@ -388,6 +388,22 @@
                                 android:src="@mipmap/arrow_right"
                                 android:tint="#B1B1B1" />
                         </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/tvIcpRecord"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="24px"
+                            android:layout_marginBottom="12px"
+                            android:text="@string/setting_icp_record"
+                            android:textColor="#999999"
+                            android:textSize="24px" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>

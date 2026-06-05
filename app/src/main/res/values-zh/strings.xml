@@ -222,6 +222,8 @@
     <string name="setting_user_agreement">用户协议</string>
     <string name="setting_privacy_policy">隐私政策</string>
     <string name="setting_open_source_license">开源协议</string>
+    <string name="setting_icp_record">ICP备案号： 粤ICP备2024188934号-3A</string>
+    <string name="setting_icp_record_number">粤ICP备2024188934号-3A</string>
     <string name="setting_add_skill_by_chat">通过对话创建</string>
     <string name="setting_add_skill_by_chat_desc">描述你的需求，AI帮你生成</string>
     <string name="setting_import_from_github">从GitHub导入</string>

@@ -14,6 +14,11 @@ import android.graphics.Outline
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.KeyEvent
 import android.view.Gravity
@@ -46,6 +51,7 @@ class SettingPanelController(
         private val NON_REMOVABLE_BUILTIN_SKILLS = setOf("dev_ctrl", "multi-search-engine", "pdf", "pptx", "html-default")
         private const val SKILL_CACHE_TTL_MS = 30_000L
         private const val SKILL_TRACE_TAG = "SettingSkillTrace"
+        private const val ICP_RECORD_URL = "https://beian.miit.gov.cn/"
 
         @Volatile
         private var cachedBuiltinSkillNames: List<String>? = null
@@ -126,6 +132,39 @@ class SettingPanelController(
 
     private fun bindAboutInfo() {
         rootView.findViewById<TextView>(R.id.tvVersion)?.text = "V${getAppVersionName()}"
+        bindIcpRecord()
+    }
+
+    private fun bindIcpRecord() {
+        val icpView = rootView.findViewById<TextView>(R.id.tvIcpRecord) ?: return
+        val fullText = context.getString(R.string.setting_icp_record)
+        val recordNumber = context.getString(R.string.setting_icp_record_number)
+        val start = fullText.indexOf(recordNumber)
+        if (start < 0) {
+            icpView.text = fullText
+            return
+        }
+
+        val spannable = SpannableString(fullText)
+        spannable.setSpan(
+            object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    openLegalPage(recordNumber, ICP_RECORD_URL)
+                }
+
+                override fun updateDrawState(ds: TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.color = Color.parseColor("#3978F3")
+                    ds.isUnderlineText = false
+                }
+            },
+            start,
+            start + recordNumber.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        icpView.text = spannable
+        icpView.movementMethod = LinkMovementMethod.getInstance()
+        icpView.highlightColor = Color.TRANSPARENT
     }
 
     private fun getAppVersionName(): String {
