@@ -3,7 +3,7 @@ package ai.cjym.agentclaw.constants
 import java.util.Locale
 
 object AppConstants {
-    const val APP_NAME = "Agent小龙虾"
+    const val APP_NAME = "小龙虾Agent"
     const val VERSION = "1.0.0"
     const val PACKAGE_NAME = "ai.cjym.agentclaw"
 

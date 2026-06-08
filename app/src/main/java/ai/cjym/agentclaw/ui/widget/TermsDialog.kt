@@ -28,7 +28,7 @@ class TermsDialog(
     override fun onStart() {
         super.onStart()
         window?.attributes = window?.attributes?.apply {
-            height = 800
+            height = 1200
         }
     }
     private val result = CompletableDeferred<Boolean>()
