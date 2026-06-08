@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">小龙虾Agent</string>
+    <string name="app_name">Agent小龙虾</string>
     <string name="common_retry">Retry</string>
     <string name="common_back">Back</string>
     <string name="common_copied">Copied</string>

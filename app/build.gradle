@@ -29,7 +29,7 @@ if (releaseTaskRequested && !hasSigningConfig) {
 
 android {
     namespace 'ai.cjym.agentclaw'
-    compileSdkVersion 34
+    compileSdk 34
 
     lint {
         disable 'NullSafeMutableLiveData'
@@ -208,5 +208,4 @@ dependencies {
     implementation(libs.firebase.crashlytics.ndk)
     implementation(libs.firebase.analytics)
 }
-
 
