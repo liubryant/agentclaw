@@ -12,7 +12,7 @@
     <string name="setup_skip">暂时跳过</string>
 
     <string name="startup_title">正在启动 AgentClaw</string>
-    <string name="startup_loading_title">Agent小龙虾启动中，\n正在唤醒您的专属小龙虾</string>
+    <string name="startup_loading_title">Agent智能体生活助手启动中，\n正在唤醒您的专属小龙虾</string>
     <string name="startup_loading_subtitle">首次加载需要几分钟时间，请稍等</string>
     <string-array name="startup_tips">
         <item>AgentClaw内置了Linux系统虚拟机，首次加载比较慢请耐心等待</item>
@@ -20,7 +20,7 @@
         <item>精美的HTML文档生成会略缓慢，请耐心等待</item>
         <item>AgentClaw内置了多种文档格式的Skills高级技能</item>
         <item>AgentClaw会在通知栏实时显示任务加载与执行进度，即使切换到后台也能随时查看运行状态</item>
-        <item>AgentClaw深度集成完整的OpenClaw小龙虾能力体系，不仅支持AI对话，还覆盖代码生成、文档处理、技能调用、自动化执行等多种智能能力</item>
+        <item>AgentClaw深度集成完整的Agent能力体系，不仅支持AI对话，还覆盖代码生成、文档处理、技能调用、自动化执行等多种智能能力</item>
         <item>后台任务支持持续运行，长时间生成内容时无需停留在当前页面，可边使用手机边等待结果完成</item>
         <item>相比传统聊天式AI，AgentClaw更偏向智能工作流平台，可通过Skills扩展多领域能力与自动化任务</item>
     </string-array>
@@ -313,9 +313,9 @@
 
     <string name="terms_title">个人信息保护提示</string>
     <string name="terms_message">使用 AI 网关能力前，请先阅读并同意用户协议和隐私政策。</string>
-    <string name="terms_user_agreement">Agent小龙虾 用户协议</string>
-    <string name="terms_privacy_policy">Agent小龙虾 隐私政策</string>
-    <string name="terms_content">亲爱的用户，欢迎使用Agent小龙虾多智能体生活助手！为了更好地保障您的权益，为您提供安全、便捷的服务，请您阅读并同意以下相关协议。\n\n为正常提供服务，
+    <string name="terms_user_agreement">Agent智能体生活助手 用户协议</string>
+    <string name="terms_privacy_policy">Agent智能体生活助手 隐私政策</string>
+    <string name="terms_content">亲爱的用户，欢迎使用Agent智能体生活助手多智能体生活助手！为了更好地保障您的权益，为您提供安全、便捷的服务，请您阅读并同意以下相关协议。\n\n为正常提供服务，
         我们将收集以下个人信息，目的、方式和范围如下：\n\n【软件安装列表（已安装应用包名）】\n收集目的：用于安全风控、广告归因及应用功能适配；\n收集方式：由应用及第三方SDK
         （穿山甲/GroMore广告SDK、友盟SDK）通过系统API自动获取；\n收集范围：您设备上已安装的应用包名列表。\n\n【设备MAC地址，设备序列号】\n收集目的：用于设备唯一标识、广告精准投放及统计分析；\n收集方式：由应用及第三方SDK（穿山甲/GroMore广告SDK、友盟SDK）通过系统API自动获取；\n收集范围：设备网络硬件MAC地址。\n\n【设备IP地址】\n收集目的：用于网络连接保障及安全风控；\n收集方式：由应用通过系统API自动获取；\n收集范围：设备当前网络IP地址。\n\n详情请见隐私政策第1.8条及第3条。\n\n请您仔细阅读并理解\n<annotation user_agreement="user_agreement">AgentClaw 用户协议</annotation>与<annotation privacy_policy="privacy_policy">AgentClaw 隐私政策</annotation>，点击协议名称可查看全文；\n您点击"同意"，即视为已完整阅读、充分理解并自愿接受上述两个协议的全部条款，可正常使用本功能；点击"不同意"，将无法使用AgentClaw功能，不影响设备其他核心功能。</string>
     <string name="terms_consent_tip">我已阅读并同意上述全部协议</string>

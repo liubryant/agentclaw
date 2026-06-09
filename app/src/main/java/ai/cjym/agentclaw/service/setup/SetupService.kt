@@ -115,7 +115,7 @@ class SetupService : Service() {
             Notification.Builder(this)
         }
 
-        builder.setContentTitle("OpenClaw Setup")
+        builder.setContentTitle("Agent Setup")
             .setContentText(text)
             .setSmallIcon(android.R.drawable.stat_sys_download)
             .setContentIntent(pendingIntent)
