@@ -12,3 +12,11 @@ data class TokenUsageData(
     val usedTokens: Long,
     val totalQuota: Long
 )
+
+data class LoginVerificationCodeRequest(val phone: String)
+
+data class LoginVerificationCodeResponse(
+    val msg: String?,
+    val code: String?,
+    val data: Any?
+)

@@ -139,6 +139,16 @@
                 app:navText="@string/agentclaw_docs_title"
                 app:navSubtitle="@string/agentclaw_docs_subtitle" />
 
+            <ai.cjym.agentclaw.ui.widget.SidebarNavItemView
+                android:id="@+id/navLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:navIcon="@drawable/ic_shell_login"
+                app:navIconTint="@color/black"
+                app:navText="@string/login_title"
+                app:navSubtitle="@string/nav_login_subtitle" />
+
 <!--            <ai.cjym.agentclaw.ui.widget.SidebarNavItemView-->
 <!--                android:id="@+id/navSchedule"-->
 <!--                android:layout_width="match_parent"-->

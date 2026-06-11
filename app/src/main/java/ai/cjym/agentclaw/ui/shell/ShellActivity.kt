@@ -6,8 +6,10 @@ import ai.inmo.core_common.utils.Logger
 import ai.inmo.core_common.utils.WifiNetworkMonitor
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.SettingPanelController
+import ai.cjym.agentclaw.data.remote.api.LoginVerificationCodeRequest
 import ai.cjym.agentclaw.di.AppGraph
 import ai.cjym.agentclaw.databinding.ActivityShellBinding
+import ai.cjym.agentclaw.databinding.DialogLoginBinding
 import ai.cjym.agentclaw.ui.chat.ChatScreenState
 import ai.cjym.agentclaw.ui.chat.ChatSessionAdapter
 import ai.cjym.agentclaw.ui.chat.ChatSessionItem
@@ -16,6 +18,7 @@ import ai.cjym.agentclaw.ui.fancyideas.FancyIdeasFragment
 import ai.cjym.agentclaw.ui.search.ChatSearchActivity
 import ai.cjym.agentclaw.ui.shell.chat.ChatFragment
 import ai.cjym.agentclaw.ui.shell.schedule.ScheduleFragment
+import android.app.Dialog
 import android.content.Intent
 import android.app.DownloadManager
 import android.net.Uri
@@ -155,6 +158,10 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         binding.navAgentclawDocs.setOnClickListener {
             shellViewModel.requestClearChatComposerFocus()
             showExportedFilesDialog()
+        }
+        binding.navLogin.setOnClickListener {
+            shellViewModel.requestClearChatComposerFocus()
+            showLoginDialog()
         }
         binding.navSetting.setOnClickListener {
             shellViewModel.requestClearChatComposerFocus()
@@ -596,6 +603,88 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         if (supportFragmentManager.findFragmentByTag(tag) != null) return
         ai.cjym.agentclaw.ui.shell.chat.ExportedFilesDialogFragment.newInstance()
             .show(supportFragmentManager, tag)
+    }
+
+    private fun showLoginDialog() {
+        val dialogBinding = DialogLoginBinding.inflate(layoutInflater)
+        var verifiedPhone: String? = null
+        val dialog = Dialog(this).apply {
+            requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+            setContentView(dialogBinding.root)
+            setCanceledOnTouchOutside(true)
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+
+        dialogBinding.root.setOnClickListener { dialog.dismiss() }
+        dialogBinding.loginDialogContainer.setOnClickListener { /* consume */ }
+        dialogBinding.loginCloseButton.setOnClickListener { dialog.dismiss() }
+        dialogBinding.loginCodeButton.setOnClickListener {
+            val normalizedPhone = normalizeMainlandPhone(dialogBinding.loginPhoneInput.text?.toString().orEmpty())
+            val phoneValid = isReliableMainlandPhone(normalizedPhone)
+            dialogBinding.loginPhoneError.visibility = if (phoneValid) View.GONE else View.VISIBLE
+            if (!phoneValid) return@setOnClickListener
+
+            dialogBinding.loginCodeButton.isEnabled = false
+            dialogBinding.loginCodeButton.text = getString(R.string.login_code_loading)
+            lifecycleScope.launch {
+                val result = runCatching {
+                    AppGraph.botApi.requestLoginVerificationCode(
+                        LoginVerificationCodeRequest(phone = normalizedPhone)
+                    )
+                }
+                val response = result.getOrNull()
+                val success = response != null && isLoginCodeSuccess(response.code)
+                if (success) {
+                    verifiedPhone = normalizedPhone
+                }
+                Toast.makeText(
+                    this@ShellActivity,
+                    response?.msg?.takeIf { it.isNotBlank() }
+                        ?: getString(if (success) R.string.login_code_success else R.string.login_code_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
+                dialogBinding.loginCodeButton.isEnabled = true
+                dialogBinding.loginCodeButton.text = getString(R.string.login_code)
+            }
+        }
+        dialogBinding.loginSubmitButton.setOnClickListener {
+            val normalizedPhone = normalizeMainlandPhone(dialogBinding.loginPhoneInput.text?.toString().orEmpty())
+            val password = dialogBinding.loginPasswordInput.text?.toString().orEmpty()
+            val phoneValid = isReliableMainlandPhone(normalizedPhone)
+            val passwordValid = password.isNotBlank()
+            val codeValid = verifiedPhone == normalizedPhone
+
+            dialogBinding.loginPhoneError.visibility = if (phoneValid) View.GONE else View.VISIBLE
+            dialogBinding.loginPasswordError.visibility = if (passwordValid) View.GONE else View.VISIBLE
+
+            if (phoneValid && passwordValid && codeValid) {
+                Toast.makeText(this, getString(R.string.login_local_success), Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            } else if (phoneValid && passwordValid) {
+                Toast.makeText(this, getString(R.string.login_code_required), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
+        dialog.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+    }
+
+    private fun normalizeMainlandPhone(rawPhone: String): String {
+        return rawPhone
+            .filterNot { it.isWhitespace() || it == '-' }
+            .removePrefix("+86")
+            .removePrefix("86")
+    }
+
+    private fun isReliableMainlandPhone(phone: String): Boolean {
+        return Regex("^1[3-9]\\d{9}$").matches(phone)
+    }
+
+    private fun isLoginCodeSuccess(code: String?): Boolean {
+        return code?.trim()?.lowercase() in setOf("0", "200", "success", "ok")
     }
 
     private fun openAgentclawDocsDirectory() {
