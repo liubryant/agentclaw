@@ -114,6 +114,18 @@ class PreferencesManager(context: Context) {
             prefs.encode(KEY_TERMS_ACCEPTED, value)
         }
 
+    var isLoggedIn: Boolean
+        get() = prefs.decodeBool(KEY_IS_LOGGED_IN, false)
+        set(value) {
+            prefs.encode(KEY_IS_LOGGED_IN, value)
+        }
+
+    var userPhone: String?
+        get() = prefs.decodeString(KEY_USER_PHONE, null)
+        set(value) {
+            prefs.encodeOrRemove(KEY_USER_PHONE, value)
+        }
+
 //    切测试服：
 //    const val DEFAULT_AGENTCLAW_BASE_URL = "http://192.168.110.67:8066/v1"
 //    切正式服：
@@ -147,6 +159,8 @@ class PreferencesManager(context: Context) {
         private const val KEY_LAST_APP_VERSION = "last_app_version"
         private const val KEY_LAST_SELECTED_CHAT_SESSION_KEY = "last_selected_chat_session_key"
         private const val KEY_TERMS_ACCEPTED = "terms_accepted"
+        private const val KEY_IS_LOGGED_IN = "is_logged_in"
+        private const val KEY_USER_PHONE = "user_phone"
         private const val KEY_AGENTCLAW_BASE_URL = "inmoclaw_base_url"
         private const val KEY_SIDEBAR_VISIBLE = "sidebar_visible"
         private const val KEY_PREFIX_SESSION_ENTRY_MODE = "session_entry_mode:"

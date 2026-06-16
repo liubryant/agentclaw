@@ -23,6 +23,7 @@
         android:paddingEnd="28dp"
         android:paddingBottom="24dp">
 
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,6 +46,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/loginSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
@@ -66,100 +68,321 @@
                 app:tint="@color/black" />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/loginPhoneInput"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginTop="22dp"
-            android:background="@drawable/bg_login_field"
-            android:fontFamily="@font/misans_medium"
-            android:hint="@string/login_phone_hint"
-            android:importantForAutofill="yes"
-            android:inputType="phone"
-            android:maxLines="1"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/sidebar_muted"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/loginPhoneError"
+        <!-- ── 已登录状态 ── -->
+        <LinearLayout
+            android:id="@+id/loggedInSection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/misans_medium"
-            android:text="@string/login_phone_invalid"
-            android:textColor="@color/error"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/loginPasswordRow"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_login_field"
+            android:layout_marginTop="22dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/loggedInPhoneText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/misans_medium"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/setPasswordButton"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_login_field"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/misans_medium"
+                android:gravity="center"
+                android:text="@string/login_set_password"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/logoutButton"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_login_field"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/misans_medium"
+                android:gravity="center"
+                android:text="@string/login_logout"
+                android:textColor="@color/error"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- ── 设置密码表单 ── -->
+        <LinearLayout
+            android:id="@+id/setPasswordSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/misans_medium"
+                android:text="@string/set_password_title"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/setPasswordPhoneText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/misans_medium"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_login_field"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/setPasswordCodeInput"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/misans_medium"
+                    android:hint="@string/login_code_hint"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:maxLines="1"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/sidebar_muted"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/setPasswordCodeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_login_code_button"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/misans_medium"
+                    android:gravity="center"
+                    android:minWidth="72dp"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/login_get_code"
+                    android:textColor="@color/brand_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <EditText
+                android:id="@+id/setPasswordNewInput"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_login_field"
+                android:fontFamily="@font/misans_medium"
+                android:hint="@string/set_password_new_hint"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/sidebar_muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/setPasswordError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/misans_medium"
+                android:textColor="@color/error"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/setPasswordSubmitButton"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_login_primary_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/misans_medium"
+                android:gravity="center"
+                android:text="@string/set_password_submit"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/setPasswordBackButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/misans_medium"
+                android:padding="4dp"
+                android:text="@string/set_password_back"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <!-- ── 未登录表单 ── -->
+        <LinearLayout
+            android:id="@+id/loginFormSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/loginPhoneInput"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/bg_login_field"
+                android:fontFamily="@font/misans_medium"
+                android:hint="@string/login_phone_hint"
+                android:importantForAutofill="yes"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:maxLines="1"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/sidebar_muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/loginPhoneError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/misans_medium"
+                android:text="@string/login_phone_invalid"
+                android:textColor="@color/error"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <!-- 验证码模式：验证码输入 + 获取按钮 -->
+            <LinearLayout
+                android:id="@+id/loginSmsRow"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_login_field"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/loginCodeInput"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/misans_medium"
+                    android:hint="@string/login_code_hint"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:maxLines="1"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/sidebar_muted"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/loginCodeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_login_code_button"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/misans_medium"
+                    android:gravity="center"
+                    android:minWidth="72dp"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/login_get_code"
+                    android:textColor="@color/brand_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- 密码模式：密码输入 -->
+            <EditText
                 android:id="@+id/loginPasswordInput"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_login_field"
                 android:fontFamily="@font/misans_medium"
                 android:hint="@string/login_password_hint"
                 android:importantForAutofill="yes"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:paddingStart="14dp"
-                android:paddingEnd="8dp"
+                android:paddingEnd="14dp"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/sidebar_muted"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <TextView
-                android:id="@+id/loginCodeButton"
-                android:layout_width="72dp"
-                android:layout_height="34dp"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bg_login_code_button"
+                android:id="@+id/loginFormError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/misans_medium"
+                android:textColor="@color/error"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/loginSubmitButton"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_login_primary_button"
                 android:clickable="true"
                 android:focusable="true"
                 android:fontFamily="@font/misans_medium"
                 android:gravity="center"
-                android:text="@string/login_code"
-                android:textColor="@color/brand_primary"
-                android:textSize="13sp"
+                android:text="@string/login_submit"
+                android:textColor="@color/white"
+                android:textSize="15sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/loginSwitchModeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/misans_medium"
+                android:padding="4dp"
+                android:text="@string/login_use_password"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/loginPasswordError"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/misans_medium"
-            android:text="@string/login_password_empty"
-            android:textColor="@color/error"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/loginSubmitButton"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/bg_login_primary_button"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="@font/misans_medium"
-            android:gravity="center"
-            android:text="@string/login_submit"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold" />
     </LinearLayout>
 </FrameLayout>

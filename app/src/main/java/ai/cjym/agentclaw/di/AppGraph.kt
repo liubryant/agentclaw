@@ -13,6 +13,7 @@ import ai.cjym.agentclaw.data.repository.PackageService
 import ai.cjym.agentclaw.data.repository.ProviderConfigService
 import ai.cjym.agentclaw.data.repository.SshRepository
 import ai.cjym.agentclaw.data.remote.api.BotNetworkModule
+import ai.cjym.agentclaw.data.repository.AuthService
 import ai.cjym.agentclaw.data.repository.SyncedChatWsManager
 
 object AppGraph {
@@ -31,4 +32,5 @@ object AppGraph {
     val syncedChatWsManager by lazy { SyncedChatWsManager(appContext, preferences) }
     val artifactExportRepository by lazy { ArtifactExportRepository(appContext) }
     val botApi by lazy { BotNetworkModule.botApi }
+    val authService by lazy { AuthService(appContext) }
 }

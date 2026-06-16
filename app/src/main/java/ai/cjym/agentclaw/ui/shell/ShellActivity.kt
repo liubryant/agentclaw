@@ -7,6 +7,8 @@ import ai.inmo.core_common.utils.WifiNetworkMonitor
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.SettingPanelController
 import ai.cjym.agentclaw.data.remote.api.LoginVerificationCodeRequest
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import ai.cjym.agentclaw.di.AppGraph
 import ai.cjym.agentclaw.databinding.ActivityShellBinding
 import ai.cjym.agentclaw.databinding.DialogLoginBinding
@@ -607,7 +609,6 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
 
     private fun showLoginDialog() {
         val dialogBinding = DialogLoginBinding.inflate(layoutInflater)
-        var verifiedPhone: String? = null
         val dialog = Dialog(this).apply {
             requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
             setContentView(dialogBinding.root)
@@ -615,54 +616,245 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
 
+        var isCodeMode = true
+        var countdownJob: Job? = null
+        var setPasswordCountdownJob: Job? = null
+
+        fun setError(msg: String?) {
+            dialogBinding.loginFormError.visibility = if (msg.isNullOrEmpty()) View.GONE else View.VISIBLE
+            dialogBinding.loginFormError.text = msg.orEmpty()
+        }
+
+        fun setLoading(loading: Boolean) {
+            dialogBinding.loginSubmitButton.isEnabled = !loading
+            dialogBinding.loginSubmitButton.text =
+                getString(if (loading) R.string.login_logging_in else R.string.login_submit)
+        }
+
+        fun setSetPasswordError(msg: String?) {
+            dialogBinding.setPasswordError.visibility = if (msg.isNullOrEmpty()) View.GONE else View.VISIBLE
+            dialogBinding.setPasswordError.text = msg.orEmpty()
+        }
+
+        fun setSetPasswordLoading(loading: Boolean) {
+            dialogBinding.setPasswordSubmitButton.isEnabled = !loading
+            dialogBinding.setPasswordSubmitButton.text =
+                getString(if (loading) R.string.set_password_submitting else R.string.set_password_submit)
+        }
+
+        fun refreshMode() {
+            if (isCodeMode) {
+                dialogBinding.loginSmsRow.visibility = View.VISIBLE
+                dialogBinding.loginPasswordInput.visibility = View.GONE
+                dialogBinding.loginSwitchModeButton.text = getString(R.string.login_use_password)
+            } else {
+                dialogBinding.loginSmsRow.visibility = View.GONE
+                dialogBinding.loginPasswordInput.visibility = View.VISIBLE
+                dialogBinding.loginSwitchModeButton.text = getString(R.string.login_use_code)
+            }
+            setError(null)
+        }
+
+        fun showLoggedInSection() {
+            dialogBinding.loggedInSection.visibility = View.VISIBLE
+            dialogBinding.loginFormSection.visibility = View.GONE
+            dialogBinding.setPasswordSection.visibility = View.GONE
+            dialogBinding.loginSubtitle.text = getString(R.string.login_dialog_subtitle)
+        }
+
+        fun showSetPasswordSection(phone: String) {
+            dialogBinding.loggedInSection.visibility = View.GONE
+            dialogBinding.loginFormSection.visibility = View.GONE
+            dialogBinding.setPasswordSection.visibility = View.VISIBLE
+            dialogBinding.loginSubtitle.text = getString(R.string.set_password_title)
+            dialogBinding.setPasswordPhoneText.text = getString(R.string.login_logged_in_as, phone)
+            dialogBinding.setPasswordCodeInput.text?.clear()
+            dialogBinding.setPasswordNewInput.text?.clear()
+            setSetPasswordError(null)
+        }
+
+        // 已登录状态
+        if (AppGraph.preferences.isLoggedIn) {
+            val phone = AppGraph.preferences.userPhone.orEmpty()
+            dialogBinding.loggedInPhoneText.text = getString(R.string.login_logged_in_as, phone)
+            showLoggedInSection()
+            dialogBinding.setPasswordButton.setOnClickListener {
+                showSetPasswordSection(phone)
+            }
+            dialogBinding.logoutButton.setOnClickListener {
+                AppGraph.preferences.isLoggedIn = false
+                AppGraph.preferences.userPhone = null
+                dialog.dismiss()
+                Toast.makeText(this, getString(R.string.login_logout), Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            dialogBinding.loggedInSection.visibility = View.GONE
+            dialogBinding.loginFormSection.visibility = View.VISIBLE
+            dialogBinding.setPasswordSection.visibility = View.GONE
+            refreshMode()
+        }
+
+        // 设置密码 — 返回
+        dialogBinding.setPasswordBackButton.setOnClickListener {
+            setPasswordCountdownJob?.cancel()
+            setPasswordCountdownJob = null
+            showLoggedInSection()
+        }
+
+        // 设置密码 — 获取验证码
+        dialogBinding.setPasswordCodeButton.setOnClickListener {
+            val phone = AppGraph.preferences.userPhone.orEmpty()
+            if (phone.isEmpty()) return@setOnClickListener
+            dialogBinding.setPasswordCodeButton.isEnabled = false
+            dialogBinding.setPasswordCodeButton.text = getString(R.string.login_sending_code)
+
+            lifecycleScope.launch {
+                AppGraph.authService.sendSmsCode(phone)
+                    .onSuccess {
+                        setPasswordCountdownJob?.cancel()
+                        setPasswordCountdownJob = launch {
+                            var remaining = 120
+                            while (remaining > 0) {
+                                dialogBinding.setPasswordCodeButton.text =
+                                    getString(R.string.login_code_countdown, remaining)
+                                delay(1000)
+                                remaining--
+                            }
+                            dialogBinding.setPasswordCodeButton.isEnabled = true
+                            dialogBinding.setPasswordCodeButton.text = getString(R.string.login_get_code)
+                        }
+                    }
+                    .onFailure { e ->
+                        dialogBinding.setPasswordCodeButton.isEnabled = true
+                        dialogBinding.setPasswordCodeButton.text = getString(R.string.login_get_code)
+                        setSetPasswordError(e.message ?: getString(R.string.login_code_failed))
+                    }
+            }
+        }
+
+        // 设置密码 — 提交
+        dialogBinding.setPasswordSubmitButton.setOnClickListener {
+            val phone = AppGraph.preferences.userPhone.orEmpty()
+            val code = dialogBinding.setPasswordCodeInput.text?.toString()?.trim().orEmpty()
+            val password = dialogBinding.setPasswordNewInput.text?.toString().orEmpty()
+            if (code.length != 6) {
+                setSetPasswordError(getString(R.string.login_code_hint))
+                return@setOnClickListener
+            }
+            if (password.length < 6) {
+                setSetPasswordError(getString(R.string.set_password_new_hint))
+                return@setOnClickListener
+            }
+            lifecycleScope.launch {
+                setSetPasswordLoading(true)
+                setSetPasswordError(null)
+                AppGraph.authService.setPassword(phone, code, password)
+                    .onSuccess {
+                        setSetPasswordLoading(false)
+                        setPasswordCountdownJob?.cancel()
+                        setPasswordCountdownJob = null
+                        showLoggedInSection()
+                        Toast.makeText(
+                            this@ShellActivity,
+                            getString(R.string.set_password_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .onFailure { e ->
+                        setSetPasswordLoading(false)
+                        setSetPasswordError(e.message ?: getString(R.string.login_code_failed))
+                    }
+            }
+        }
+
         dialogBinding.root.setOnClickListener { dialog.dismiss() }
         dialogBinding.loginDialogContainer.setOnClickListener { /* consume */ }
         dialogBinding.loginCloseButton.setOnClickListener { dialog.dismiss() }
-        dialogBinding.loginCodeButton.setOnClickListener {
-            val normalizedPhone = normalizeMainlandPhone(dialogBinding.loginPhoneInput.text?.toString().orEmpty())
-            val phoneValid = isReliableMainlandPhone(normalizedPhone)
-            dialogBinding.loginPhoneError.visibility = if (phoneValid) View.GONE else View.VISIBLE
-            if (!phoneValid) return@setOnClickListener
 
+        dialogBinding.loginSwitchModeButton.setOnClickListener {
+            isCodeMode = !isCodeMode
+            refreshMode()
+        }
+
+        dialogBinding.loginCodeButton.setOnClickListener {
+            val phone = normalizeMainlandPhone(dialogBinding.loginPhoneInput.text?.toString().orEmpty())
+            if (!isReliableMainlandPhone(phone)) {
+                dialogBinding.loginPhoneError.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+            dialogBinding.loginPhoneError.visibility = View.GONE
             dialogBinding.loginCodeButton.isEnabled = false
-            dialogBinding.loginCodeButton.text = getString(R.string.login_code_loading)
+            dialogBinding.loginCodeButton.text = getString(R.string.login_sending_code)
+
             lifecycleScope.launch {
-                val result = runCatching {
-                    AppGraph.botApi.requestLoginVerificationCode(
-                        LoginVerificationCodeRequest(phone = normalizedPhone)
-                    )
-                }
-                val response = result.getOrNull()
-                val success = response != null && isLoginCodeSuccess(response.code)
-                if (success) {
-                    verifiedPhone = normalizedPhone
-                }
-                Toast.makeText(
-                    this@ShellActivity,
-                    response?.msg?.takeIf { it.isNotBlank() }
-                        ?: getString(if (success) R.string.login_code_success else R.string.login_code_failed),
-                    Toast.LENGTH_SHORT
-                ).show()
-                dialogBinding.loginCodeButton.isEnabled = true
-                dialogBinding.loginCodeButton.text = getString(R.string.login_code)
+                AppGraph.authService.sendSmsCode(phone)
+                    .onSuccess {
+                        // 120s 倒计时
+                        countdownJob?.cancel()
+                        countdownJob = launch {
+                            var remaining = 120
+                            while (remaining > 0) {
+                                dialogBinding.loginCodeButton.text =
+                                    getString(R.string.login_code_countdown, remaining)
+                                delay(1000)
+                                remaining--
+                            }
+                            dialogBinding.loginCodeButton.isEnabled = true
+                            dialogBinding.loginCodeButton.text = getString(R.string.login_get_code)
+                        }
+                    }
+                    .onFailure { e ->
+                        dialogBinding.loginCodeButton.isEnabled = true
+                        dialogBinding.loginCodeButton.text = getString(R.string.login_get_code)
+                        setError(e.message ?: getString(R.string.login_code_failed))
+                    }
             }
         }
+
         dialogBinding.loginSubmitButton.setOnClickListener {
-            val normalizedPhone = normalizeMainlandPhone(dialogBinding.loginPhoneInput.text?.toString().orEmpty())
-            val password = dialogBinding.loginPasswordInput.text?.toString().orEmpty()
-            val phoneValid = isReliableMainlandPhone(normalizedPhone)
-            val passwordValid = password.isNotBlank()
-            val codeValid = verifiedPhone == normalizedPhone
-
-            dialogBinding.loginPhoneError.visibility = if (phoneValid) View.GONE else View.VISIBLE
-            dialogBinding.loginPasswordError.visibility = if (passwordValid) View.GONE else View.VISIBLE
-
-            if (phoneValid && passwordValid && codeValid) {
-                Toast.makeText(this, getString(R.string.login_local_success), Toast.LENGTH_SHORT).show()
-                dialog.dismiss()
-            } else if (phoneValid && passwordValid) {
-                Toast.makeText(this, getString(R.string.login_code_required), Toast.LENGTH_SHORT).show()
+            val phone = normalizeMainlandPhone(dialogBinding.loginPhoneInput.text?.toString().orEmpty())
+            if (!isReliableMainlandPhone(phone)) {
+                dialogBinding.loginPhoneError.visibility = View.VISIBLE
+                return@setOnClickListener
             }
+            dialogBinding.loginPhoneError.visibility = View.GONE
+
+            lifecycleScope.launch {
+                setLoading(true)
+                setError(null)
+                val result = if (isCodeMode) {
+                    val code = dialogBinding.loginCodeInput.text?.toString()?.trim().orEmpty()
+                    if (code.length != 6) {
+                        setError(getString(R.string.login_code_hint))
+                        setLoading(false)
+                        return@launch
+                    }
+                    AppGraph.authService.loginByCode(phone, code)
+                } else {
+                    val password = dialogBinding.loginPasswordInput.text?.toString().orEmpty()
+                    if (password.length < 6) {
+                        setError(getString(R.string.login_password_empty))
+                        setLoading(false)
+                        return@launch
+                    }
+                    AppGraph.authService.loginByPassword(phone, password)
+                }
+                result.onSuccess { loginResult ->
+                    AppGraph.preferences.isLoggedIn = true
+                    AppGraph.preferences.userPhone = loginResult.phone
+                    setLoading(false)
+                    dialog.dismiss()
+                    Toast.makeText(this@ShellActivity, getString(R.string.login_success), Toast.LENGTH_SHORT).show()
+                }.onFailure { e ->
+                    setLoading(false)
+                    setError(e.message ?: getString(R.string.login_code_failed))
+                }
+            }
+        }
+
+        dialog.setOnDismissListener {
+            countdownJob?.cancel()
+            setPasswordCountdownJob?.cancel()
         }
 
         dialog.show()
