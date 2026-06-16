@@ -1,4 +1,4 @@
-﻿package ai.cjym.agentclaw.ui.settings
+package ai.cjym.agentclaw.ui.settings
 
 import ai.inmo.core_common.ui.activity.BaseBindingActivity
 import ai.cjym.agentclaw.R
@@ -27,6 +27,19 @@ class SettingsActivity : BaseBindingActivity<ActivitySettingsBinding>(ActivitySe
 
     override fun initView() {
         binding.backButton.setOnClickListener { finish() }
+
+        // proot/Linux VM removed — show static "not available" for system info rows
+        val na = getString(R.string.settings_not_available)
+        binding.archValue.text = na
+        binding.prootValue.text = na
+        binding.rootfsValue.text = na
+        binding.nodeValue.text = na
+        binding.openclawValue.text = na
+        binding.goValue.text = na
+        binding.brewValue.text = na
+        binding.sshValue.text = na
+        binding.snapshotStatus.text = ""
+
         lifecycleScope.launch {
             viewModel.state.collectLatest { state ->
                 syncingSwitches = true
@@ -34,36 +47,8 @@ class SettingsActivity : BaseBindingActivity<ActivitySettingsBinding>(ActivitySe
                 binding.nodeSwitch.isChecked = state.nodeEnabled
                 syncingSwitches = false
                 binding.dashboardUrlValue.text = state.dashboardUrl ?: getString(R.string.settings_not_available)
-                binding.archValue.text = state.arch
-                binding.prootValue.text = state.prootPath
-                binding.rootfsValue.text = installedText(state.rootfsInstalled)
-                binding.nodeValue.text = installedText(state.nodeInstalled)
-                binding.openclawValue.text = installedText(state.openClawInstalled)
-                binding.goValue.text = installedText(state.goInstalled)
-                binding.brewValue.text = installedText(state.brewInstalled)
-                binding.sshValue.text = installedText(state.sshInstalled)
-                binding.snapshotStatus.text = state.statusMessage ?: ""
                 binding.batteryValue.text = if (isBatteryOptimized()) getString(R.string.settings_battery_optimized) else getString(R.string.settings_battery_unrestricted)
                 binding.storageValue.text = if (hasStorageAccess()) getString(R.string.settings_storage_granted) else getString(R.string.settings_storage_not_granted)
-                when (state.snapshotAction) {
-                    SettingsViewModel.SnapshotAction.EXPORTED -> {
-                        Toast.makeText(this@SettingsActivity, getString(R.string.settings_snapshot_exported), Toast.LENGTH_SHORT).show()
-                        viewModel.consumeSnapshotAction()
-                    }
-                    SettingsViewModel.SnapshotAction.IMPORTED -> {
-                        Toast.makeText(this@SettingsActivity, getString(R.string.settings_snapshot_imported), Toast.LENGTH_SHORT).show()
-                        viewModel.consumeSnapshotAction()
-                    }
-                    SettingsViewModel.SnapshotAction.EXPORT_FAILED -> {
-                        Toast.makeText(this@SettingsActivity, getString(R.string.settings_snapshot_export_failed), Toast.LENGTH_SHORT).show()
-                        viewModel.consumeSnapshotAction()
-                    }
-                    SettingsViewModel.SnapshotAction.IMPORT_FAILED -> {
-                        Toast.makeText(this@SettingsActivity, getString(R.string.settings_snapshot_import_failed), Toast.LENGTH_SHORT).show()
-                        viewModel.consumeSnapshotAction()
-                    }
-                    null -> Unit
-                }
             }
         }
     }
@@ -87,8 +72,12 @@ class SettingsActivity : BaseBindingActivity<ActivitySettingsBinding>(ActivitySe
                 data = Uri.fromParts("package", packageName, null)
             })
         }
-        binding.exportSnapshotButton.setOnClickListener { viewModel.exportSnapshot() }
-        binding.importSnapshotButton.setOnClickListener { viewModel.importSnapshot() }
+        binding.exportSnapshotButton.setOnClickListener {
+            Toast.makeText(this, getString(R.string.settings_not_available), Toast.LENGTH_SHORT).show()
+        }
+        binding.importSnapshotButton.setOnClickListener {
+            Toast.makeText(this, getString(R.string.settings_not_available), Toast.LENGTH_SHORT).show()
+        }
         binding.rerunSetupButton.setOnClickListener { startActivity(Intent(this, StartupActivity::class.java)) }
         binding.licenseRow.setOnClickListener { startActivity(Intent(this, LicenseActivity::class.java)) }
     }
@@ -96,10 +85,6 @@ class SettingsActivity : BaseBindingActivity<ActivitySettingsBinding>(ActivitySe
     override fun onResume() {
         super.onResume()
         viewModel.refresh()
-    }
-
-    private fun installedText(installed: Boolean): String {
-        return if (installed) getString(R.string.settings_installed) else getString(R.string.settings_not_installed)
     }
 
     private fun isBatteryOptimized(): Boolean {

@@ -1,7 +1,6 @@
 package ai.cjym.agentclaw.capability
 
 import ai.cjym.agentclaw.domain.model.NodeFrame
-import ai.cjym.agentclaw.proot.BootstrapManager
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Build
@@ -10,8 +9,7 @@ import java.io.File
 import java.util.Base64
 
 class FsCapabilityHandler(
-    private val context: Context,
-    private val bootstrapManager: BootstrapManager
+    private val context: Context
 ) : NodeCapabilityHandler {
     override val name: String = "fs"
     override val commands: List<String> = listOf(
@@ -46,62 +44,44 @@ class FsCapabilityHandler(
     private fun list(params: Map<String, Any?>): NodeFrame {
         val scope = requireScope(params)
         val path = sanitizePath(params["path"] as? String ?: "")
-        return if (scope == "rootfs") {
-            NodeFrame.response("", payload = mapOf(
-                "scope" to scope,
-                "path" to path,
-                "entries" to bootstrapManager.listRootfsDir(path)
-            ))
-        } else {
-            val dir = resolveLocalScope(scope, path)
-            if (!dir.exists()) return error("NOT_FOUND", "Path not found")
-            if (!dir.isDirectory) return error("NOT_A_DIRECTORY", "Path is not a directory")
-            val entries = dir.listFiles()
-                ?.sortedBy { it.name.lowercase() }
-                ?.map { toEntryMap(it, dir) }
-                ?: emptyList()
-            NodeFrame.response("", payload = mapOf("scope" to scope, "path" to path, "entries" to entries))
-        }
+        if (scope == "rootfs") return error("NOT_SUPPORTED", "rootfs scope is not available")
+        val dir = resolveLocalScope(scope, path)
+        if (!dir.exists()) return error("NOT_FOUND", "Path not found")
+        if (!dir.isDirectory) return error("NOT_A_DIRECTORY", "Path is not a directory")
+        val entries = dir.listFiles()
+            ?.sortedBy { it.name.lowercase() }
+            ?.map { toEntryMap(it, dir) }
+            ?: emptyList()
+        return NodeFrame.response("", payload = mapOf("scope" to scope, "path" to path, "entries" to entries))
     }
 
     private fun stat(params: Map<String, Any?>): NodeFrame {
         val scope = requireScope(params)
         val path = sanitizePath(params["path"] as? String ?: "")
-        return if (scope == "rootfs") {
-            val stat = bootstrapManager.statRootfsPath(path) ?: return error("NOT_FOUND", "Path not found")
-            NodeFrame.response("", payload = mapOf("scope" to scope) + stat)
-        } else {
-            val file = resolveLocalScope(scope, path)
-            if (!file.exists()) return error("NOT_FOUND", "Path not found")
-            NodeFrame.response("", payload = mapOf("scope" to scope) + toEntryMap(file, null))
-        }
+        if (scope == "rootfs") return error("NOT_SUPPORTED", "rootfs scope is not available")
+        val file = resolveLocalScope(scope, path)
+        if (!file.exists()) return error("NOT_FOUND", "Path not found")
+        return NodeFrame.response("", payload = mapOf("scope" to scope) + toEntryMap(file, null))
     }
 
     private fun readText(params: Map<String, Any?>): NodeFrame {
         val scope = requireScope(params)
         val path = requirePath(params)
-        return if (scope == "rootfs") {
-            val content = bootstrapManager.readRootfsFile(path) ?: return error("NOT_FOUND", "Path not found")
-            NodeFrame.response("", payload = mapOf("scope" to scope, "path" to path, "content" to content, "size" to content.toByteArray().size))
-        } else {
-            val file = resolveLocalScope(scope, path)
-            if (!file.exists() || !file.isFile) return error("NOT_FOUND", "Path not found")
-            val content = file.readText()
-            NodeFrame.response("", payload = mapOf("scope" to scope, "path" to path, "content" to content, "size" to file.length()))
-        }
+        if (scope == "rootfs") return error("NOT_SUPPORTED", "rootfs scope is not available")
+        val file = resolveLocalScope(scope, path)
+        if (!file.exists() || !file.isFile) return error("NOT_FOUND", "Path not found")
+        val content = file.readText()
+        return NodeFrame.response("", payload = mapOf("scope" to scope, "path" to path, "content" to content, "size" to file.length()))
     }
 
     private fun readBytes(params: Map<String, Any?>, includeBase64Default: Boolean): NodeFrame {
         val scope = requireScope(params)
         val path = requirePath(params)
         val includeBase64 = params["includeBase64"] as? Boolean ?: includeBase64Default
-        val bytes = if (scope == "rootfs") {
-            bootstrapManager.readRootfsBytes(path) ?: return error("NOT_FOUND", "Path not found")
-        } else {
-            val file = resolveLocalScope(scope, path)
-            if (!file.exists() || !file.isFile) return error("NOT_FOUND", "Path not found")
-            file.readBytes()
-        }
+        if (scope == "rootfs") return error("NOT_SUPPORTED", "rootfs scope is not available")
+        val file = resolveLocalScope(scope, path)
+        if (!file.exists() || !file.isFile) return error("NOT_FOUND", "Path not found")
+        val bytes = file.readBytes()
         return NodeFrame.response("", payload = buildMap {
             put("scope", scope)
             put("path", path)
@@ -114,13 +94,10 @@ class FsCapabilityHandler(
         val scope = requireScope(params)
         val path = requirePath(params)
         val content = params["content"] as? String ?: return error("MISSING_PARAM", "content is required")
-        if (scope == "rootfs") {
-            bootstrapManager.writeRootfsFile(path, content)
-        } else {
-            val file = resolveLocalScope(scope, path, createParents = true)
-            file.parentFile?.mkdirs()
-            file.writeText(content)
-        }
+        if (scope == "rootfs") return error("NOT_SUPPORTED", "rootfs scope is not available")
+        val file = resolveLocalScope(scope, path, createParents = true)
+        file.parentFile?.mkdirs()
+        file.writeText(content)
         return NodeFrame.response("", payload = mapOf("scope" to scope, "path" to path, "written" to true))
     }
 
@@ -130,13 +107,10 @@ class FsCapabilityHandler(
         val base64 = params["base64"] as? String ?: return error("MISSING_PARAM", "base64 is required")
         val bytes = runCatching { Base64.getDecoder().decode(base64) }
             .getOrElse { return error("INVALID_BASE64", "Invalid base64 payload") }
-        if (scope == "rootfs") {
-            bootstrapManager.writeRootfsBytes(path, bytes)
-        } else {
-            val file = resolveLocalScope(scope, path, createParents = true)
-            file.parentFile?.mkdirs()
-            file.writeBytes(bytes)
-        }
+        if (scope == "rootfs") return error("NOT_SUPPORTED", "rootfs scope is not available")
+        val file = resolveLocalScope(scope, path, createParents = true)
+        file.parentFile?.mkdirs()
+        file.writeBytes(bytes)
         return NodeFrame.response("", payload = mapOf("scope" to scope, "path" to path, "written" to true, "size" to bytes.size))
     }
 
@@ -144,12 +118,9 @@ class FsCapabilityHandler(
         val scope = requireScope(params)
         val path = requirePath(params)
         val recursive = params["recursive"] as? Boolean ?: true
-        if (scope == "rootfs") {
-            bootstrapManager.mkdirRootfsPath(path, recursive)
-        } else {
-            val dir = resolveLocalScope(scope, path)
-            if (recursive) dir.mkdirs() else dir.mkdir()
-        }
+        if (scope == "rootfs") return error("NOT_SUPPORTED", "rootfs scope is not available")
+        val dir = resolveLocalScope(scope, path)
+        if (recursive) dir.mkdirs() else dir.mkdir()
         return NodeFrame.response("", payload = mapOf("scope" to scope, "path" to path, "created" to true))
     }
 
@@ -157,26 +128,20 @@ class FsCapabilityHandler(
         val scope = requireScope(params)
         val path = requirePath(params)
         val recursive = params["recursive"] as? Boolean ?: false
-        if (scope == "rootfs") {
-            bootstrapManager.deleteRootfsPath(path, recursive)
-        } else {
-            val file = resolveLocalScope(scope, path)
-            if (!file.exists()) return error("NOT_FOUND", "Path not found")
-            if (file.isDirectory && recursive) file.deleteRecursively() else file.delete()
-        }
+        if (scope == "rootfs") return error("NOT_SUPPORTED", "rootfs scope is not available")
+        val file = resolveLocalScope(scope, path)
+        if (!file.exists()) return error("NOT_FOUND", "Path not found")
+        if (file.isDirectory && recursive) file.deleteRecursively() else file.delete()
         return NodeFrame.response("", payload = mapOf("scope" to scope, "path" to path, "deleted" to true))
     }
 
     private fun loadImage(params: Map<String, Any?>): NodeFrame {
         val scope = requireScope(params)
         val path = requirePath(params)
-        val raw = if (scope == "rootfs") {
-            bootstrapManager.readRootfsBytes(path) ?: return error("NOT_FOUND", "Path not found")
-        } else {
-            val file = resolveLocalScope(scope, path)
-            if (!file.exists() || !file.isFile) return error("NOT_FOUND", "Path not found")
-            file.readBytes()
-        }
+        if (scope == "rootfs") return error("NOT_SUPPORTED", "rootfs scope is not available")
+        val file = resolveLocalScope(scope, path)
+        if (!file.exists() || !file.isFile) return error("NOT_FOUND", "Path not found")
+        val raw = file.readBytes()
         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         BitmapFactory.decodeByteArray(raw, 0, raw.size, options)
         return NodeFrame.response("", payload = mapOf(

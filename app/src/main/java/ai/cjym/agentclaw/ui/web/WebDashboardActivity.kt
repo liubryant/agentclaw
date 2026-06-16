@@ -1,4 +1,4 @@
-﻿package ai.cjym.agentclaw.ui.web
+package ai.cjym.agentclaw.ui.web
 
 import ai.inmo.core_common.ui.activity.BaseBindingActivity
 import ai.cjym.agentclaw.R
@@ -9,7 +9,6 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 
 class WebDashboardActivity : BaseBindingActivity<ActivityWebDashboardBinding>(ActivityWebDashboardBinding::inflate) {
     private var currentUrl: String? = null
@@ -28,15 +27,12 @@ class WebDashboardActivity : BaseBindingActivity<ActivityWebDashboardBinding>(Ac
             binding.progressBar.visibility = android.view.View.VISIBLE
             binding.webView.reload()
         }
-        val gatewayState = AppGraph.gatewayManager.state.value
-        val explicitUrl = intent.getStringExtra(EXTRA_URL)
-        val dashboardUrl = explicitUrl ?: gatewayState.dashboardUrl ?: AppGraph.preferences.dashboardUrl
-        if ((explicitUrl == null && !gatewayState.isRunning) || dashboardUrl.isNullOrBlank()) {
-            Toast.makeText(this, getString(R.string.web_dashboard_not_ready), Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
-        currentUrl = dashboardUrl
+
+        val url = intent.getStringExtra(EXTRA_URL)
+            ?: AppGraph.preferences.dashboardUrl
+            ?: AppGraph.preferences.agentclawBaseUrl
+        currentUrl = url
+
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.settings.domStorageEnabled = true
         binding.webView.webChromeClient = WebChromeClient()
@@ -55,7 +51,7 @@ class WebDashboardActivity : BaseBindingActivity<ActivityWebDashboardBinding>(Ac
                 binding.errorGroup.visibility = android.view.View.VISIBLE
             }
         }
-        binding.webView.loadUrl(dashboardUrl)
+        binding.webView.loadUrl(url)
     }
 
     override fun initEvent() = Unit

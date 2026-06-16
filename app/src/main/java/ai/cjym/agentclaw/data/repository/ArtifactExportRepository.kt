@@ -3,7 +3,6 @@ package ai.cjym.agentclaw.data.repository
 import ai.cjym.agentclaw.domain.model.ArtifactExportItemResult
 import ai.cjym.agentclaw.domain.model.ArtifactExportResult
 import ai.cjym.agentclaw.domain.model.GeneratedArtifact
-import ai.cjym.agentclaw.proot.BootstrapManager
 import android.content.ContentValues
 import android.content.Context
 import android.os.Build
@@ -51,13 +50,6 @@ class ArtifactExportRepository(context: Context) {
 
     private val appContext = context.applicationContext
     private val exportStatePrefs = appContext.getSharedPreferences(EXPORT_STATE_PREFS, Context.MODE_PRIVATE)
-    private val bootstrapManager by lazy {
-        BootstrapManager(
-            appContext,
-            appContext.filesDir.absolutePath,
-            appContext.applicationInfo.nativeLibraryDir
-        )
-    }
 
     init {
         restoreExportedWorkspacePaths()
@@ -232,47 +224,8 @@ class ArtifactExportRepository(context: Context) {
     }
 
     private fun collectWorkspaceArtifacts(): List<GeneratedArtifact> {
-        val entries = mutableListOf<GeneratedArtifact>()
-
-        fun walk(relativeDir: String) {
-            val children = runCatching { bootstrapManager.listRootfsDir(relativeDir) }.getOrElse {
-                Log.w(TAG, "collectWorkspaceArtifacts walk failed dir=$relativeDir, error=${it.message}")
-                return
-            }
-            children.forEach { item ->
-                val name = item["name"]?.toString().orEmpty()
-                val type = item["type"]?.toString().orEmpty()
-                if (name.isBlank()) return@forEach
-                val childRelative = if (relativeDir.isBlank()) name else "$relativeDir/$name"
-                when (type) {
-                    "directory" -> walk(childRelative)
-                    "file" -> {
-                        if (!shouldExportWorkspaceFile(name)) return@forEach
-                        val normalizedAbs = "/$childRelative"
-                        entries.add(
-                            GeneratedArtifact(
-                                id = "workspace_scan:${childRelative.lowercase(Locale.US)}",
-                                sessionKey = "workspace_scan",
-                                messageId = "workspace_scan",
-                                toolCallId = "workspace_scan",
-                                toolName = "workspace_scan",
-                                sourceType = ai.cjym.agentclaw.domain.model.ArtifactSourceType.ASSISTANT_BLOCK,
-                                originalPath = normalizedAbs,
-                                displayName = name,
-                                mimeType = guessMimeType(name),
-                                createdAt = System.currentTimeMillis(),
-                                status = ai.cjym.agentclaw.domain.model.ArtifactStatus.DETECTED
-                            )
-                        )
-                    }
-                }
-            }
-        }
-
-        walk(WORKSPACE_ROOTFS_DIR)
-        return entries
-            .distinctBy { workspaceKeyOf(it.originalPath) }
-            .sortedByDescending { it.createdAt }
+        // rootfs 已移除，workspace 扫描不再可用
+        return emptyList()
     }
 
     private fun workspaceKeyOf(path: String): String {
@@ -280,55 +233,9 @@ class ArtifactExportRepository(context: Context) {
     }
 
     private fun resolveArtifactBytes(path: String): ByteArray? {
-        val relativePath = normalizeToRootfsRelative(path) ?: return null
-        val bytes = runCatching { bootstrapManager.readRootfsBytes(relativePath) }.getOrNull()
-        Log.i(
-            TAG,
-            "resolveArtifactBytes source=$path, relative=$relativePath, resolved=${bytes != null}, size=${bytes?.size ?: -1}"
-        )
-        return bytes
-    }
-
-    private fun normalizeToRootfsRelative(path: String): String? {
-        val normalized = path.trim().replace('\\', '/').removePrefix("./")
-        if (normalized.isBlank()) return null
-
-        val hostRootfsMarker = "/rootfs/ubuntu/"
-        if (normalized.contains(hostRootfsMarker)) {
-            val mapped = normalized.substringAfter(hostRootfsMarker)
-            Log.d(TAG, "normalizeToRootfsRelative hostRootfsMarker path=$path -> $mapped")
-            return mapped
-        }
-        if (normalized.startsWith("rootfs/ubuntu/")) {
-            val mapped = normalized.substringAfter("rootfs/ubuntu/")
-            Log.d(TAG, "normalizeToRootfsRelative rootfsPrefix path=$path -> $mapped")
-            return mapped
-        }
-
-        if (normalized.startsWith("/root/")) {
-            val mapped = normalized.removePrefix("/")
-            Log.d(TAG, "normalizeToRootfsRelative absRoot path=$path -> $mapped")
-            return mapped
-        }
-        if (normalized.startsWith("root/")) {
-            Log.d(TAG, "normalizeToRootfsRelative relRoot path=$path -> $normalized")
-            return normalized
-        }
-
-        if (normalized.startsWith("/.openclaw/")) {
-            val mapped = "root$normalized"
-            Log.d(TAG, "normalizeToRootfsRelative absOpenclaw path=$path -> $mapped")
-            return mapped
-        }
-        if (normalized.startsWith(".openclaw/")) {
-            val mapped = "root/$normalized"
-            Log.d(TAG, "normalizeToRootfsRelative relOpenclaw path=$path -> $mapped")
-            return mapped
-        }
-
-        val mapped = normalized.removePrefix("/")
-        Log.d(TAG, "normalizeToRootfsRelative fallback path=$path -> $mapped")
-        return mapped
+        // rootfs 已移除，无法读取 workspace 文件
+        Log.w(TAG, "resolveArtifactBytes skipped (rootfs removed): $path")
+        return null
     }
 
     private fun buildExportFileName(artifact: GeneratedArtifact): String {

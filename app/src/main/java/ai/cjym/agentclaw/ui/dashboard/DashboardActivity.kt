@@ -27,7 +27,6 @@ import android.view.ViewTreeObserver
 import android.view.WindowInsets
 import android.widget.FrameLayout
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -52,43 +51,25 @@ class DashboardActivity :
     }
 
     override fun initView() {
-        lifecycleScope.launch {
-            gatewayViewModel.state.collectLatest { state ->
-                binding.gatewayControls.bind(state)
-                binding.chatCard.isEnabled = state.isRunning
-                binding.chatSubtitleView.text = if (state.isRunning) getString(R.string.dashboard_chat_subtitle_ready) else getString(R.string.dashboard_chat_subtitle_pending)
-                binding.chatSubtitleView.alpha = if (state.isRunning) 1f else 0.6f
-            }
-        }
+        binding.chatCard.isEnabled = true
+        binding.chatSubtitleView.text = getString(R.string.dashboard_chat_subtitle_ready)
+        binding.chatSubtitleView.alpha = 1f
         lifecycleScope.launch {
             viewModel.overviewState.collectLatest { state ->
-                binding.gatewayStatusCard.bind(state.gatewayCard)
                 binding.nodeStatusCard.bind(state.nodeCard)
             }
         }
     }
 
     override fun initEvent() {
-        binding.gatewayControls.onStartClick = { gatewayViewModel.start() }
-        binding.gatewayControls.onStopClick = { gatewayViewModel.stop() }
-        binding.gatewayControls.onLogsClick = { startActivity(Intent(this, LogsActivity::class.java)) }
-        binding.gatewayControls.onOpenDashboardClick = { startActivity(Intent(this, WebDashboardActivity::class.java)) }
         binding.terminalCard.setOnClickListener { startActivity(Intent(this, TerminalActivity::class.java)) }
-        binding.chatCard.setOnClickListener { if (binding.chatCard.isEnabled) startActivity(Intent(this, SyncedChatActivity::class.java)) }
+        binding.chatCard.setOnClickListener { startActivity(Intent(this, SyncedChatActivity::class.java)) }
         binding.onboardingCard.setOnClickListener { startActivity(Intent(this, OnboardingActivity::class.java)) }
         binding.configureCard.setOnClickListener { startActivity(Intent(this, ConfigureActivity::class.java)) }
         binding.providersCard.setOnClickListener { startActivity(Intent(this, ProvidersActivity::class.java)) }
         binding.packagesCard.setOnClickListener { startActivity(Intent(this, PackagesActivity::class.java)) }
         binding.sshCard.setOnClickListener { startActivity(Intent(this, SshActivity::class.java)) }
         binding.logsCard.setOnClickListener { startActivity(Intent(this, LogsActivity::class.java)) }
-        binding.snapshotCard.setOnClickListener {
-            val file = ai.cjym.agentclaw.di.AppGraph.snapshotManager.exportLatestSnapshot()
-            if (file != null) {
-                Toast.makeText(this, getString(R.string.settings_snapshot_exported), Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, getString(R.string.settings_snapshot_export_failed), Toast.LENGTH_SHORT).show()
-            }
-        }
         binding.webDashboardCard.setOnClickListener { startActivity(Intent(this, WebDashboardActivity::class.java)) }
         binding.settingsCard.setOnClickListener { showSettingDialogPopup() }
         binding.nodeStatusCard.setOnClickListener { startActivity(Intent(this, NodeActivity::class.java)) }

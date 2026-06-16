@@ -12,7 +12,7 @@ class ProviderConfigService(
 ) {
     private val gson = Gson()
     private val configFile: File
-        get() = File(context.filesDir, "rootfs/ubuntu/root/.openclaw/openclaw.json")
+        get() = File(context.filesDir, "provider_config.json")
 
     data class ProviderConfigSnapshot(
         val activeModel: String?,

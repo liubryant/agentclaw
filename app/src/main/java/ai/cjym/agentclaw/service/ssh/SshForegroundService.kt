@@ -9,20 +9,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import android.os.PowerManager
-import android.net.ConnectivityManager
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStreamReader
 import java.net.NetworkInterface
 import ai.cjym.agentclaw.MainActivity
-import ai.cjym.agentclaw.proot.ProcessManager
-import ai.cjym.agentclaw.proot.BootstrapManager
 
-/**
- * Foreground service that runs sshd in a persistent proot process.
- * sshd must run with -D (no daemonize) so proot stays alive.
- */
 class SshForegroundService : Service() {
     companion object {
         const val CHANNEL_ID = "openclaw_ssh"
@@ -32,7 +21,6 @@ class SshForegroundService : Service() {
             private set
         var currentPort = 8022
             private set
-        private var instance: SshForegroundService? = null
 
         fun start(context: Context, port: Int = 8022) {
             val intent = Intent(context, SshForegroundService::class.java).apply {
@@ -50,7 +38,6 @@ class SshForegroundService : Service() {
             context.stopService(intent)
         }
 
-        /** Get device IP addresses via Android NetworkInterface. */
         fun getDeviceIps(): List<String> {
             val ips = mutableListOf<String>()
             try {
@@ -60,9 +47,7 @@ class SshForegroundService : Service() {
                     for (addr in iface.inetAddresses) {
                         if (addr.isLoopbackAddress) continue
                         val hostAddr = addr.hostAddress ?: continue
-                        // Skip IPv6 link-local
                         if (hostAddr.contains("%")) continue
-                        // Prefer IPv4, but include IPv6 too
                         ips.add(hostAddr)
                     }
                 }
@@ -70,9 +55,6 @@ class SshForegroundService : Service() {
             return ips
         }
     }
-
-    private var sshdProcess: Process? = null
-    private var wakeLock: PowerManager.WakeLock? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -84,163 +66,27 @@ class SshForegroundService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val port = intent?.getIntExtra(EXTRA_PORT, 8022) ?: 8022
         currentPort = port
-        startForeground(NOTIFICATION_ID, buildNotification("Starting SSH on port $port..."))
-        if (isRunning) {
-            updateNotification("SSH running on port $port")
-            return START_STICKY
-        }
-        acquireWakeLock()
-        startSshd(port)
-        return START_STICKY
+        startForeground(NOTIFICATION_ID, buildNotification("SSH not available"))
+        // proot removed — sshd cannot run without the Linux container
+        isRunning = false
+        updateNotification("SSH not available (Linux VM removed)")
+        stopSelf()
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {
         isRunning = false
-        instance = null
-        stopSshd()
-        releaseWakeLock()
         super.onDestroy()
-    }
-
-    private fun startSshd(port: Int) {
-        if (sshdProcess?.isAlive == true) return
-        isRunning = true
-        instance = this
-
-        Thread {
-            try {
-                val filesDir = applicationContext.filesDir.absolutePath
-                val nativeLibDir = applicationContext.applicationInfo.nativeLibraryDir
-                val pm = ProcessManager(filesDir, nativeLibDir)
-
-                // Ensure directories exist
-                val bootstrapManager = BootstrapManager(applicationContext, filesDir, nativeLibDir)
-                try { bootstrapManager.setupDirectories() } catch (_: Exception) {}
-                try { bootstrapManager.writeResolvConf() } catch (_: Exception) {}
-
-                // Last-resort: verify resolv.conf exists, create inline if not.
-                // Use system DNS servers when available (#60).
-                val resolvContent = getSystemDnsContent()
-                try {
-                    val resolvFile = File(filesDir, "config/resolv.conf")
-                    resolvFile.parentFile?.mkdirs()
-                    resolvFile.writeText(resolvContent)
-                } catch (_: Exception) {}
-                // Also write into rootfs /etc/ so DNS works even if bind-mount fails
-                try {
-                    val rootfsResolv = File(filesDir, "rootfs/ubuntu/etc/resolv.conf")
-                    rootfsResolv.parentFile?.mkdirs()
-                    rootfsResolv.writeText(resolvContent)
-                } catch (_: Exception) {}
-
-                // Generate host keys if missing, configure sshd, then run in
-                // foreground mode (-D) so the proot process stays alive.
-                // -e logs to stderr instead of syslog (easier debugging).
-                // PermitRootLogin yes is needed since proot fakes root.
-                // ListenAddress 0.0.0.0 ensures sshd binds to all IPv4
-                // interfaces and survives VPN network changes (#61).
-                val cmd = "mkdir -p /run/sshd /etc/ssh && " +
-                    "test -f /etc/ssh/ssh_host_rsa_key || ssh-keygen -A && " +
-                    "sed -i 's/^#\\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config 2>/dev/null; " +
-                    "grep -q '^PermitRootLogin' /etc/ssh/sshd_config || echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config; " +
-                    "sed -i 's/^#\\?ListenAddress.*/ListenAddress 0.0.0.0/' /etc/ssh/sshd_config 2>/dev/null; " +
-                    "grep -q '^ListenAddress' /etc/ssh/sshd_config || echo 'ListenAddress 0.0.0.0' >> /etc/ssh/sshd_config; " +
-                    "/usr/sbin/sshd -D -e -p $port"
-
-                var restartCount = 0
-                val maxRestarts = 3
-
-                while (restartCount <= maxRestarts) {
-                    sshdProcess = pm.startProotProcess(cmd)
-                    if (restartCount == 0) {
-                        updateNotification("SSH running on port $port")
-                    } else {
-                        updateNotification("SSH restarted on port $port (attempt ${restartCount + 1})")
-                    }
-
-                    // Read stderr for logs
-                    val stderrReader = BufferedReader(InputStreamReader(sshdProcess!!.errorStream))
-                    Thread {
-                        try {
-                            var line: String?
-                            while (stderrReader.readLine().also { line = it } != null) {
-                                android.util.Log.w("SSHD", line ?: "")
-                            }
-                        } catch (_: Exception) {}
-                    }.start()
-
-                    val exitCode = sshdProcess!!.waitFor()
-
-                    if (!isRunning) break // Intentional stop
-
-                    restartCount++
-                    if (restartCount <= maxRestarts) {
-                        updateNotification("SSH exited ($exitCode), restarting...")
-                        Thread.sleep(2000L * restartCount)
-                    } else {
-                        isRunning = false
-                        updateNotification("SSH stopped (exit $exitCode)")
-                        stopSelf()
-                    }
-                }
-            } catch (e: Exception) {
-                isRunning = false
-                updateNotification("SSH error: ${e.message?.take(50)}")
-                stopSelf()
-            }
-        }.start()
-    }
-
-    private fun stopSshd() {
-        sshdProcess?.let {
-            it.destroyForcibly()
-            sshdProcess = null
-        }
-    }
-
-    private fun getSystemDnsContent(): String {
-        try {
-            val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-            if (cm != null) {
-                val network = cm.activeNetwork
-                if (network != null) {
-                    val linkProps = cm.getLinkProperties(network)
-                    val dnsServers = linkProps?.dnsServers
-                    if (dnsServers != null && dnsServers.isNotEmpty()) {
-                        val lines = dnsServers.joinToString("\n") { "nameserver ${it.hostAddress}" }
-                        return "$lines\nnameserver 8.8.8.8\n"
-                    }
-                }
-            }
-        } catch (_: Exception) {}
-        return "nameserver 8.8.8.8\nnameserver 8.8.4.4\n"
-    }
-
-    private fun acquireWakeLock() {
-        releaseWakeLock()
-        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-        wakeLock = powerManager.newWakeLock(
-            PowerManager.PARTIAL_WAKE_LOCK,
-            "OpenClaw::SshWakeLock"
-        )
-        wakeLock?.acquire(24 * 60 * 60 * 1000L)
-    }
-
-    private fun releaseWakeLock() {
-        wakeLock?.let {
-            if (it.isHeld) it.release()
-        }
-        wakeLock = null
     }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "OpenClaw SSH",
+                "AgentClaw SSH",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Keeps the SSH server running in the background"
+                description = "SSH server status"
             }
             val manager = getSystemService(NotificationManager::class.java) as NotificationManager
             manager.createNotificationChannel(channel)
@@ -261,11 +107,11 @@ class SshForegroundService : Service() {
             Notification.Builder(this)
         }
 
-        builder.setContentTitle("OpenClaw SSH")
+        builder.setContentTitle("AgentClaw SSH")
             .setContentText(text)
             .setSmallIcon(android.R.drawable.ic_lock_lock)
             .setContentIntent(pendingIntent)
-            .setOngoing(true)
+            .setOngoing(false)
 
         return builder.build()
     }

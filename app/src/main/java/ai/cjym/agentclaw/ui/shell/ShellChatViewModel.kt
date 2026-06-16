@@ -5,7 +5,6 @@ import ai.inmo.core_common.utils.Logger
 import ai.inmo.core_common.utils.context.AppProvider
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.di.AppGraph
-import ai.cjym.agentclaw.domain.model.GatewayState
 import ai.cjym.agentclaw.domain.model.StreamingToolChain
 import ai.cjym.agentclaw.domain.model.SyncedMessage
 import ai.cjym.agentclaw.domain.model.TimelineEntry
@@ -226,7 +225,6 @@ class ShellChatViewModel : BaseViewModel() {
     }
 
     val state: StateFlow<ChatScreenState> = combine(
-        AppGraph.gatewayManager.state,
         manager.connectionState,
         manager.sessions,
         manager.currentSessionKey,
@@ -240,19 +238,18 @@ class ShellChatViewModel : BaseViewModel() {
         _sessionHasExportArtifacts,
         _sessionKeepExportButtonVisible
     ) { values ->
-        val gateway = values[0] as GatewayState
-        val connected = values[1] as Boolean
-        val sessions = values[2] as List<ai.cjym.agentclaw.domain.model.SyncedSession>
-        val selectedSession = values[3] as String?
-        val messages = values[4] as List<ai.cjym.agentclaw.domain.model.SyncedMessage>
-        val chain = values[5] as StreamingToolChain
-        val isLoading = values[6] as Boolean
-        val isReconnecting = values[7] as Boolean
-        val isGenerating = values[8] as Boolean
-        val generatingPhase = values[9] as ai.cjym.agentclaw.domain.model.GeneratingPhase
-        val error = values[10] as String?
-        val sessionHasExportArtifacts = values[11] as Map<String, Boolean>
-        val sessionKeepExportButtonVisible = values[12] as Map<String, Boolean>
+        val connected = values[0] as Boolean
+        val sessions = values[1] as List<ai.cjym.agentclaw.domain.model.SyncedSession>
+        val selectedSession = values[2] as String?
+        val messages = values[3] as List<ai.cjym.agentclaw.domain.model.SyncedMessage>
+        val chain = values[4] as StreamingToolChain
+        val isLoading = values[5] as Boolean
+        val isReconnecting = values[6] as Boolean
+        val isGenerating = values[7] as Boolean
+        val generatingPhase = values[8] as ai.cjym.agentclaw.domain.model.GeneratingPhase
+        val error = values[9] as String?
+        val sessionHasExportArtifacts = values[10] as Map<String, Boolean>
+        val sessionKeepExportButtonVisible = values[11] as Map<String, Boolean>
 
         val historyItems = buildMessageItems(selectedSession, messages)
         val allItems = appendTransientItems(
@@ -278,9 +275,9 @@ class ShellChatViewModel : BaseViewModel() {
             messages = allItems,
             isGenerating = isGenerating,
             isLoading = isLoading,
-            canSend = gateway.isRunning,
+            canSend = true,
             errorMessage = if (isReconnecting) null else error,
-            connectionMessage = connectionMessage(gateway.isRunning, connected, isReconnecting),
+            connectionMessage = connectionMessage(connected, isReconnecting),
             generatingPhase = generatingPhase,
             showExportSessionFilesButton = !isGenerating &&
                     messages.isNotEmpty() &&
@@ -298,8 +295,9 @@ class ShellChatViewModel : BaseViewModel() {
 
     fun start() {
         launchIo {
-            ensureCurrentSessionTracked()
             manager.connect()
+            manager.loadSessions()
+            ensureCurrentSessionTracked()
         }
     }
 
@@ -493,18 +491,9 @@ class ShellChatViewModel : BaseViewModel() {
     }
 
     private fun connectionMessage(
-        isGatewayRunning: Boolean,
         connected: Boolean,
         isReconnecting: Boolean
-    ): String? {
-        val context = AppProvider.get()
-        return when {
-            !isGatewayRunning -> context.getString(R.string.chat_gateway_not_running)
-            isReconnecting -> context.getString(R.string.chat_connecting)
-            !connected -> context.getString(R.string.chat_connecting)
-            else -> null
-        }
-    }
+    ): String? = null
 
     private fun List<ChatMessageItem>.endsWithEquivalentItems(
         transientItems: List<ChatMessageItem>

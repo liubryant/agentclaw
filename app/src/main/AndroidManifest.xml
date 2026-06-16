@@ -121,10 +121,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.gateway.GatewayService" android:exported="false" android:foregroundServiceType="dataSync" />
         <service android:name=".service.terminal.TerminalSessionService" android:exported="false" android:foregroundServiceType="dataSync" />
         <service android:name=".service.node.NodeForegroundService" android:exported="false" android:foregroundServiceType="dataSync" />
-        <service android:name=".service.setup.SetupService" android:exported="false" android:foregroundServiceType="dataSync" />
         <service android:name=".service.ssh.SshForegroundService" android:exported="false" android:foregroundServiceType="dataSync" />
         <service android:name=".service.capture.ScreenCaptureService" android:exported="false" android:foregroundServiceType="mediaProjection" />
     </application>

@@ -170,6 +170,10 @@ class PreferencesManager(context: Context) {
                 if (match != null) return match.groupValues[1]
             }
 
+            // 3. Device token assigned by backend during pairing
+            val deviceToken = prefs.nodeDeviceToken
+            if (!deviceToken.isNullOrEmpty()) return deviceToken
+
             return null
         }
     }

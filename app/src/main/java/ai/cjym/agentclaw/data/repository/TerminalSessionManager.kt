@@ -3,10 +3,8 @@
 import ai.inmo.core_common.utils.Logger
 import ai.cjym.agentclaw.constants.AppConstants
 import ai.cjym.agentclaw.data.local.prefs.PreferencesManager
-import ai.cjym.agentclaw.domain.model.TerminalExecutionMode
 import ai.cjym.agentclaw.domain.model.TerminalSessionSpec
 import ai.cjym.agentclaw.domain.model.TerminalSessionState
-import ai.cjym.agentclaw.proot.ProcessManager
 import ai.cjym.agentclaw.service.terminal.TerminalSessionService
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -31,7 +29,6 @@ class TerminalSessionManager(
 
     private val appContext = context.applicationContext
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    private val processManager = ProcessManager(appContext.filesDir.absolutePath, appContext.applicationInfo.nativeLibraryDir)
     private val clipboardManager = appContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     private val _state = MutableStateFlow(TerminalSessionState())
@@ -57,15 +54,23 @@ class TerminalSessionManager(
         scope.launch {
             runCatching {
                 TerminalSessionService.start(appContext)
-                val config = when (spec.mode) {
-                    TerminalExecutionMode.SHELL -> processManager.buildShellPtyConfig(spec.command)
-                    TerminalExecutionMode.INSTALL -> processManager.buildInstallPtyConfig(spec.command)
+                val sh = "/system/bin/sh"
+                val cwd = appContext.filesDir.absolutePath
+                val args = if (spec.command.isNotBlank()) {
+                    arrayOf(sh, "-c", spec.command)
+                } else {
+                    arrayOf(sh)
                 }
+                val env = arrayOf(
+                    "HOME=${appContext.filesDir.absolutePath}",
+                    "TERM=xterm-256color",
+                    "PATH=/system/bin:/system/xbin"
+                )
                 val session = TerminalSession(
-                    config.executable,
-                    config.cwd,
-                    config.args,
-                    config.env,
+                    sh,
+                    cwd,
+                    args,
+                    env,
                     TerminalEmulator.DEFAULT_TERMINAL_TRANSCRIPT_ROWS,
                     this@TerminalSessionManager
                 )

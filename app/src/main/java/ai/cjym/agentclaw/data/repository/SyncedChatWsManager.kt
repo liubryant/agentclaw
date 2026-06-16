@@ -7,6 +7,8 @@ import ai.cjym.agentclaw.constants.AppConstants
 import ai.cjym.agentclaw.data.local.db.AppDatabase
 import ai.cjym.agentclaw.data.local.prefs.PreferencesManager
 import ai.cjym.agentclaw.data.remote.api.NetworkModule
+import ai.cjym.agentclaw.domain.model.ChatMessage
+import ai.cjym.agentclaw.domain.model.ChatRole
 import ai.cjym.agentclaw.domain.model.ContentSegment
 import ai.cjym.agentclaw.domain.model.GeneratingPhase
 import ai.cjym.agentclaw.domain.model.MessageSendStatus
@@ -18,6 +20,8 @@ import ai.cjym.agentclaw.domain.model.TimelineEntry
 import ai.cjym.agentclaw.domain.model.ToolCallUiModel
 import ai.cjym.agentclaw.ui.shell.ChatEntryMode
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +33,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
@@ -101,6 +106,8 @@ class SyncedChatWsManager(
         )
     }
 
+    private val chatService = ChatService(appContext)
+
     private var webSocket: WebSocket? = null
     private var isSocketConnected = false
     private var isSocketConnecting = false
@@ -158,6 +165,7 @@ class SyncedChatWsManager(
     private var isLoadingMoreHistory = false
 
     fun connect() {
+        if (preferencesManager.nodeGatewayHost.isNullOrBlank()) return
         if (_connectionState.value || isSocketConnected || isSocketConnecting) return
         shouldReconnect = true
         _isReconnecting.value = false
@@ -371,6 +379,15 @@ class SyncedChatWsManager(
         text: String
     ) {
         val assistantId = UUID.randomUUID().toString()
+        val outboundMessage = when (resolveSessionEntryMode(sessionKey)) {
+            ChatEntryMode.IMAGE -> "$IMAGE_MODE_MARKER ${text.trim()}"
+            ChatEntryMode.VIDEO -> "$VIDEO_MODE_MARKER ${text.trim()}"
+            else -> text.trim()
+        }
+        if (preferencesManager.nodeGatewayHost.isNullOrBlank()) {
+            sendViaRestFallback(sessionKey, uiMessageId, assistantId, outboundMessage)
+            return
+        }
         try {
             ensureConnected()
             Logger.d(
@@ -387,11 +404,6 @@ class SyncedChatWsManager(
             clearTransientRunState()
             currentRunId = transportRunId
             draftSessionKeys.remove(sessionKey)
-            val outboundMessage = when (resolveSessionEntryMode(sessionKey)) {
-                ChatEntryMode.IMAGE -> "$IMAGE_MODE_MARKER ${text.trim()}"
-                ChatEntryMode.VIDEO -> "$VIDEO_MODE_MARKER ${text.trim()}"
-                else -> text.trim()
-            }
             val response = sendRequest(
                 NodeFrame.request(
                     "chat.send",
@@ -401,7 +413,7 @@ class SyncedChatWsManager(
                         "idempotencyKey" to transportRunId
                     )
                 ),
-                timeoutMs = GatewayConfigDefaults.DEFAULT_AGENT_TIMEOUT_SECONDS.toLong()
+                timeoutMs = AppConstants.DEFAULT_AGENT_TIMEOUT_SECONDS.toLong()
             )
             if (response.isError) {
                 finishRunWithError(
@@ -426,11 +438,77 @@ class SyncedChatWsManager(
             }
         } catch (t: Throwable) {
             if (hasAvailableNetwork()) {
-                finishRunWithError(t.message ?: "Failed to send message")
+                sendViaRestFallback(sessionKey, uiMessageId, assistantId, outboundMessage)
             } else {
                 markActiveUserMessagePendingRetry()
                 stopRunLocally(emitReplyFinished = false)
             }
+        }
+    }
+
+    private suspend fun sendViaRestFallback(
+        sessionKey: String,
+        uiMessageId: String,
+        assistantId: String,
+        outboundText: String
+    ) {
+        try {
+            _activeAssistantMessageId.value = assistantId
+            activeUserMessageId = uiMessageId
+            _isGenerating.value = true
+            _generatingPhase.value = GeneratingPhase.THINKING
+            clearTransientRunState()
+            draftSessionKeys.remove(sessionKey)
+
+            // Build history: use outboundText (with mode markers) for the triggering user message
+            val history = _messages.value
+                .filter { it.role.equals("user", ignoreCase = true) || it.role.equals("assistant", ignoreCase = true) }
+                .map { msg ->
+                    val content = if (msg.id == uiMessageId) outboundText else msg.content
+                    ChatMessage(
+                        id = msg.id,
+                        sessionId = sessionKey,
+                        role = if (msg.role.equals("user", ignoreCase = true)) ChatRole.USER else ChatRole.ASSISTANT,
+                        content = content,
+                        createdAt = msg.createdAt
+                    )
+                }
+
+            val accumulated = StringBuilder()
+            chatService.sendMessageStream(history).collect { chunk ->
+                accumulated.append(chunk)
+                _streamingToolChain.value = StreamingToolChain(pendingText = accumulated.toString())
+            }
+
+            val fullText = accumulated.toString()
+            if (fullText.isNotBlank()) {
+                val now = System.currentTimeMillis()
+                val assistantMessage = SyncedMessage(
+                    id = assistantId,
+                    role = "assistant",
+                    content = fullText,
+                    createdAt = now,
+                    messageIndex = _messages.value.size,
+                    sendStatus = MessageSendStatus.SENT,
+                    segments = listOf(ContentSegment.Text(fullText))
+                )
+                _messages.value = _messages.value + assistantMessage
+                cacheRepo.appendMessage(sessionKey, assistantMessage)
+            }
+            stopRunLocally(emitReplyFinished = true)
+        } catch (t: Throwable) {
+            Logger.e(TAG, "REST fallback failed: ${t.message}")
+            val userMsg = when {
+                t is java.net.SocketTimeoutException || t.message?.contains("timeout", ignoreCase = true) == true ->
+                    "请求超时，请检查 Token 是否正确或稍后重试"
+                t.message?.contains("401", ignoreCase = true) == true ||
+                t.message?.contains("403", ignoreCase = true) == true ->
+                    "认证失败，请在设置中填写正确的 API Token"
+                t.message?.contains("HTTP 4", ignoreCase = true) == true ->
+                    "请求失败（${t.message}），请检查 Token 配置"
+                else -> t.message ?: "请求失败，请重试"
+            }
+            finishRunWithError(userMsg)
         }
     }
 
@@ -445,16 +523,13 @@ class SyncedChatWsManager(
     }
 
     suspend fun resetCurrentSession() {
-        ensureConnected()
         if (_isGenerating.value) {
             abortRun(clearLocalState = true)
         }
-
         createDraftSession()
     }
 
     suspend fun createPersistentSession(): String {
-        ensureConnected()
         if (_isGenerating.value) {
             abortRun(clearLocalState = true)
         }
@@ -465,7 +540,6 @@ class SyncedChatWsManager(
         userPrompt: String,
         assistantReply: String
     ): String {
-        ensureConnected()
         if (_isGenerating.value) {
             abortRun(clearLocalState = true)
         }
@@ -500,23 +574,25 @@ class SyncedChatWsManager(
     }
 
     suspend fun deleteSession(sessionKey: String) {
-        ensureConnected()
         if (_currentSessionKey.value == sessionKey && _isGenerating.value) {
             abortRun(clearLocalState = true)
         }
 
         val isDraftSession = isDraftSession(sessionKey)
         val isPendingPersistentSession = isPendingPersistentSession(sessionKey)
-        if (!isDraftSession && !isPendingPersistentSession) {
-            val response = sendAdminScopedRequest(
-                NodeFrame.request(
-                    "sessions.delete",
-                    mapOf("key" to sessionKey, "deleteTranscript" to true)
+        if (!isDraftSession && !isPendingPersistentSession && !preferencesManager.nodeGatewayHost.isNullOrBlank()) {
+            runCatching {
+                ensureConnected()
+                val response = sendAdminScopedRequest(
+                    NodeFrame.request(
+                        "sessions.delete",
+                        mapOf("key" to sessionKey, "deleteTranscript" to true)
+                    )
                 )
-            )
-            if (response.isError) {
-                val message = response.error?.get("message")?.toString().orEmpty()
-                throw IllegalStateException(normalizeSessionMutationError(message, "delete"))
+                if (response.isError) {
+                    val message = response.error?.get("message")?.toString().orEmpty()
+                    Logger.e(TAG, "Remote session delete failed: $message")
+                }
             }
         }
 
@@ -541,13 +617,28 @@ class SyncedChatWsManager(
         _errorMessage.value = null
     }
 
+    private fun resolveGatewayWsUrl(): String {
+        val host = preferencesManager.nodeGatewayHost
+        val port = preferencesManager.nodeGatewayPort
+        if (!host.isNullOrBlank()) {
+            return if (port != null) "ws://$host:$port" else "ws://$host"
+        }
+        // Derive WebSocket URL from agentclawBaseUrl:
+        // https://www.cjym123.cn/v1 → wss://www.cjym123.cn
+        val base = preferencesManager.agentclawBaseUrl
+            .trimEnd('/')
+            .removeSuffix("/v1")
+            .removeSuffix("/api")
+        return base.replaceFirst("https://", "wss://").replaceFirst("http://", "ws://")
+    }
+
     private fun openSocket() {
         if (isSocketConnected || isSocketConnecting) return
         isSocketConnecting = true
         _isReconnecting.value = false
         webSocket?.cancel()
         val request =
-            Request.Builder().url("ws://${AppConstants.GATEWAY_HOST}:${AppConstants.GATEWAY_PORT}")
+            Request.Builder().url(resolveGatewayWsUrl())
                 .build()
         webSocket = NetworkModule.okHttpClient.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
@@ -677,7 +768,7 @@ class SyncedChatWsManager(
         val requestDeferred = CompletableDeferred<NodeFrame>()
         val socketClosed = CompletableDeferred<Unit>()
         val socket = NetworkModule.okHttpClient.newWebSocket(
-            Request.Builder().url("ws://${AppConstants.GATEWAY_HOST}:${AppConstants.GATEWAY_PORT}")
+            Request.Builder().url(resolveGatewayWsUrl())
                 .build(),
             object : WebSocketListener() {
                 override fun onMessage(webSocket: WebSocket, text: String) {
@@ -732,23 +823,35 @@ class SyncedChatWsManager(
     }
 
     private suspend fun loadSessionsAndCache(skipEnsureConnected: Boolean = false) {
-        if (!skipEnsureConnected) {
-            ensureConnected()
-        }
-        val fetchedSessions = fetchSessionsFromGateway()
-        val restoredSessionKey = resolveRestoredSessionKey(fetchedSessions)
-        when {
-            restoredSessionKey != null && restoredSessionKey != _currentSessionKey.value -> {
-                setCurrentSessionKey(restoredSessionKey)
+        // Always load from local cache first so sessions are visible without WS
+        val cachedSessions = cacheRepo.getCachedSessions()
+        if (cachedSessions.isNotEmpty() && _sessions.value.none { !draftSessionKeys.contains(it.sessionKey) }) {
+            val restoredKey = resolveRestoredSessionKey(cachedSessions)
+            val nextSessions = reconcileSessionTitles(cachedSessions)
+            _sessions.value = nextSessions
+            if (restoredKey != null && restoredKey != _currentSessionKey.value) {
+                setCurrentSessionKey(restoredKey)
+                loadHistoryFromCache(restoredKey, showLoading = false)
             }
+        }
 
-            restoredSessionKey == null -> {
-                clearCurrentSessionSelection()
+        // Try WS fetch only if custom gateway is configured
+        if (!skipEnsureConnected && preferencesManager.nodeGatewayHost.isNullOrBlank()) return
+        runCatching {
+            val fetchedSessions = fetchSessionsFromGateway()
+            val restoredSessionKey = resolveRestoredSessionKey(fetchedSessions)
+            when {
+                restoredSessionKey != null && restoredSessionKey != _currentSessionKey.value -> {
+                    setCurrentSessionKey(restoredSessionKey)
+                }
+                restoredSessionKey == null -> {
+                    clearCurrentSessionSelection()
+                }
             }
-        }
-        val nextSessions = reconcileSessionTitles(fetchedSessions)
-        _sessions.value = nextSessions
-        cacheRepo.cacheSessions(nextSessions)
+            val nextSessions = reconcileSessionTitles(fetchedSessions)
+            _sessions.value = nextSessions
+            cacheRepo.cacheSessions(nextSessions)
+        }.onFailure { Logger.w(TAG, "Gateway session fetch failed, using local cache: ${it.message}") }
     }
 
     private suspend fun reconcileSessionTitles(sessions: List<SyncedSession>): List<SyncedSession> {
@@ -953,7 +1056,11 @@ class SyncedChatWsManager(
     }
 
     private fun hasAvailableNetwork(): Boolean {
-        return WifiNetworkMonitor.isWifiConnected(appContext)
+        val cm = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+            ?: return WifiNetworkMonitor.isWifiConnected(appContext)
+        val network = cm.activeNetwork ?: return false
+        val caps = cm.getNetworkCapabilities(network) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     private fun stopRunLocally(emitReplyFinished: Boolean) {
@@ -974,10 +1081,10 @@ class SyncedChatWsManager(
         generationTimeoutStartedAtMs = System.currentTimeMillis()
         Logger.d(
             TRACE_TAG,
-            "generationTimeoutStart session=$sessionKey, run=$runId, timeoutMs=${GatewayConfigDefaults.DEFAULT_AGENT_TIMEOUT_SECONDS}"
+            "generationTimeoutStart session=$sessionKey, run=$runId, timeoutMs=${AppConstants.DEFAULT_AGENT_TIMEOUT_SECONDS}"
         )
         generationTimeoutJob = scope.launch {
-            delay(GatewayConfigDefaults.DEFAULT_AGENT_TIMEOUT_SECONDS * 1000L)
+            delay(AppConstants.DEFAULT_AGENT_TIMEOUT_SECONDS * 1000L)
             handleGenerationBusinessTimeout(sessionKey, runId)
         }
     }
@@ -999,7 +1106,7 @@ class SyncedChatWsManager(
     private fun handleGenerationBusinessTimeout(sessionKey: String, runId: String) {
         val startedAt = generationTimeoutStartedAtMs
         val elapsedMs = startedAt?.let { System.currentTimeMillis() - it }
-            ?: GatewayConfigDefaults.DEFAULT_AGENT_TIMEOUT_SECONDS
+            ?: AppConstants.DEFAULT_AGENT_TIMEOUT_SECONDS
         val currentSessionKey = _currentSessionKey.value
         val activeRunId = currentRunId
         val isStillGenerating = _isGenerating.value
@@ -1678,7 +1785,7 @@ class SyncedChatWsManager(
         val normalizedReason = reason.ifBlank { "WebSocket disconnected" }
         val isRecoverable = shouldReconnect && isRecoverableDisconnect(normalizedReason)
         _isReconnecting.value = isRecoverable
-        if (isRecoverable) {
+        if (isRecoverable || !disconnectedWhileGenerating) {
             _errorMessage.value = null
         } else if (normalizedReason.isNotBlank()) {
             _errorMessage.value = normalizedReason

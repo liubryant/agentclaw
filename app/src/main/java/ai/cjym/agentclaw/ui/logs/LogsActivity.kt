@@ -55,7 +55,7 @@ class LogsActivity : BaseBindingActivity<ActivityLogsBinding>(ActivityLogsBindin
             }
         }
         lifecycleScope.launch {
-            viewModel.gatewayState.collectLatest { state ->
+            viewModel.nodeState.collectLatest { state ->
                 latestLogs = state.logs
                 renderLogs(binding.autoScrollButton.tag as? Boolean ?: true)
             }

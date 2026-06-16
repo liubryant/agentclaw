@@ -16,8 +16,6 @@ import ai.cjym.agentclaw.data.remote.websocket.NodeWsManager
 import ai.cjym.agentclaw.domain.model.NodeFrame
 import ai.cjym.agentclaw.domain.model.NodeState
 import ai.cjym.agentclaw.domain.model.NodeStatus
-import ai.cjym.agentclaw.proot.BootstrapManager
-import ai.cjym.agentclaw.proot.ProcessManager
 import ai.cjym.agentclaw.service.node.NodeForegroundService
 import android.content.Context
 import android.os.Build
@@ -32,7 +30,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
+
 import org.json.JSONObject
 
 class NodeManager(
@@ -49,8 +47,6 @@ class NodeManager(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val wsManager = NodeWsManager()
     private val identityService = NodeIdentityService(appContext)
-    private val processManager = ProcessManager(appContext.filesDir.absolutePath, appContext.applicationInfo.nativeLibraryDir)
-    private val bootstrapManager = BootstrapManager(appContext, appContext.filesDir.absolutePath, appContext.applicationInfo.nativeLibraryDir)
     private val capabilityHandlers = linkedMapOf<String, NodeCapabilityHandler>()
     private var identityReady = false
     private val connectionMutex = Mutex()
@@ -79,6 +75,13 @@ class NodeManager(
                 true
             }.getOrDefault(false)
             _state.value = buildState()
+            // Auto-reconnect only when a remote gateway host is explicitly configured.
+            // Without a configured host the default is 127.0.0.1 (local gateway removed),
+            // so we must not attempt a connection and produce endless failures.
+            if (preferencesManager.nodeEnabled &&
+                !preferencesManager.nodeGatewayHost.isNullOrBlank()) {
+                ensurePaired()
+            }
         }
         scope.launch {
             wsManager.frames.collect { frame ->
@@ -149,6 +152,15 @@ class NodeManager(
         token: String?,
         forceReconnect: Boolean
     ) {
+        // Guard: refuse to connect to the default fallback address (127.0.0.1) when
+        // no gateway host has been explicitly configured and no token is provided.
+        // The local gateway has been removed; connecting to 127.0.0.1 would only
+        // produce endless ConnectException logs without ever succeeding.
+        val isDefaultLocalhost = host == AppConstants.GATEWAY_HOST && preferencesManager.nodeGatewayHost.isNullOrBlank()
+        if (isDefaultLocalhost && token.isNullOrBlank() && preferencesManager.nodeGatewayToken.isNullOrBlank()) {
+            updateStatus(NodeStatus.DISABLED, error = null, appendLog = "[NODE] No gateway configured — skipping connection")
+            return
+        }
         connectionMutex.withLock {
             if (!preferencesManager.nodeEnabled) {
                 preferencesManager.nodeEnabled = true
@@ -420,27 +432,6 @@ class NodeManager(
                     appendLog = "[NODE] Pairing request pending: $requestId"
                 )
 
-                val isLocalGateway = (preferencesManager.nodeGatewayHost ?: AppConstants.GATEWAY_HOST) in setOf("127.0.0.1", "localhost")
-                if (isLocalGateway) {
-                    scope.launch {
-                        runCatching {
-                            withContext(Dispatchers.IO) {
-                                processManager.runInProotSync("openclaw nodes approve $requestId", 30)
-                            }
-                        }.onSuccess {
-                            updateStatus(NodeStatus.CONNECTING, error = null, appendLog = "[NODE] Auto-approved local pairing request")
-                            wsManager.disconnect()
-                            delay(500)
-                            connectInternal(
-                                host = preferencesManager.nodeGatewayHost ?: AppConstants.GATEWAY_HOST,
-                                port = preferencesManager.nodeGatewayPort ?: AppConstants.GATEWAY_PORT,
-                                token = preferencesManager.nodeGatewayToken
-                            )
-                        }.onFailure {
-                            appendLog("[NODE] Auto-approve failed for request $requestId: ${it.message}")
-                        }
-                    }
-                }
             }
             .onFailure {
                 updateStatus(NodeStatus.ERROR, it.message ?: "Pairing request failed", appendLog = "[NODE] Pairing request error: ${it.message}")
@@ -552,7 +543,7 @@ class NodeManager(
     private fun registerCapabilities() {
         listOf(
             CameraCapabilityHandler(appContext),
-            FsCapabilityHandler(appContext, bootstrapManager),
+            FsCapabilityHandler(appContext),
             LocationCapabilityHandler(appContext),
             SystemCapabilityHandler(appContext),
             ScreenCapabilityHandler(appContext),

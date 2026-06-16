@@ -11,10 +11,10 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import ai.cjym.agentclaw.MainActivity
-import ai.cjym.agentclaw.service.gateway.GatewayService
 
 class TerminalSessionService : Service() {
     companion object {
+        const val CHANNEL_ID = "agentclaw_terminal"
         const val NOTIFICATION_ID = 2
         var isRunning = false
             private set
@@ -64,9 +64,9 @@ class TerminalSessionService : Service() {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(
             PowerManager.PARTIAL_WAKE_LOCK,
-            "OpenClaw::TerminalWakeLock"
+            "AgentClaw::TerminalWakeLock"
         )
-        wakeLock?.acquire(24 * 60 * 60 * 1000L) // 24 hours max
+        wakeLock?.acquire(24 * 60 * 60 * 1000L)
     }
 
     private fun releaseWakeLock() {
@@ -79,11 +79,11 @@ class TerminalSessionService : Service() {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                GatewayService.CHANNEL_ID,
-                "OpenClaw Gateway",
+                CHANNEL_ID,
+                "AgentClaw Terminal",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Keeps the OpenClaw gateway running in the background"
+                description = "Keeps the terminal session running in the background"
             }
             val manager = getSystemService(NotificationManager::class.java) as NotificationManager
             manager.createNotificationChannel(channel)
@@ -98,8 +98,8 @@ class TerminalSessionService : Service() {
         )
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification.Builder(this, GatewayService.CHANNEL_ID)
-                .setContentTitle("OpenClaw Terminal")
+            Notification.Builder(this, CHANNEL_ID)
+                .setContentTitle("AgentClaw Terminal")
                 .setContentText("Terminal session active")
                 .setSmallIcon(android.R.drawable.ic_menu_manage)
                 .setContentIntent(pendingIntent)
@@ -108,7 +108,7 @@ class TerminalSessionService : Service() {
         } else {
             @Suppress("DEPRECATION")
             Notification.Builder(this)
-                .setContentTitle("OpenClaw Terminal")
+                .setContentTitle("AgentClaw Terminal")
                 .setContentText("Terminal session active")
                 .setSmallIcon(android.R.drawable.ic_menu_manage)
                 .setContentIntent(pendingIntent)

@@ -1,6 +1,5 @@
 ﻿package ai.cjym.agentclaw.data.repository
 
-import ai.cjym.agentclaw.constants.AppConstants
 import ai.cjym.agentclaw.data.local.prefs.PreferencesManager
 import ai.cjym.agentclaw.data.remote.api.NetworkModule
 import ai.cjym.agentclaw.domain.model.ChatMessage
@@ -19,12 +18,29 @@ import okio.BufferedSource
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class ChatService(private val context: Context) {
     private companion object {
         private const val TAG = "ChatService"
         private const val IMAGE_MODE_MARKER = "[[OPENCLAW_IMAGE_MODE]]"
         private const val VIDEO_MODE_MARKER = "[[OPENCLAW_VIDEO_MODE]]"
+        private const val CHAT_READ_TIMEOUT_SECONDS = 120L
+        private const val MEDIA_READ_TIMEOUT_MINUTES = 30L
+    }
+
+    private val chatHttpClient by lazy {
+        NetworkModule.okHttpClient.newBuilder()
+            .readTimeout(CHAT_READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .writeTimeout(CHAT_READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .build()
+    }
+
+    private val mediaHttpClient by lazy {
+        NetworkModule.okHttpClient.newBuilder()
+            .readTimeout(MEDIA_READ_TIMEOUT_MINUTES, TimeUnit.MINUTES)
+            .writeTimeout(MEDIA_READ_TIMEOUT_MINUTES, TimeUnit.MINUTES)
+            .build()
     }
 
     @Volatile
@@ -32,7 +48,7 @@ class ChatService(private val context: Context) {
 
     fun sendMessageStream(
         messages: List<ChatMessage>,
-        model: String = "openclaw:main"
+        model: String = "glm-4.7"
     ): Flow<String> = callbackFlow {
         val hasImageModeMarker = messages.any { it.content.contains(IMAGE_MODE_MARKER) }
         val hasVideoModeMarker = messages.any { it.content.contains(VIDEO_MODE_MARKER) }
@@ -65,7 +81,8 @@ class ChatService(private val context: Context) {
         }
 
         val token = PreferencesManager.resolveGatewayToken(context)
-        val url = "${AppConstants.GATEWAY_URL}/v1/chat/completions"
+        val baseUrl = PreferencesManager(context).agentclawBaseUrl.trimEnd('/')
+        val url = "$baseUrl/chat/completions"
         val request = Request.Builder()
             .url(url)
             .post(payload.toString().toRequestBody("application/json".toMediaType()))
@@ -80,7 +97,11 @@ class ChatService(private val context: Context) {
             "agentclaw REQ_CHAT_COMPLETIONS url=$url, model=$requestModel, stream=false, imageRoute=${requestModel == "glm-image"}, messageCount=${messages.size}, tokenPresent=${!token.isNullOrBlank()}, payload=${payload.toString().take(500)}"
         )
 
-        val call = NetworkModule.okHttpClient.newCall(request)
+        val httpClient = when {
+            hasImageModeMarker || hasVideoModeMarker -> mediaHttpClient
+            else -> chatHttpClient
+        }
+        val call = httpClient.newCall(request)
         activeCall = call
 
         launch(Dispatchers.IO) {

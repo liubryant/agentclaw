@@ -1,8 +1,6 @@
 package ai.cjym.agentclaw.ui.widget
 
 import ai.cjym.agentclaw.databinding.ViewGatewayControlsBinding
-import ai.cjym.agentclaw.domain.model.GatewayState
-import ai.cjym.agentclaw.domain.model.GatewayStatus
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -25,15 +23,5 @@ class GatewayControlsView @JvmOverloads constructor(
         binding.stopButton.setOnClickListener { onStopClick?.invoke() }
         binding.logsButton.setOnClickListener { onLogsClick?.invoke() }
         binding.openDashboardButton.setOnClickListener { onOpenDashboardClick?.invoke() }
-    }
-
-    fun bind(state: GatewayState) {
-        binding.statusValue.text = state.statusText
-        binding.urlValue.text = state.dashboardUrl ?: "http://127.0.0.1:18789"
-        binding.errorValue.text = state.errorMessage.orEmpty()
-        binding.errorValue.alpha = if (state.errorMessage.isNullOrBlank()) 0f else 1f
-        binding.startButton.isEnabled = state.isStopped
-        binding.stopButton.isEnabled = state.isRunning || state.status == GatewayStatus.STARTING
-        binding.openDashboardButton.isEnabled = state.isRunning && !state.dashboardUrl.isNullOrBlank()
     }
 }

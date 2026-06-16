@@ -1,10 +1,7 @@
 package ai.cjym.agentclaw.ui.synced_chat
 
 import ai.inmo.core_common.ui.viewModel.BaseViewModel
-import ai.inmo.core_common.utils.context.AppProvider
-import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.di.AppGraph
-import ai.cjym.agentclaw.domain.model.GatewayState
 import ai.cjym.agentclaw.domain.model.StreamingToolChain
 import ai.cjym.agentclaw.domain.model.TimelineEntry
 import ai.cjym.agentclaw.ui.chat.ChatMessageItem
@@ -20,7 +17,6 @@ class SyncedChatViewModel : BaseViewModel() {
     private val manager = AppGraph.syncedChatWsManager
 
     val state: StateFlow<ChatScreenState> = combine(
-        AppGraph.gatewayManager.state,
         manager.connectionState,
         manager.sessions,
         manager.currentSessionKey,
@@ -32,17 +28,16 @@ class SyncedChatViewModel : BaseViewModel() {
         manager.streamingToolChain,
         manager.activeAssistantMessageId
     ) { values ->
-        val gateway = values[0] as GatewayState
-        val connected = values[1] as Boolean
-        val sessions = values[2] as List<ai.cjym.agentclaw.domain.model.SyncedSession>
-        val selectedSession = values[3] as String?
-        val messages = values[4] as List<ai.cjym.agentclaw.domain.model.SyncedMessage>
-        val isLoading = values[5] as Boolean
-        val isGenerating = values[6] as Boolean
-        val generatingPhase = values[7] as ai.cjym.agentclaw.domain.model.GeneratingPhase
-        val error = values[8] as String?
-        val chain = values[9] as StreamingToolChain
-        val activeId = values[10] as String?
+        val connected = values[0] as Boolean
+        val sessions = values[1] as List<ai.cjym.agentclaw.domain.model.SyncedSession>
+        val selectedSession = values[2] as String?
+        val messages = values[3] as List<ai.cjym.agentclaw.domain.model.SyncedMessage>
+        val isLoading = values[4] as Boolean
+        val isGenerating = values[5] as Boolean
+        val generatingPhase = values[6] as ai.cjym.agentclaw.domain.model.GeneratingPhase
+        val error = values[7] as String?
+        val chain = values[8] as StreamingToolChain
+        val activeId = values[9] as String?
 
         val items = ChatMessageItem.buildSyncedList(messages).toMutableList()
 
@@ -99,9 +94,9 @@ class SyncedChatViewModel : BaseViewModel() {
             messages = items,
             isGenerating = isGenerating,
             isLoading = isLoading,
-            canSend = gateway.isRunning && connected,
+            canSend = !isGenerating,
             errorMessage = error,
-            connectionMessage = connectionMessage(gateway.isRunning, connected),
+            connectionMessage = null,
             generatingPhase = generatingPhase
         )
     }.stateIn(
@@ -111,7 +106,10 @@ class SyncedChatViewModel : BaseViewModel() {
     )
 
     fun start() {
-        launchIo { manager.connect() }
+        launchIo {
+            manager.connect()
+            manager.loadSessions()
+        }
     }
 
     fun createSession() {
@@ -144,14 +142,5 @@ class SyncedChatViewModel : BaseViewModel() {
     fun shouldConfirmSwitch(targetSessionId: String): Boolean {
         val current = state.value
         return current.isGenerating && current.selectedSessionId != null && current.selectedSessionId != targetSessionId
-    }
-
-    private fun connectionMessage(isGatewayRunning: Boolean, connected: Boolean): String? {
-        val context = AppProvider.get()
-        return when {
-            !isGatewayRunning -> context.getString(R.string.chat_gateway_not_running)
-            !connected -> context.getString(R.string.chat_connecting)
-            else -> null
-        }
     }
 }

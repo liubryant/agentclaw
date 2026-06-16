@@ -24,8 +24,7 @@ class StartupActivity :
     }
 
     override fun initView() {
-        // 走过一次流程后，就不需要显示了
-        binding.subtitleView.isVisible = !AppGraph.preferences.setupComplete
+        binding.subtitleView.isVisible = AppGraph.preferences.isFirstRun
         startTipsCarousel()
 
         lifecycleScope.launch {

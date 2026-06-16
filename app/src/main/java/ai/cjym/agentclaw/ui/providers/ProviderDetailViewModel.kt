@@ -1,4 +1,4 @@
-﻿package ai.cjym.agentclaw.ui.providers
+package ai.cjym.agentclaw.ui.providers
 
 import ai.inmo.core_common.ui.viewModel.BaseViewModel
 import ai.cjym.agentclaw.di.AppGraph
@@ -35,11 +35,6 @@ class ProviderDetailViewModel : BaseViewModel() {
         launchIo {
             runCatching {
                 AppGraph.providerConfigService.saveProviderConfig(provider, apiKey, model)
-                if (AppGraph.gatewayManager.state.value.isRunning) {
-                    AppGraph.gatewayManager.stop()
-                    Thread.sleep(500)
-                    AppGraph.gatewayManager.start()
-                }
             }.onSuccess {
                 _state.value = _state.value.copy(
                     saving = false,
@@ -59,11 +54,6 @@ class ProviderDetailViewModel : BaseViewModel() {
         launchIo {
             runCatching {
                 AppGraph.providerConfigService.removeProviderConfig(provider)
-                if (AppGraph.gatewayManager.state.value.isRunning) {
-                    AppGraph.gatewayManager.stop()
-                    Thread.sleep(500)
-                    AppGraph.gatewayManager.start()
-                }
             }.onSuccess {
                 _state.value = _state.value.copy(
                     removing = false,
