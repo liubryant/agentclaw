@@ -281,7 +281,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         binding.exportSessionFilesButton.setOnClickListener {
             chatViewModel.rememberExportButtonVisibleForCurrentSession()
             chatViewModel.exportCurrentSessionArtifacts()
-            binding.shellChatRoot.postDelayed({ openAgentClawDirectory() }, 300L)
+            showExportedFilesDialog()
         }
         binding.sendButton.setOnClickListener {
             val text = binding.composerInput.text?.toString().orEmpty().trim()

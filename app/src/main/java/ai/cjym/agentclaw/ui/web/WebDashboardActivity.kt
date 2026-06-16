@@ -35,6 +35,8 @@ class WebDashboardActivity : BaseBindingActivity<ActivityWebDashboardBinding>(Ac
 
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.settings.domStorageEnabled = true
+        binding.webView.settings.allowContentAccess = true
+        binding.webView.settings.allowFileAccess = true
         binding.webView.webChromeClient = WebChromeClient()
         binding.webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
@@ -51,7 +53,12 @@ class WebDashboardActivity : BaseBindingActivity<ActivityWebDashboardBinding>(Ac
                 binding.errorGroup.visibility = android.view.View.VISIBLE
             }
         }
-        binding.webView.loadUrl(url)
+        val htmlContent = intent.getStringExtra(EXTRA_HTML_CONTENT)
+        if (!htmlContent.isNullOrBlank()) {
+            binding.webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
+        } else {
+            binding.webView.loadUrl(url)
+        }
     }
 
     override fun initEvent() = Unit
@@ -64,5 +71,6 @@ class WebDashboardActivity : BaseBindingActivity<ActivityWebDashboardBinding>(Ac
 
     companion object {
         const val EXTRA_URL = "dashboard_url"
+        const val EXTRA_HTML_CONTENT = "html_content"
     }
 }

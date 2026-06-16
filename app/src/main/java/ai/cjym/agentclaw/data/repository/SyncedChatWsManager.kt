@@ -500,7 +500,7 @@ class SyncedChatWsManager(
             Logger.e(TAG, "REST fallback failed: ${t.message}")
             val userMsg = when {
                 t is java.net.SocketTimeoutException || t.message?.contains("timeout", ignoreCase = true) == true ->
-                    "请求超时，请检查 Token 是否正确或稍后重试"
+                    "请求超时，服务器响应较慢，请稍后重试"
                 t.message?.contains("401", ignoreCase = true) == true ||
                 t.message?.contains("403", ignoreCase = true) == true ->
                     "认证失败，请在设置中填写正确的 API Token"

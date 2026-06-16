@@ -25,7 +25,7 @@ class ChatService(private val context: Context) {
         private const val TAG = "ChatService"
         private const val IMAGE_MODE_MARKER = "[[OPENCLAW_IMAGE_MODE]]"
         private const val VIDEO_MODE_MARKER = "[[OPENCLAW_VIDEO_MODE]]"
-        private const val CHAT_READ_TIMEOUT_SECONDS = 120L
+        private const val CHAT_READ_TIMEOUT_SECONDS = 300L
         private const val MEDIA_READ_TIMEOUT_MINUTES = 30L
     }
 

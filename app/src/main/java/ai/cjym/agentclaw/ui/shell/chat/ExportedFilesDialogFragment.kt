@@ -4,6 +4,7 @@ import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.databinding.DialogExportedFilesBinding
 import ai.cjym.agentclaw.databinding.ItemExportedFileBinding
 import android.app.Dialog
+import ai.cjym.agentclaw.ui.web.WebDashboardActivity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -89,6 +90,26 @@ class ExportedFilesDialogFragment : DialogFragment() {
 
     private fun openFile(item: ExportedFileItem) {
         val mime = item.mimeType ?: getMimeType(item.name) ?: "*/*"
+        // HTML files: try system browser first, fall back to in-app WebView
+        if (mime == "text/html" || item.name.lowercase(Locale.getDefault()).endsWith(".html")) {
+            val browserIntent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(item.contentUri, "text/html")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            if (runCatching { startActivity(browserIntent) }.isSuccess) return
+            // No browser available — load content into in-app WebView
+            val html = runCatching {
+                requireContext().contentResolver.openInputStream(item.contentUri)
+                    ?.use { it.bufferedReader().readText() }
+            }.getOrNull()
+            if (!html.isNullOrBlank()) {
+                startActivity(
+                    Intent(requireContext(), WebDashboardActivity::class.java)
+                        .putExtra(WebDashboardActivity.EXTRA_HTML_CONTENT, html)
+                )
+                return
+            }
+        }
         val intent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(item.contentUri, mime)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

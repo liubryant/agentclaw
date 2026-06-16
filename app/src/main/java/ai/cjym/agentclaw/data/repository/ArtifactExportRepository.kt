@@ -223,6 +223,23 @@ class ArtifactExportRepository(context: Context) {
         return head.joinToString(prefix = "[", postfix = "]$suffix")
     }
 
+    fun injectAndExportArtifact(fileName: String, bytes: ByteArray, mimeType: String): Boolean {
+        return runCatching {
+            val fingerprint = buildFingerprint(fileName, bytes)
+            if (exportedContentFingerprints.contains(fingerprint)) {
+                Log.i(TAG, "injectAndExportArtifact skip duplicate fileName=$fileName")
+                return@runCatching false
+            }
+            writeToDownloads(fileName, bytes, mimeType)
+            exportedContentFingerprints.add(fingerprint)
+            Log.i(TAG, "injectAndExportArtifact saved fileName=$fileName, bytes=${bytes.size}")
+            true
+        }.getOrElse { e ->
+            Log.e(TAG, "injectAndExportArtifact failed fileName=$fileName, err=${e.message}")
+            false
+        }
+    }
+
     private fun collectWorkspaceArtifacts(): List<GeneratedArtifact> {
         // rootfs 已移除，workspace 扫描不再可用
         return emptyList()

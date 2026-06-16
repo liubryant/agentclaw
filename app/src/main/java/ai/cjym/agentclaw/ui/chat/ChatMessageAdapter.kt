@@ -15,6 +15,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Typeface
+import android.os.Build
+import android.text.Html
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
@@ -238,7 +240,18 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
             val imageUrl = ChatMediaUtils.extractFirstImageUrl(item.content)
             val videoUrl = ChatMediaUtils.extractFirstVideoUrl(item.content)
             val displayContent = ChatMediaUtils.stripMedia(item.content)
-            getMarkwon(binding.root.context).setMarkdown(binding.messageView, displayContent)
+            val extractedHtml = extractHtmlFromContent(displayContent)
+            if (extractedHtml != null) {
+                @Suppress("DEPRECATION")
+                val spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Html.fromHtml(extractedHtml, Html.FROM_HTML_MODE_COMPACT)
+                } else {
+                    Html.fromHtml(extractedHtml)
+                }
+                binding.messageView.setText(spanned, android.widget.TextView.BufferType.SPANNABLE)
+            } else {
+                getMarkwon(binding.root.context).setMarkdown(binding.messageView, displayContent)
+            }
             bindGeneratedImage(binding, imageUrl)
             bindGeneratedVideo(binding, videoUrl)
             val markdownCost = System.currentTimeMillis() - markdownStart
@@ -552,6 +565,28 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
                     .build()
                     .also { markwonInstance = it }
             }
+        }
+
+        private fun extractHtmlFromContent(content: String): String? {
+            val trimmed = content.trim()
+            val lower = trimmed.lowercase()
+            if (lower.startsWith("```html")) {
+                val afterFence = trimmed.drop("```html".length).trimStart('\n', '\r')
+                val html = if (afterFence.trimEnd().endsWith("```")) {
+                    afterFence.trimEnd().dropLast(3).trimEnd()
+                } else {
+                    afterFence
+                }
+                if (isHtmlContent(html)) return html
+            }
+            if (isHtmlContent(trimmed)) return trimmed
+            return null
+        }
+
+        private fun isHtmlContent(content: String): Boolean {
+            if (content.length < 50) return false
+            val lower = content.trimStart().lowercase()
+            return lower.startsWith("<!doctype html") || lower.startsWith("<html")
         }
 
         private fun copy(context: Context, text: String) {

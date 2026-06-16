@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ShellChatViewModel : BaseViewModel() {
     private val manager = AppGraph.syncedChatWsManager
@@ -450,8 +451,61 @@ class ShellChatViewModel : BaseViewModel() {
     }
 
     private suspend fun refreshCurrentSessionExportState() {
-        val hasPending = artifactExportRepository.collectNewWorkspaceArtifacts().isNotEmpty()
+        var hasPending = artifactExportRepository.collectNewWorkspaceArtifacts().isNotEmpty()
+
+        if (!hasPending) {
+            val lastAssistantContent = manager.messages.value
+                .lastOrNull { it.role.equals("assistant", ignoreCase = true) }
+                ?.content?.trim().orEmpty()
+            val htmlContent = extractHtmlFromContent(lastAssistantContent)
+            if (htmlContent != null) {
+                hasPending = withContext(Dispatchers.IO) {
+                    val title = extractHtmlTitle(htmlContent)
+                    val baseName = title?.takeIf { it.isNotBlank() } ?: "document"
+                    val fileName = sanitizeArtifactFileName("$baseName.html")
+                    artifactExportRepository.injectAndExportArtifact(
+                        fileName = fileName,
+                        bytes = htmlContent.toByteArray(Charsets.UTF_8),
+                        mimeType = "text/html"
+                    )
+                }
+            }
+        }
+
         updateCurrentSessionExportState(hasPendingArtifacts = hasPending)
+    }
+
+    private fun extractHtmlFromContent(content: String): String? {
+        val trimmed = content.trim()
+        val lower = trimmed.lowercase()
+        // ```html\n...\n``` 代码围栏
+        if (lower.startsWith("```html")) {
+            val afterFence = trimmed.drop("```html".length).trimStart('\n', '\r')
+            val html = if (afterFence.trimEnd().endsWith("```")) {
+                afterFence.trimEnd().dropLast(3).trimEnd()
+            } else {
+                afterFence
+            }
+            if (isHtmlContent(html)) return html
+        }
+        // 裸 HTML
+        if (isHtmlContent(trimmed)) return trimmed
+        return null
+    }
+
+    private fun isHtmlContent(content: String): Boolean {
+        if (content.length < 50) return false
+        val lower = content.trimStart().lowercase()
+        return lower.startsWith("<!doctype html") || lower.startsWith("<html")
+    }
+
+    private fun extractHtmlTitle(html: String): String? {
+        return Regex("<title[^>]*>([^<]+)</title>", RegexOption.IGNORE_CASE)
+            .find(html)?.groupValues?.getOrNull(1)?.trim()?.takeIf { it.isNotBlank() }
+    }
+
+    private fun sanitizeArtifactFileName(name: String): String {
+        return name.replace(Regex("[\\\\/:*?\"<>|]"), "_").take(100)
     }
 
     private suspend fun ensureCurrentSessionTracked() {
