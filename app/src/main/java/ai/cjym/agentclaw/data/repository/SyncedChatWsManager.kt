@@ -273,24 +273,25 @@ class SyncedChatWsManager(
         }
     }
 
-    suspend fun sendMessage(text: String) {
-        if (text.isBlank() || _isGenerating.value) return
+    suspend fun sendMessage(text: String, imageBase64: String? = null) {
+        if (text.isBlank() && imageBase64 == null || _isGenerating.value) return
         _errorMessage.value = null
 
         val sessionKey = ensureCurrentSessionForCompose()
         draftSessionKeys.remove(sessionKey)
         val now = System.currentTimeMillis()
+        val messageContent = text.trim()
         val localUserMessage = SyncedMessage(
             id = UUID.randomUUID().toString(),
             role = "user",
-            content = text.trim(),
+            content = messageContent,
             createdAt = now,
             sendStatus = if (hasAvailableNetwork()) {
                 MessageSendStatus.SENT
             } else {
                 MessageSendStatus.PENDING_RETRY_OFFLINE
             },
-            segments = listOf(ContentSegment.Text(text.trim()))
+            segments = listOf(ContentSegment.Text(messageContent))
         )
         appendLocalUserMessage(sessionKey, localUserMessage)
 
@@ -302,7 +303,8 @@ class SyncedChatWsManager(
             sessionKey = sessionKey,
             uiMessageId = localUserMessage.id,
             transportRunId = localUserMessage.id,
-            text = localUserMessage.content
+            text = localUserMessage.content,
+            imageBase64 = imageBase64
         )
     }
 
@@ -376,7 +378,8 @@ class SyncedChatWsManager(
         sessionKey: String,
         uiMessageId: String,
         transportRunId: String,
-        text: String
+        text: String,
+        imageBase64: String? = null
     ) {
         val assistantId = UUID.randomUUID().toString()
         val outboundMessage = when (resolveSessionEntryMode(sessionKey)) {
@@ -385,7 +388,7 @@ class SyncedChatWsManager(
             else -> text.trim()
         }
         if (preferencesManager.nodeGatewayHost.isNullOrBlank()) {
-            sendViaRestFallback(sessionKey, uiMessageId, assistantId, outboundMessage)
+            sendViaRestFallback(sessionKey, uiMessageId, assistantId, outboundMessage, imageBase64)
             return
         }
         try {
@@ -404,15 +407,14 @@ class SyncedChatWsManager(
             clearTransientRunState()
             currentRunId = transportRunId
             draftSessionKeys.remove(sessionKey)
+            val requestPayload = buildMap<String, Any> {
+                put("sessionKey", sessionKey)
+                put("message", outboundMessage)
+                put("idempotencyKey", transportRunId)
+                if (!imageBase64.isNullOrBlank()) put("imageBase64", imageBase64)
+            }
             val response = sendRequest(
-                NodeFrame.request(
-                    "chat.send",
-                    mapOf(
-                        "sessionKey" to sessionKey,
-                        "message" to outboundMessage,
-                        "idempotencyKey" to transportRunId
-                    )
-                ),
+                NodeFrame.request("chat.send", requestPayload),
                 timeoutMs = AppConstants.DEFAULT_AGENT_TIMEOUT_SECONDS.toLong()
             )
             if (response.isError) {
@@ -438,7 +440,7 @@ class SyncedChatWsManager(
             }
         } catch (t: Throwable) {
             if (hasAvailableNetwork()) {
-                sendViaRestFallback(sessionKey, uiMessageId, assistantId, outboundMessage)
+                sendViaRestFallback(sessionKey, uiMessageId, assistantId, outboundMessage, imageBase64)
             } else {
                 markActiveUserMessagePendingRetry()
                 stopRunLocally(emitReplyFinished = false)
@@ -450,7 +452,8 @@ class SyncedChatWsManager(
         sessionKey: String,
         uiMessageId: String,
         assistantId: String,
-        outboundText: String
+        outboundText: String,
+        imageBase64: String? = null
     ) {
         try {
             _activeAssistantMessageId.value = assistantId
@@ -470,6 +473,7 @@ class SyncedChatWsManager(
                         sessionId = sessionKey,
                         role = if (msg.role.equals("user", ignoreCase = true)) ChatRole.USER else ChatRole.ASSISTANT,
                         content = content,
+                        imageBase64 = if (msg.id == uiMessageId) imageBase64 else null,
                         createdAt = msg.createdAt
                     )
                 }

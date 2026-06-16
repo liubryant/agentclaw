@@ -12,7 +12,8 @@ data class ChatMessage(
     val role: ChatRole,
     val content: String = "",
     val createdAt: Long,
-    val isStreaming: Boolean = false
+    val isStreaming: Boolean = false,
+    val imageBase64: String? = null
 ) {
     fun toApiMessage(): Map<String, String> = mapOf(
         "role" to role.apiName,

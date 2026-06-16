@@ -331,11 +331,11 @@ class ShellChatViewModel : BaseViewModel() {
         return sessionId
     }
 
-    fun sendMessage(text: String) {
+    fun sendMessage(text: String, imageBase64: String? = null) {
         launchIo {
-            // 用户发起新问题后，重置“下载按钮保持可见”状态，避免按钮持续残留显示。
+            // 用户发起新问题后，重置”下载按钮保持可见”状态，避免按钮持续残留显示。
             updateCurrentSessionKeepExportButtonVisible(keepVisible = false)
-            manager.sendMessage(text)
+            manager.sendMessage(text, imageBase64)
         }
     }
 

@@ -73,7 +73,26 @@ class ChatService(private val context: Context) {
                     messages.forEach { message ->
                         put(JSONObject().apply {
                             put("role", message.role.apiName)
-                            put("content", stripModeMarkers(message.content))
+                            val cleanText = stripModeMarkers(message.content)
+                            val imgBase64 = message.imageBase64
+                            if (!imgBase64.isNullOrBlank()) {
+                                put("content", JSONArray().apply {
+                                    put(JSONObject().apply {
+                                        put("type", "image_url")
+                                        put("image_url", JSONObject().apply {
+                                            put("url", "data:image/jpeg;base64,$imgBase64")
+                                        })
+                                    })
+                                    if (cleanText.isNotBlank()) {
+                                        put(JSONObject().apply {
+                                            put("type", "text")
+                                            put("text", cleanText)
+                                        })
+                                    }
+                                })
+                            } else {
+                                put("content", cleanText)
+                            }
                         })
                     }
                 }

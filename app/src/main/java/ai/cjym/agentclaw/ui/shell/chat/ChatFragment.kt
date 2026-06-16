@@ -57,6 +57,17 @@ import okhttp3.Request
 import java.io.File
 import java.net.URLDecoder
 import java.util.Locale
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
+import android.view.LayoutInflater
+import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import android.content.pm.PackageManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.io.ByteArrayOutputStream
 
 class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShellChatBinding::inflate) {
     private companion object {
@@ -77,6 +88,27 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
     private var lastRenderedSessionId: String? = null
     private var activeRenderTrace: RenderTrace? = null
     private val imageDownloadClient by lazy { OkHttpClient() }
+
+    private var cameraImageUri: Uri? = null
+    private var pendingImageUri: Uri? = null
+
+    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            cameraImageUri?.let { setComposerImage(it) }
+        }
+    }
+
+    private val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let { setComposerImage(it) }
+    }
+
+    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) {
+            launchCamera()
+        } else {
+            Toast.makeText(requireContext(), "需要相机权限才能拍照", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun initView(savedInstanceState: Bundle?) {
         chatViewModel.start()
@@ -285,8 +317,14 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         }
         binding.sendButton.setOnClickListener {
             val text = binding.composerInput.text?.toString().orEmpty().trim()
-            if (text.isBlank()) return@setOnClickListener
-            chatViewModel.sendMessage(text)
+            val hasImage = pendingImageUri != null
+            if (text.isBlank() && !hasImage) return@setOnClickListener
+            val imageUri = pendingImageUri
+            clearComposerImage()
+            viewLifecycleOwner.lifecycleScope.launch {
+                val imageBase64 = imageUri?.let { encodeImageToBase64(it) }
+                chatViewModel.sendMessage(text, imageBase64)
+            }
             binding.composerInput.hideKeyboard(clearFocus = true)
             val currentSessionId = chatViewModel.state.value.selectedSessionId.orEmpty()
             suppressDraftSync = true
@@ -356,6 +394,9 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         }
         binding.imageChatEntryButton.setOnClickListener { shellViewModel.launchImageChat() }
         binding.videoChatEntryButton.setOnClickListener { shellViewModel.launchVideoChat() }
+
+        binding.attachButton.setOnClickListener { showImagePickerSheet() }
+        binding.removeThumbnailButton.setOnClickListener { clearComposerImage() }
     }
 
     override fun onPause() {
@@ -736,12 +777,86 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
 
     private fun refreshComposerActionButton(state: ChatScreenState = chatViewModel.state.value) {
         val isInputBlank = binding.composerInput.text?.toString()?.trim().isNullOrEmpty()
+        val hasContent = !isInputBlank || pendingImageUri != null
         binding.stopButton.visibility = if (state.isGenerating) android.view.View.VISIBLE else android.view.View.GONE
         binding.sendButton.visibility = if (state.isGenerating) android.view.View.GONE else android.view.View.VISIBLE
         binding.sendButton.isEnabled = state.canSend
         binding.sendButton.setImageResource(
-            if (isInputBlank) R.drawable.ic_chat_unsend else R.drawable.ic_chat_send
+            if (!hasContent) R.drawable.ic_chat_unsend else R.drawable.ic_chat_send
         )
+    }
+
+    private fun showImagePickerSheet() {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.bottom_sheet_image_picker, null)
+        sheetView.findViewById<View>(R.id.optionCamera).setOnClickListener {
+            dialog.dismiss()
+            if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+                launchCamera()
+            } else {
+                requestCameraPermission.launch(android.Manifest.permission.CAMERA)
+            }
+        }
+        sheetView.findViewById<View>(R.id.optionGallery).setOnClickListener {
+            dialog.dismiss()
+            galleryLauncher.launch("image/*")
+        }
+        dialog.setContentView(sheetView)
+        dialog.show()
+    }
+
+    private fun launchCamera() {
+        val cacheDir = File(requireContext().cacheDir, "camera").apply { mkdirs() }
+        val photoFile = File(cacheDir, "photo_${System.currentTimeMillis()}.jpg")
+        val uri = FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.fileprovider",
+            photoFile
+        )
+        cameraImageUri = uri
+        cameraLauncher.launch(uri)
+    }
+
+    private fun setComposerImage(uri: Uri) {
+        pendingImageUri = uri
+        binding.imageThumbnail.setImageURI(uri)
+        binding.imageThumbnailRow.visibility = View.VISIBLE
+        refreshComposerActionButton()
+    }
+
+    private fun clearComposerImage() {
+        pendingImageUri = null
+        cameraImageUri = null
+        binding.imageThumbnail.setImageDrawable(null)
+        binding.imageThumbnailRow.visibility = View.GONE
+        refreshComposerActionButton()
+    }
+
+    private suspend fun encodeImageToBase64(uri: Uri): String? {
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                val inputStream = requireContext().contentResolver.openInputStream(uri)
+                    ?: return@runCatching null
+                val original = BitmapFactory.decodeStream(inputStream)
+                inputStream.close()
+                if (original == null) return@runCatching null
+                val maxDim = 1024
+                val scaled = if (original.width > maxDim || original.height > maxDim) {
+                    val ratio = minOf(maxDim.toFloat() / original.width, maxDim.toFloat() / original.height)
+                    Bitmap.createScaledBitmap(
+                        original,
+                        (original.width * ratio).toInt(),
+                        (original.height * ratio).toInt(),
+                        true
+                    )
+                } else original
+                val out = ByteArrayOutputStream()
+                scaled.compress(Bitmap.CompressFormat.JPEG, 85, out)
+                Base64.encodeToString(out.toByteArray(), Base64.NO_WRAP)
+            }.getOrNull()
+        }
     }
 
     override fun onDestroyView() {
