@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#99000000"
+    android:background="#1A000000"
     android:clickable="true"
     android:focusable="true">
 
@@ -91,13 +91,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/bg_login_field"
+                android:background="@drawable/bg_login_primary_button"
                 android:clickable="true"
                 android:focusable="true"
                 android:fontFamily="@font/misans_medium"
                 android:gravity="center"
                 android:text="@string/login_set_password"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/bg_login_field"
+                android:background="@drawable/bg_login_logout_button"
                 android:clickable="true"
                 android:focusable="true"
                 android:fontFamily="@font/misans_medium"

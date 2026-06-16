@@ -37,12 +37,13 @@
 
     <ImageButton
         android:id="@+id/actionButton"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="0dp"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="4dp"
         android:background="@drawable/bg_shell_delete_button"
         android:contentDescription="@string/chat_delete_confirm"
         android:padding="0dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_shell_delete"
         android:visibility="invisible" />
 </LinearLayout>

@@ -1821,6 +1821,12 @@ class SyncedChatWsManager(
             reason.equals("Disconnected", ignoreCase = true) -> true
             reason.contains("timeout", ignoreCase = true) -> true
             reason.contains("canceled", ignoreCase = true) -> true
+            // TCP-level connection failures (OkHttp ConnectException) are transient —
+            // the gateway may still be starting up; retry silently instead of showing a banner.
+            reason.contains("Failed to connect", ignoreCase = true) -> true
+            reason.contains("Connection refused", ignoreCase = true) -> true
+            reason.contains("ECONNREFUSED", ignoreCase = true) -> true
+            reason.contains("Unable to resolve host", ignoreCase = true) -> true
             else -> false
         }
     }

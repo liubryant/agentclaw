@@ -21,9 +21,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_file_manager"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_shell_file"
                 android:contentDescription="文件管理" />
 
             <TextView

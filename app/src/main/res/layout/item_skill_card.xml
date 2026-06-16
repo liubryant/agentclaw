@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="0dp"
-    android:layout_height="180dp"
+    android:layout_height="wrap_content"
     android:layout_columnWeight="1"
     android:background="@drawable/bg_skill_card"
     android:orientation="vertical"
-    android:padding="28px">
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
 
         <ImageView
             android:layout_width="23dp"
-            android:layout_height="60px"
+            android:layout_height="28dp"
             android:src="@mipmap/icon_skill" />
 
         <TextView
@@ -28,53 +28,52 @@
             android:maxLines="1"
             android:text="canvas-design"
             android:textColor="#1F1F1F"
-            android:textSize="28px"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/ivRemove"
-            android:layout_width="32px"
-            android:layout_height="32px"
-            android:src="@mipmap/icon_remove"
-            />
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@mipmap/icon_remove" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvSkillContent"
         android:layout_width="match_parent"
-        android:layout_height="65px"
-        android:maxHeight="65px"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="4dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:layout_marginStart="75px"
         android:text="crate beautiful visual art png and .pdf documents..."
         android:textColor="#666666"
-        android:textSize="23px" />
+        android:textSize="11sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:background="#ECECEC" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tvSkillTag"
             android:layout_width="wrap_content"
-            android:layout_height="52px"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:background="@drawable/bg_skill_tag"
             android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
             android:text="@string/setting_builtin_skill"
             android:textColor="#000000"
-            android:textSize="20px" />
+            android:textSize="10sp" />
 
         <View
             android:layout_width="0dp"
@@ -83,8 +82,8 @@
 
         <ImageView
             android:id="@+id/skillSwitch"
-            android:layout_width="48px"
-            android:layout_height="28px"
+            android:layout_width="24dp"
+            android:layout_height="14dp"
             android:src="@mipmap/switch_off" />
     </LinearLayout>
 </LinearLayout>

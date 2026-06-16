@@ -12,6 +12,7 @@ class LegalWebActivity : BaseBindingActivity<ActivityLegalWebBinding>(ActivityLe
 
     override fun initView() {
         binding.backButton.setOnClickListener { finish() }
+        binding.titleView.text = intent.getStringExtra(EXTRA_TITLE).orEmpty()
         binding.legalWebView.apply {
             webViewClient = WebViewClient()
             settings.javaScriptEnabled = true
@@ -34,10 +35,12 @@ class LegalWebActivity : BaseBindingActivity<ActivityLegalWebBinding>(ActivityLe
 
     companion object {
         private const val EXTRA_URL = "extra_url"
+        private const val EXTRA_TITLE = "extra_title"
 
         fun createIntent(context: Context, title: String, url: String): Intent {
             return Intent(context, LegalWebActivity::class.java).apply {
                 putExtra(EXTRA_URL, url)
+                putExtra(EXTRA_TITLE, title)
                 if (context !is Activity) {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
