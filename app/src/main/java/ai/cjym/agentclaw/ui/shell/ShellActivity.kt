@@ -30,6 +30,9 @@ import android.os.Build
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import ai.cjym.agentclaw.constants.AppConstants
+import ai.cjym.agentclaw.ui.legal.LegalWebActivity
+import ai.cjym.agentclaw.util.toSpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,6 +90,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
     private var previousSoftInputMode: Int? = null
     private var hoverTooltipPopup: ShellHoverTooltipPopupWindow? = null
     private var suppressedHoverTooltipView: View? = null
+    private var activeLoginDialog: Dialog? = null
 
     override fun initData() {
         chatViewModel.start()
@@ -403,6 +407,17 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         WifiNetworkMonitor.register(this, this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        enforceLoginGate()
+    }
+
+    private fun enforceLoginGate() {
+        if (!AppGraph.preferences.isLoggedIn) {
+            showLoginDialog(forceLogin = true)
+        }
+    }
+
     override fun onStop() {
         WifiNetworkMonitor.unregister()
         super.onStop()
@@ -607,18 +622,35 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             .show(supportFragmentManager, tag)
     }
 
-    private fun showLoginDialog() {
+    private fun showLoginDialog(forceLogin: Boolean = false) {
+        if (activeLoginDialog?.isShowing == true) return
+
         val dialogBinding = DialogLoginBinding.inflate(layoutInflater)
         val dialog = Dialog(this).apply {
             requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
             setContentView(dialogBinding.root)
-            setCanceledOnTouchOutside(true)
+            setCancelable(!forceLogin)
+            setCanceledOnTouchOutside(!forceLogin)
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            if (forceLogin) {
+                setOnKeyListener { _, keyCode, _ ->
+                    keyCode == android.view.KeyEvent.KEYCODE_BACK
+                }
+            }
         }
+        activeLoginDialog = dialog
+
+        dialogBinding.loginCloseButton.visibility = if (forceLogin) View.GONE else View.VISIBLE
 
         var isCodeMode = true
         var countdownJob: Job? = null
         var setPasswordCountdownJob: Job? = null
+        var isAgreementChecked = false
+
+        fun refreshAgreementState() {
+            dialogBinding.loginAgreementCheckIcon.isSelected = isAgreementChecked
+            dialogBinding.loginSubmitButton.alpha = if (isAgreementChecked) 1f else 0.4f
+        }
 
         fun setError(msg: String?) {
             dialogBinding.loginFormError.visibility = if (msg.isNullOrEmpty()) View.GONE else View.VISIBLE
@@ -686,12 +718,31 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
                 AppGraph.preferences.userPhone = null
                 dialog.dismiss()
                 Toast.makeText(this, getString(R.string.login_logout), Toast.LENGTH_SHORT).show()
+                showLoginDialog(forceLogin = true)
             }
         } else {
             dialogBinding.loggedInSection.visibility = View.GONE
             dialogBinding.loginFormSection.visibility = View.VISIBLE
             dialogBinding.setPasswordSection.visibility = View.GONE
             refreshMode()
+            refreshAgreementState()
+
+            dialogBinding.loginAgreementText.toSpannableString(colorId = R.color.terms_link, isBold = false) { key ->
+                when (key) {
+                    "user_agreement" -> startActivity(
+                        LegalWebActivity.createIntent(this, getString(R.string.terms_user_agreement), AppConstants.USER_AGREEMENT_URL)
+                    )
+                    "privacy_policy" -> startActivity(
+                        LegalWebActivity.createIntent(this, getString(R.string.terms_privacy_policy), AppConstants.PRIVACY_POLICY_URL)
+                    )
+                }
+            }
+            dialogBinding.loginAgreementText.highlightColor = android.graphics.Color.TRANSPARENT
+
+            dialogBinding.loginAgreementRow.setOnClickListener {
+                isAgreementChecked = !isAgreementChecked
+                refreshAgreementState()
+            }
         }
 
         // 设置密码 — 返回
@@ -767,7 +818,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             }
         }
 
-        dialogBinding.root.setOnClickListener { dialog.dismiss() }
+        dialogBinding.root.setOnClickListener { if (!forceLogin) dialog.dismiss() }
         dialogBinding.loginDialogContainer.setOnClickListener { /* consume */ }
         dialogBinding.loginCloseButton.setOnClickListener { dialog.dismiss() }
 
@@ -812,6 +863,10 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         }
 
         dialogBinding.loginSubmitButton.setOnClickListener {
+            if (!isAgreementChecked) {
+                Toast.makeText(this, getString(R.string.login_agreement_required), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val phone = normalizeMainlandPhone(dialogBinding.loginPhoneInput.text?.toString().orEmpty())
             if (!isReliableMainlandPhone(phone)) {
                 dialogBinding.loginPhoneError.visibility = View.VISIBLE
@@ -855,6 +910,9 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         dialog.setOnDismissListener {
             countdownJob?.cancel()
             setPasswordCountdownJob?.cancel()
+            if (activeLoginDialog === dialog) {
+                activeLoginDialog = null
+            }
         }
 
         dialog.show()

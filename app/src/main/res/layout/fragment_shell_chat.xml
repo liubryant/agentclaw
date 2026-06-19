@@ -296,7 +296,7 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <!-- Input row: EditText + attach + send -->
+            <!-- Input row: EditText + send -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -344,7 +344,8 @@
                         android:contentDescription="添加图片"
                         android:padding="8dp"
                         android:scaleType="centerInside"
-                        android:src="@drawable/ic_composer_attach" />
+                        android:src="@drawable/ic_composer_attach"
+                        android:visibility="gone" />
 
                     <FrameLayout
                         android:id="@+id/sendControls"

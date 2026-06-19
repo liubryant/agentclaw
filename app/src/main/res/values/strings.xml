@@ -307,6 +307,9 @@
     <string name="login_phone_invalid">请输入可靠的手机号</string>
     <string name="login_password_empty">密码不能为空</string>
     <string name="login_submit">登录</string>
+    <string name="login_agreement_prefix">我已阅读并同意</string>
+    <string name="login_agreement_required">请先阅读并勾选同意《用户协议》和《隐私政策》</string>
+    <string name="login_agreement_text">我已阅读并同意<annotation user_agreement="user_agreement">《用户协议》</annotation>和<annotation privacy_policy="privacy_policy">《隐私政策》</annotation></string>
     <string name="login_local_success">登录信息已通过本地校验</string>
     <string name="login_code">验证码</string>
     <string name="login_code_loading">获取中</string>

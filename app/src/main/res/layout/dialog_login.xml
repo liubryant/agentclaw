@@ -127,18 +127,9 @@
             android:visibility="gone">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/misans_medium"
-                android:text="@string/set_password_title"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp" />
-
-            <TextView
                 android:id="@+id/setPasswordPhoneText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:fontFamily="@font/misans_medium"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp" />
@@ -381,6 +372,40 @@
                 android:text="@string/login_use_password"
                 android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
+
+            <!-- 协议勾选行 -->
+            <LinearLayout
+                android:id="@+id/loginAgreementRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/loginAgreementCheckIcon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:background="@drawable/bg_terms_consent_check"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="✓"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/loginAgreementText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/login_agreement_text"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/misans_medium" />
+            </LinearLayout>
 
         </LinearLayout>
 
