@@ -14,6 +14,10 @@ import android.graphics.Outline
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.text.InputFilter
+import android.text.InputType
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
@@ -31,6 +35,7 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -38,9 +43,15 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import java.io.File
 import java.util.concurrent.Executors
 import kotlin.math.abs
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class SettingPanelController(
     private val context: Context,
@@ -69,8 +80,12 @@ class SettingPanelController(
     private var skillDetailPopupWindow: PopupWindow? = null
     private var githubImportPopupWindow: PopupWindow? = null
     private var legalWebPopupWindow: PopupWindow? = null
+    private var deleteAccountDialog: AlertDialog? = null
+    private var deleteCodeCountdownRunnable: Runnable? = null
     private var skillContainer: LinearLayout? = null
     private var skillSearchInput: EditText? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val controllerScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val githubSkillImportService: GithubSkillImportService by lazy { AppGraph.githubSkillImportService }
     private val runtimeSkillsDir: File by lazy {
         File(context.filesDir, "rootfs/ubuntu/root/.openclaw/skills")
@@ -127,6 +142,11 @@ class SettingPanelController(
         githubImportPopupWindow = null
         legalWebPopupWindow?.dismiss()
         legalWebPopupWindow = null
+        deleteAccountDialog?.dismiss()
+        deleteAccountDialog = null
+        deleteCodeCountdownRunnable?.let { mainHandler.removeCallbacks(it) }
+        deleteCodeCountdownRunnable = null
+        controllerScope.cancel()
         ioExecutor.shutdownNow()
     }
 
@@ -219,9 +239,222 @@ class SettingPanelController(
         rootView.findViewById<View>(R.id.rowPrivacyPolicy)?.setOnClickListener {
             openLegalPage(context.getString(R.string.setting_privacy_policy), AppConstants.PRIVACY_POLICY_URL)
         }
+        rootView.findViewById<View>(R.id.rowDeleteAccount)?.setOnClickListener {
+            showDeleteAccountDialog()
+        }
         rootView.findViewById<View>(R.id.rowOpenSourceLicense)?.setOnClickListener {
             openLegalPage(context.getString(R.string.setting_open_source_license), AppConstants.PRIVACY_POLICY_URL)
         }
+    }
+
+    private fun showDeleteAccountDialog() {
+        val phone = AppGraph.preferences.userPhone.orEmpty()
+        if (!AppGraph.preferences.isLoggedIn || phone.isBlank()) {
+            Toast.makeText(context, context.getString(R.string.setting_delete_account_login_required), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        deleteCodeCountdownRunnable?.let { mainHandler.removeCallbacks(it) }
+        deleteCodeCountdownRunnable = null
+        deleteAccountDialog?.dismiss()
+
+        val contentView = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(8), dp(20), dp(4))
+        }
+        val subtitleView = TextView(context).apply {
+            text = context.getString(R.string.setting_delete_account_subtitle, phone)
+            setTextColor(Color.parseColor("#666666"))
+            textSize = 14f
+        }
+        contentView.addView(subtitleView, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ))
+
+        val warningView = TextView(context).apply {
+            text = context.getString(R.string.setting_delete_account_warning)
+            setTextColor(Color.parseColor("#666666"))
+            textSize = 13f
+            setPadding(dp(12), dp(10), dp(12), dp(10))
+            background = GradientDrawable().apply {
+                setColor(Color.parseColor("#FFF7ED"))
+                cornerRadius = dp(8).toFloat()
+            }
+        }
+        contentView.addView(warningView, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ).apply { topMargin = dp(14) })
+
+        val codeRow = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        contentView.addView(codeRow, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ).apply { topMargin = dp(14) })
+
+        val codeInput = EditText(context).apply {
+            hint = context.getString(R.string.login_code_hint)
+            inputType = InputType.TYPE_CLASS_NUMBER
+            filters = arrayOf(InputFilter.LengthFilter(6))
+            textSize = 14f
+            setSingleLine(true)
+        }
+        codeRow.addView(codeInput, LinearLayout.LayoutParams(
+            0,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            1f
+        ))
+
+        val codeButton = Button(context).apply {
+            text = context.getString(R.string.login_get_code)
+            textSize = 12f
+            minHeight = 0
+            minWidth = 0
+        }
+        codeRow.addView(codeButton, LinearLayout.LayoutParams(
+            dp(112),
+            dp(44)
+        ).apply { marginStart = dp(10) })
+
+        val errorView = TextView(context).apply {
+            visibility = View.GONE
+            setTextColor(Color.parseColor("#E5484D"))
+            textSize = 12f
+        }
+        contentView.addView(errorView, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ).apply { topMargin = dp(8) })
+
+        fun setError(message: String?) {
+            errorView.text = message.orEmpty()
+            errorView.visibility = if (message.isNullOrBlank()) View.GONE else View.VISIBLE
+        }
+
+        val dialog = AlertDialog.Builder(context)
+            .setTitle(R.string.setting_delete_account)
+            .setView(contentView)
+            .setNegativeButton(R.string.setting_cancel, null)
+            .setPositiveButton(R.string.setting_delete_account_confirm_button, null)
+            .create()
+
+        deleteAccountDialog = dialog
+        dialog.setOnDismissListener {
+            if (deleteAccountDialog === dialog) deleteAccountDialog = null
+            deleteCodeCountdownRunnable?.let { runnable -> mainHandler.removeCallbacks(runnable) }
+            deleteCodeCountdownRunnable = null
+        }
+        dialog.setOnShowListener {
+            val deleteButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            deleteButton.setTextColor(Color.parseColor("#E5484D"))
+            codeButton.setOnClickListener {
+                requestDeleteAccountCode(phone, codeButton, ::setError)
+            }
+            deleteButton.setOnClickListener {
+                val code = codeInput.text?.toString()?.trim().orEmpty()
+                if (!isLoginCodeValid(code)) {
+                    setError(context.getString(R.string.login_code_hint))
+                    return@setOnClickListener
+                }
+                confirmDeleteAccount(phone, code, dialog, deleteButton, ::setError)
+            }
+        }
+        dialog.show()
+    }
+
+    private fun requestDeleteAccountCode(
+        phone: String,
+        codeButton: Button,
+        setError: (String?) -> Unit
+    ) {
+        setError(null)
+        codeButton.isEnabled = false
+        codeButton.text = context.getString(R.string.login_sending_code)
+        controllerScope.launch {
+            val result = AppGraph.authService.sendSmsCode(phone)
+            result.onSuccess {
+                startDeleteCodeCountdown(codeButton)
+            }.onFailure { e ->
+                codeButton.isEnabled = true
+                codeButton.text = context.getString(R.string.login_get_code)
+                setError(e.message ?: context.getString(R.string.login_code_failed))
+            }
+        }
+    }
+
+    private fun startDeleteCodeCountdown(codeButton: Button) {
+        deleteCodeCountdownRunnable?.let { mainHandler.removeCallbacks(it) }
+        var remaining = 120
+        val runnable = object : Runnable {
+            override fun run() {
+                if (remaining > 0) {
+                    codeButton.isEnabled = false
+                    codeButton.text = context.getString(R.string.login_code_countdown, remaining)
+                    remaining -= 1
+                    mainHandler.postDelayed(this, 1_000L)
+                } else {
+                    codeButton.isEnabled = true
+                    codeButton.text = context.getString(R.string.login_get_code)
+                    if (deleteCodeCountdownRunnable === this) deleteCodeCountdownRunnable = null
+                }
+            }
+        }
+        deleteCodeCountdownRunnable = runnable
+        mainHandler.post(runnable)
+    }
+
+    private fun confirmDeleteAccount(
+        phone: String,
+        code: String,
+        parentDialog: AlertDialog,
+        deleteButton: Button,
+        setError: (String?) -> Unit
+    ) {
+        AlertDialog.Builder(context)
+            .setTitle(R.string.setting_delete_account_confirm_title)
+            .setMessage(R.string.setting_delete_account_confirm_message)
+            .setNegativeButton(R.string.setting_cancel, null)
+            .setPositiveButton(R.string.setting_delete_account_confirm_positive) { _, _ ->
+                executeDeleteAccount(phone, code, parentDialog, deleteButton, setError)
+            }
+            .show()
+    }
+
+    private fun executeDeleteAccount(
+        phone: String,
+        code: String,
+        dialog: AlertDialog,
+        deleteButton: Button,
+        setError: (String?) -> Unit
+    ) {
+        setError(null)
+        deleteButton.isEnabled = false
+        deleteButton.text = context.getString(R.string.setting_delete_account_deleting)
+        controllerScope.launch {
+            val result = AppGraph.authService.deleteAccount(phone, code)
+            result.onSuccess {
+                AppGraph.preferences.isLoggedIn = false
+                AppGraph.preferences.userPhone = null
+                Toast.makeText(context, context.getString(R.string.setting_delete_account_success), Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }.onFailure { e ->
+                deleteButton.isEnabled = true
+                deleteButton.text = context.getString(R.string.setting_delete_account_confirm_button)
+                setError(e.message ?: context.getString(R.string.setting_delete_account_failed))
+            }
+        }
+    }
+
+    private fun isLoginCodeValid(code: String): Boolean {
+        return code.length == 6 && code.all { it.isDigit() }
+    }
+
+    private fun dp(value: Int): Int {
+        return (value * context.resources.displayMetrics.density).toInt()
     }
 
     private fun openLegalPage(title: String, url: String) {

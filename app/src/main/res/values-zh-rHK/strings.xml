@@ -211,6 +211,17 @@
     <string name="setting_current_version">當前版本</string>
     <string name="setting_user_agreement">用戶協議</string>
     <string name="setting_privacy_policy">私隱政策</string>
+    <string name="setting_delete_account">註銷帳號</string>
+    <string name="setting_delete_account_subtitle">驗證手機號 %1$s 後將永久註銷帳號</string>
+    <string name="setting_delete_account_warning">註銷帳號前請確認：\n• 帳號信息及相關數據將被永久刪除，無法恢復。\n• 註銷後該手機號可重新註冊新帳號。</string>
+    <string name="setting_delete_account_login_required">請先登入後再註銷帳號</string>
+    <string name="setting_delete_account_confirm_button">註銷帳號</string>
+    <string name="setting_delete_account_confirm_title">確認註銷帳號？</string>
+    <string name="setting_delete_account_confirm_message">註銷後帳號及數據將被永久刪除，且無法恢復。</string>
+    <string name="setting_delete_account_confirm_positive">確認註銷</string>
+    <string name="setting_delete_account_deleting">註銷中…</string>
+    <string name="setting_delete_account_success">帳號已註銷</string>
+    <string name="setting_delete_account_failed">註銷失敗，請稍後重試</string>
     <string name="setting_open_source_license">開源協議</string>
     <string name="setting_add_skill_by_chat">透過對話建立</string>
     <string name="setting_add_skill_by_chat_desc">描述你的需求，AI 幫你生成</string>

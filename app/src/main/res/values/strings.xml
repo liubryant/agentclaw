@@ -230,6 +230,17 @@
     <string name="setting_current_version">Current Version</string>
     <string name="setting_user_agreement">User Agreement</string>
     <string name="setting_privacy_policy">Privacy Policy</string>
+    <string name="setting_delete_account">Delete Account</string>
+    <string name="setting_delete_account_subtitle">Verify phone %1$s to permanently delete this account.</string>
+    <string name="setting_delete_account_warning">Before deleting your account, please confirm:\n• Account information and related data will be permanently deleted and cannot be recovered.\n• The phone number can be used to register a new account again after deletion.</string>
+    <string name="setting_delete_account_login_required">Please log in before deleting your account.</string>
+    <string name="setting_delete_account_confirm_button">Delete Account</string>
+    <string name="setting_delete_account_confirm_title">Delete account?</string>
+    <string name="setting_delete_account_confirm_message">After deletion, the account and data will be permanently removed and cannot be recovered.</string>
+    <string name="setting_delete_account_confirm_positive">Confirm Delete</string>
+    <string name="setting_delete_account_deleting">Deleting...</string>
+    <string name="setting_delete_account_success">Account deleted</string>
+    <string name="setting_delete_account_failed">Failed to delete account. Please try again later.</string>
     <string name="setting_open_source_license">Open Source License</string>
     <string name="setting_icp_record">ICP备案号： 粤ICP备2024188934号-3A</string>
     <string name="setting_icp_record_number">粤ICP备2024188934号-3A</string>

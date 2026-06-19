@@ -127,6 +127,28 @@ class AuthService(private val context: Context) {
         }
     }
 
+    suspend fun deleteAccount(phone: String, code: String): Result<Unit> = withContext(Dispatchers.IO) {
+        runCatching {
+            val body = JSONObject().apply {
+                put("phone", phone)
+                put("code", code)
+            }.toString().toRequestBody(JSON_MEDIA_TYPE)
+            val response = client.newCall(
+                Request.Builder()
+                    .url("$baseUrl/im/bot/remove_account")
+                    .post(body)
+                    .header("Content-Type", "application/json")
+                    .build()
+            ).execute()
+            response.use {
+                val json = JSONObject(it.body?.string() ?: "{}")
+                if (!isSuccess(json)) {
+                    throw Exception(json.optString("msg", "注销失败，请稍后重试").ifEmpty { "注销失败，请稍后重试" })
+                }
+            }
+        }
+    }
+
     private fun isSuccess(json: JSONObject): Boolean {
         val code = json.opt("code")
         return code == 0 || code == 0L || code?.toString() == "0"
