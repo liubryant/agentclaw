@@ -1,5 +1,6 @@
 package ai.cjym.agentclaw.data.repository
 
+import ai.cjym.agentclaw.data.aigc.AigcMetadataWriter
 import ai.cjym.agentclaw.domain.model.ArtifactExportItemResult
 import ai.cjym.agentclaw.domain.model.ArtifactExportResult
 import ai.cjym.agentclaw.domain.model.GeneratedArtifact
@@ -285,6 +286,7 @@ class ArtifactExportRepository(context: Context) {
 
     private fun writeToDownloads(fileName: String, bytes: ByteArray, mimeType: String): String {
         val resolvedMimeType = mimeType.ifBlank { guessMimeType(fileName) }
+        val watermarkedBytes = applyAigcIdentificationIfSupported(fileName, bytes, resolvedMimeType)
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val relativePath = Environment.DIRECTORY_DOWNLOADS + "/AgentClaw/"
             val existingUri = findExistingDownloadUri(fileName, relativePath)
@@ -301,7 +303,7 @@ class ArtifactExportRepository(context: Context) {
                 appContext.contentResolver.update(uri, values, null, null)
             }
             appContext.contentResolver.openOutputStream(uri, "wt")?.use { output ->
-                output.write(bytes)
+                output.write(watermarkedBytes)
             } ?: throw IllegalStateException("无法写入导出文件")
             uri.toString()
         } else {
@@ -309,9 +311,61 @@ class ArtifactExportRepository(context: Context) {
             val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             val targetDir = File(downloadDir, "AgentClaw").apply { mkdirs() }
             val targetFile = File(targetDir, fileName)
-            targetFile.writeBytes(bytes)
+            targetFile.writeBytes(watermarkedBytes)
             targetFile.absolutePath
         }
+    }
+
+    /** 纯文本类导出格式：用零宽字符隐式标识（无原生元数据容器，见 AigcMetadataWriter.embedText）。 */
+    private val plainTextExportExtensions = setOf("txt", "md", "csv", "html")
+
+    /**
+     * 人工智能生成合成内容文件元数据隐式标识（GB 45438-2025）。
+     * 图片走 PNG iTXt/XMP；txt/md/csv/html 等纯文本走零宽字符方案；其余格式尚未实现时原样返回，不影响导出。
+     *
+     * ProduceID/PropagateID 的命名风格对齐已向华为提交的《人工智能生成合成内容文件
+     * 元数据隐式标识说明函》中给出的示例（agentclaw_artifact_xxxxxxxxxx /
+     * agentclaw_msg_xxxxxxxxxx），保证实际写入文件的内容和已盖章承诺的格式一致。
+     */
+    private fun applyAigcIdentificationIfSupported(fileName: String, bytes: ByteArray, mimeType: String): ByteArray {
+        val isPng = mimeType.equals("image/png", ignoreCase = true) ||
+            fileName.substringAfterLast('.', "").equals("png", ignoreCase = true)
+        if (isPng) {
+            return runCatching {
+                val produceId = "agentclaw_artifact_" + shortHash(fileName, bytes)
+                val propagateId = "agentclaw_msg_" + shortHash(fileName + System.currentTimeMillis(), bytes)
+                AigcMetadataWriter.embedPng(bytes, produceId = produceId, propagateId = propagateId)
+            }.getOrElse { error ->
+                Log.w(TAG, "applyAigcIdentificationIfSupported(png) failed fileName=$fileName, err=${error.message}")
+                bytes
+            }
+        }
+
+        val ext = fileName.substringAfterLast('.', "").lowercase(Locale.US)
+        val isPlainText = plainTextExportExtensions.contains(ext) ||
+            mimeType.startsWith("text/", ignoreCase = true)
+        if (isPlainText) {
+            return runCatching {
+                val text = bytes.toString(Charsets.UTF_8)
+                val produceId = "agentclaw_artifact_" + shortHash(fileName, bytes)
+                val propagateId = "agentclaw_msg_" + shortHash(fileName + System.currentTimeMillis(), bytes)
+                AigcMetadataWriter.embedText(text, produceId = produceId, propagateId = propagateId)
+                    .toByteArray(Charsets.UTF_8)
+            }.getOrElse { error ->
+                Log.w(TAG, "applyAigcIdentificationIfSupported(text) failed fileName=$fileName, err=${error.message}")
+                bytes
+            }
+        }
+
+        return bytes
+    }
+
+    /** 取内容指纹哈希的前 10 个十六进制字符，匹配说明函里示例 ID 的长度风格。 */
+    private fun shortHash(seed: String, bytes: ByteArray): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        digest.update(seed.toByteArray(Charsets.UTF_8))
+        val hash = digest.digest(bytes).joinToString("") { b -> "%02x".format(b) }
+        return hash.take(10)
     }
 
     private fun findExistingDownloadUri(fileName: String, relativePath: String): Uri? {

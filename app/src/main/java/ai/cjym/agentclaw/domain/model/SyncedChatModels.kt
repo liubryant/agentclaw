@@ -79,7 +79,8 @@ data class SyncedMessage(
     val isStreaming: Boolean = false,
     val sendStatus: MessageSendStatus = MessageSendStatus.SENT,
     val segments: List<ContentSegment> = emptyList(),
-    val toolCalls: List<ToolCallUiModel> = emptyList()
+    val toolCalls: List<ToolCallUiModel> = emptyList(),
+    val imageBase64: String? = null
 )
 
 data class ToolCallUiModel(

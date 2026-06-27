@@ -20,7 +20,8 @@ sealed class ChatMessageItem {
         val content: String,
         override val createdAt: Long,
         val isStreaming: Boolean = false,
-        val sendStatus: MessageSendStatus = MessageSendStatus.SENT
+        val sendStatus: MessageSendStatus = MessageSendStatus.SENT,
+        val imageBase64: String? = null
     ) : ChatMessageItem()
 
     data class AssistantMessageItem(
@@ -75,7 +76,8 @@ sealed class ChatMessageItem {
                     content = message.content,
                     createdAt = message.createdAt,
                     isStreaming = message.isStreaming,
-                    sendStatus = message.sendStatus
+                    sendStatus = message.sendStatus,
+                    imageBase64 = message.imageBase64
                 )
             } else {
                 AssistantMessageItem(

@@ -233,7 +233,6 @@
                     android:background="@drawable/bg_chat_entry_button"
                     android:clickable="true"
                     android:drawablePadding="4dp"
-                    android:visibility="visible"
                     android:drawableStart="@drawable/ic_chat_entry_video"
                     android:focusable="true"
                     android:gravity="center"
@@ -270,8 +269,8 @@
 
                 <FrameLayout
                     android:id="@+id/imageThumbnailContainer"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp">
+                    android:layout_width="96dp"
+                    android:layout_height="96dp">
 
                     <ImageView
                         android:id="@+id/imageThumbnail"
@@ -322,7 +321,7 @@
                     android:lineSpacingExtra="0dp"
                     android:maxLines="4"
                     android:minHeight="78dp"
-                    android:paddingTop="12dp"
+                    android:paddingTop="18dp"
                     android:paddingBottom="0dp"
                     android:textColor="@color/black"
                     android:textColorHint="#A6A6A6"
@@ -338,14 +337,14 @@
 
                     <ImageButton
                         android:id="@+id/attachButton"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="@android:color/transparent"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/bg_chat_attach_button"
                         android:contentDescription="添加图片"
-                        android:padding="8dp"
+                        android:padding="10dp"
                         android:scaleType="centerInside"
-                        android:src="@drawable/ic_composer_attach"
-                        android:visibility="gone" />
+                        android:src="@drawable/ic_composer_attach" />
 
                     <FrameLayout
                         android:id="@+id/sendControls"

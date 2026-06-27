@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import ai.cjym.agentclaw.R
+import ai.cjym.agentclaw.data.aigc.AigcMetadataWriter
 import ai.cjym.agentclaw.databinding.FragmentShellChatBinding
 import ai.cjym.agentclaw.domain.model.GeneratingPhase
 import ai.cjym.agentclaw.ui.chat.ChatMessageItem
@@ -56,6 +57,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.net.URLDecoder
+import java.security.MessageDigest
 import java.util.Locale
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -91,6 +93,12 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
 
     private var cameraImageUri: Uri? = null
     private var pendingImageUri: Uri? = null
+
+    private data class DownloadedGeneratedFile(
+        val uriOrPath: String,
+        val mimeType: String,
+        val downloadedNow: Boolean
+    )
 
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
@@ -354,27 +362,47 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         }
         messageAdapter.onAssistantImageClick = { imageUrl ->
             viewLifecycleOwner.lifecycleScope.launch {
-                val saved = downloadGeneratedImageToDownloads(imageUrl)
-                Toast.makeText(
-                    requireContext(),
-                    if (saved) R.string.chat_image_downloaded else R.string.chat_image_download_failed,
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (saved) {
-                    binding.shellChatRoot.postDelayed({ openAgentClawDirectory() }, 300L)
+                val downloaded = downloadGeneratedImageToDownloads(imageUrl)
+                if (downloaded == null) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.chat_image_download_failed,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (downloaded.downloadedNow) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.chat_image_downloaded,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (downloaded != null) {
+                    binding.shellChatRoot.postDelayed({
+                        openDownloadedGeneratedFile(downloaded)
+                    }, 300L)
                 }
             }
         }
         messageAdapter.onAssistantVideoClick = { videoUrl ->
             viewLifecycleOwner.lifecycleScope.launch {
-                val saved = downloadGeneratedVideoToDownloads(videoUrl)
-                Toast.makeText(
-                    requireContext(),
-                    if (saved) R.string.chat_video_downloaded else R.string.chat_video_download_failed,
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (saved) {
-                    binding.shellChatRoot.postDelayed({ openAgentClawDirectory() }, 300L)
+                val downloaded = downloadGeneratedVideoToDownloads(videoUrl)
+                if (downloaded == null) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.chat_video_download_failed,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (downloaded.downloadedNow) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.chat_video_downloaded,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (downloaded != null) {
+                    binding.shellChatRoot.postDelayed({
+                        openDownloadedGeneratedFile(downloaded)
+                    }, 300L)
                 }
             }
         }
@@ -506,7 +534,12 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         return runCatching { startActivity(intent) }.isSuccess
     }
 
-    private suspend fun downloadGeneratedImageToDownloads(imageUrl: String): Boolean {
+    private suspend fun downloadGeneratedImageToDownloads(imageUrl: String): DownloadedGeneratedFile? {
+        findExistingGeneratedFile(
+            fileUrl = imageUrl,
+            defaultPrefix = "generated-image",
+            fallbackMimeType = "image/png"
+        )?.let { return it }
         return downloadGeneratedFileToDownloads(
             fileUrl = imageUrl,
             defaultPrefix = "generated-image",
@@ -514,7 +547,12 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         )
     }
 
-    private suspend fun downloadGeneratedVideoToDownloads(videoUrl: String): Boolean {
+    private suspend fun downloadGeneratedVideoToDownloads(videoUrl: String): DownloadedGeneratedFile? {
+        findExistingGeneratedFile(
+            fileUrl = videoUrl,
+            defaultPrefix = "generated-video",
+            fallbackMimeType = "video/mp4"
+        )?.let { return it }
         return downloadGeneratedFileToDownloads(
             fileUrl = videoUrl,
             defaultPrefix = "generated-video",
@@ -526,31 +564,131 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         fileUrl: String,
         defaultPrefix: String,
         fallbackMimeType: String
-    ): Boolean {
+    ): DownloadedGeneratedFile? {
         val appContext = requireContext().applicationContext
         return withContext(Dispatchers.IO) {
             runCatching {
                 val request = Request.Builder().url(fileUrl).build()
                 val response = imageDownloadClient.newCall(request).execute()
                 response.use {
-                    if (!it.isSuccessful) return@withContext false
-                    val bytes = it.body?.bytes() ?: return@withContext false
+                    if (!it.isSuccessful) return@withContext null
+                    val rawBytes = it.body?.bytes() ?: return@withContext null
                     val contentType = it.body?.contentType()?.toString().orEmpty()
                     val fileName = buildGeneratedFileName(
                         fileUrl = fileUrl,
-                        contentType = contentType.ifBlank { fallbackMimeType },
+                        contentType = fallbackMimeType,
                         defaultPrefix = defaultPrefix
                     )
                     val mimeType = contentType.substringBefore(';').trim()
                         .ifBlank { guessMimeType(fileName) }
                         .ifBlank { fallbackMimeType }
-                    writeFileToDownloads(appContext, fileName, bytes, mimeType)
-                    true
+                    val bytes = applyAigcIdentification(fileName, rawBytes)
+                    val uriOrPath = writeFileToDownloads(appContext, fileName, bytes, mimeType)
+                    DownloadedGeneratedFile(uriOrPath = uriOrPath, mimeType = mimeType, downloadedNow = true)
                 }
             }.getOrElse { error ->
                 Logger.e(TAG, "downloadGeneratedFileToDownloads failed url=$fileUrl\n${error.stackTraceToString()}")
-                false
+                null
             }
+        }
+    }
+
+    private suspend fun findExistingGeneratedFile(
+        fileUrl: String,
+        defaultPrefix: String,
+        fallbackMimeType: String
+    ): DownloadedGeneratedFile? {
+        val appContext = requireContext().applicationContext
+        val fileName = buildGeneratedFileName(
+            fileUrl = fileUrl,
+            contentType = fallbackMimeType,
+            defaultPrefix = defaultPrefix
+        )
+        val mimeType = guessMimeType(fileName).ifBlank { fallbackMimeType }
+        return withContext(Dispatchers.IO) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val relativePath = Environment.DIRECTORY_DOWNLOADS + "/AgentClaw/"
+                val projection = arrayOf(MediaStore.Downloads._ID)
+                val selection = "${MediaStore.Downloads.DISPLAY_NAME}=? AND ${MediaStore.Downloads.RELATIVE_PATH}=?"
+                val selectionArgs = arrayOf(fileName, relativePath)
+                appContext.contentResolver.query(
+                    MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null
+                )?.use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Downloads._ID))
+                        return@withContext DownloadedGeneratedFile(
+                            uriOrPath = Uri.withAppendedPath(MediaStore.Downloads.EXTERNAL_CONTENT_URI, id.toString()).toString(),
+                            mimeType = mimeType,
+                            downloadedNow = false
+                        )
+                    }
+                }
+                null
+            } else {
+                @Suppress("DEPRECATION")
+                val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                val targetFile = File(File(downloadDir, "AgentClaw"), fileName)
+                if (targetFile.exists() && targetFile.length() > 0L) {
+                    DownloadedGeneratedFile(targetFile.absolutePath, mimeType, downloadedNow = false)
+                } else {
+                    null
+                }
+            }
+        }
+    }
+
+    private fun openDownloadedGeneratedFile(file: DownloadedGeneratedFile) {
+        val uri = if (file.uriOrPath.startsWith("content://")) {
+            Uri.parse(file.uriOrPath)
+        } else {
+            FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.provider",
+                File(file.uriOrPath)
+            )
+        }
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, file.mimeType)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        if (!tryStartActivity(intent)) {
+            showExportedFilesDialog()
+        }
+    }
+
+    /**
+     * 人工智能生成合成内容文件元数据隐式标识（GB 45438-2025）。
+     *
+     * 这里下载下来的图片/视频很多情况下已经是上游模型（比如智谱 GLM）服务端打好水印的，
+     * 这一步只是兜底——上游没打、或者以后换了别的不打水印的来源时，本地也补一层。
+     * 按真实文件头判断格式（GLM 返回的有些是 jpg 但文件名是 .png，不能只看后缀/contentType），
+     * 既不是 PNG 也不是 MP4 就原样返回，不影响下载。
+     */
+    private fun applyAigcIdentification(fileName: String, bytes: ByteArray): ByteArray {
+        val pngSignature = byteArrayOf(
+            0x89.toByte(), 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A
+        )
+        val isPng = bytes.size > 8 && bytes.copyOfRange(0, 8).contentEquals(pngSignature)
+        val isMp4 = !isPng && bytes.size > 8 &&
+            String(bytes, 4, 4, Charsets.US_ASCII) == "ftyp"
+        if (!isPng && !isMp4) return bytes
+        return runCatching {
+            val digest = MessageDigest.getInstance("SHA-256")
+            val hash = digest.digest(bytes).joinToString("") { b -> "%02x".format(b) }.take(10)
+            val produceId = "agentclaw_artifact_$hash"
+            val propagateId = "agentclaw_msg_$hash"
+            if (isPng) {
+                AigcMetadataWriter.embedPng(bytes, produceId = produceId, propagateId = propagateId)
+            } else {
+                AigcMetadataWriter.embedMp4(bytes, produceId = produceId, propagateId = propagateId)
+            }
+        }.getOrElse { error ->
+            Logger.e(TAG, "applyAigcIdentification failed fileName=$fileName, err=${error.message}")
+            bytes
         }
     }
 
@@ -597,10 +735,12 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             .replace(Regex("[\\\\/:*?\"<>|]"), "_")
             .trim()
 
-        val baseName = pathName
-            .takeIf { it.isNotBlank() && it.contains('.') }
-            ?: "$defaultPrefix-${System.currentTimeMillis()}.${extensionFor(contentType)}"
-        return baseName
+        if (pathName.isNotBlank() && pathName.contains('.')) {
+            return pathName
+        }
+        val urlHash = Integer.toHexString(fileUrl.hashCode()).takeLast(8)
+        val base = pathName.takeIf { it.isNotBlank() } ?: defaultPrefix
+        return "$base-$urlHash.${extensionFor(contentType)}"
     }
 
     private fun extensionFor(contentType: String): String {

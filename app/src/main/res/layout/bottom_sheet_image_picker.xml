@@ -4,21 +4,20 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_setting_dialog"
     android:orientation="vertical"
-    android:paddingBottom="16dp">
+    android:paddingBottom="24dp">
 
     <View
         android:layout_width="36dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:background="#1A000000"
-        android:elevation="0dp" />
+        android:background="#1A000000" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="4dp"
         android:gravity="center"
         android:text="选择图片"
         android:textColor="@color/text_primary"
@@ -30,10 +29,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="8dp">
+        android:paddingHorizontal="32dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="4dp">
 
+        <!-- 拍照 -->
         <LinearLayout
             android:id="@+id/optionCamera"
             android:layout_width="0dp"
@@ -44,19 +44,26 @@
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingVertical="20dp">
+            android:paddingVertical="24dp">
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_picker_camera"
-                android:contentDescription="相机" />
+            <FrameLayout
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_picker_camera_circle">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_picker_camera"
+                    android:contentDescription="相机" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="@font/misans_medium"
                 android:text="拍照"
                 android:textColor="@color/text_primary"
@@ -65,6 +72,7 @@
 
         <Space android:layout_width="16dp" android:layout_height="1dp" />
 
+        <!-- 从相册选择 -->
         <LinearLayout
             android:id="@+id/optionGallery"
             android:layout_width="0dp"
@@ -75,19 +83,26 @@
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingVertical="20dp">
+            android:paddingVertical="24dp">
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_picker_gallery"
-                android:contentDescription="相册" />
+            <FrameLayout
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_picker_gallery_circle">
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_picker_gallery"
+                    android:contentDescription="相册" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="@font/misans_medium"
                 android:text="从相册选择"
                 android:textColor="@color/text_primary"

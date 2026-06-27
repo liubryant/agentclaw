@@ -126,10 +126,8 @@ class PreferencesManager(context: Context) {
             prefs.encodeOrRemove(KEY_USER_PHONE, value)
         }
 
-//    切测试服：
-//    const val DEFAULT_AGENTCLAW_BASE_URL = "http://192.168.110.67:8066/v1"
-//    切正式服：
-//    const val DEFAULT_AGENTCLAW_BASE_URL = "https://www.cjym123.cn/v1"
+//    切测试服：DEFAULT_AGENTCLAW_BASE_URL = "http://192.168.1.37:8066/v1"
+//    切正式服：DEFAULT_AGENTCLAW_BASE_URL = "https://www.cjym123.cn/v1"  ← 当前
     var nodeGatewayPort: Int?
         get() {
             val v = prefs.decodeInt(KEY_NODE_GATEWAY_PORT, -1)

@@ -17,7 +17,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Typeface
 import android.os.Build
 import android.text.Html
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -26,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import android.widget.VideoView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding
 import io.noties.markwon.AbstractMarkwonPlugin
@@ -36,6 +34,7 @@ import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tables.TablePlugin
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONObject
 import java.util.concurrent.Executors
 
 class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBinding>(
@@ -209,6 +208,14 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
     }
 
     private fun bindUser(binding: ItemChatMessageUserBinding, item: ChatMessageItem.UserMessageItem) {
+        if (!item.imageBase64.isNullOrBlank()) {
+            binding.userImageCard.visibility = View.VISIBLE
+            val bytes = android.util.Base64.decode(item.imageBase64, android.util.Base64.DEFAULT)
+            val bitmap = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+            binding.userImageView.setImageBitmap(bitmap)
+        } else {
+            binding.userImageCard.visibility = View.GONE
+        }
         binding.messageView.text = item.content
         binding.streamingView.visibility = if (item.isStreaming) View.VISIBLE else View.GONE
         val showNotice = item.sendStatus == MessageSendStatus.PENDING_RETRY_OFFLINE ||
@@ -253,7 +260,12 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
                 getMarkwon(binding.root.context).setMarkdown(binding.messageView, displayContent)
             }
             bindGeneratedImage(binding, imageUrl)
-            bindGeneratedVideo(binding, videoUrl)
+            bindGeneratedVideo(
+                binding,
+                videoUrl,
+                ChatMediaUtils.extractFirstVideoCoverUrl(item.content),
+                ChatMediaUtils.extractVideoTaskId(item.content)
+            )
             val markdownCost = System.currentTimeMillis() - markdownStart
             binding.streamingView.visibility = View.GONE
             binding.messageView.visibility =
@@ -362,7 +374,12 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         binding.messageView.visibility =
             if (displayContent.isBlank() && hasMedia) View.GONE else View.VISIBLE
         bindGeneratedImage(binding, imageUrl)
-        bindGeneratedVideo(binding, videoUrl)
+        bindGeneratedVideo(
+            binding,
+            videoUrl,
+            ChatMediaUtils.extractFirstVideoCoverUrl(item.content),
+            ChatMediaUtils.extractVideoTaskId(item.content)
+        )
         binding.streamingView.visibility = if (item.isStreaming) View.VISIBLE else View.GONE
     }
 
@@ -411,39 +428,144 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
 
     private fun bindGeneratedVideo(
         binding: ItemChatMessageAssistantBinding,
-        videoUrl: String?
+        videoUrl: String?,
+        coverUrl: String?,
+        taskId: String?
     ) {
         val videoCard = binding.generatedVideoCard
-        val videoView = binding.generatedVideoView
+        val videoContainer = binding.generatedVideoContainer
+        val coverView = binding.generatedVideoCoverView
+        val playButton = binding.generatedVideoPlayButton
+        val progressBar = binding.generatedVideoProgressBar
         val statusView = binding.generatedVideoStatusView
-        videoView.stopPlayback()
-        videoView.tag = videoUrl
-        videoView.setOnClickListener(null)
+        coverView.setImageDrawable(null)
+        coverView.tag = coverUrl ?: taskId
+        coverView.setOnClickListener(null)
+        coverView.visibility = View.GONE
+        playButton.setOnClickListener(null)
+        playButton.visibility = View.GONE
+        progressBar.visibility = View.GONE
 
         if (videoUrl.isNullOrBlank()) {
             videoCard.visibility = View.GONE
+            setVideoContainerHeight(videoContainer, 16f / 9f)
             statusView.visibility = View.GONE
             return
         }
 
-        videoCard.visibility = View.VISIBLE
-        statusView.visibility = View.VISIBLE
-        statusView.setText(R.string.chat_video_loading)
-        videoView.setVideoURI(Uri.parse(videoUrl))
-        videoView.setOnPreparedListener { player: MediaPlayer ->
-            player.isLooping = true
-            statusView.visibility = View.GONE
-            videoView.start()
-        }
-        videoView.setOnErrorListener { _, _, _ ->
-            statusView.visibility = View.VISIBLE
-            statusView.setText(R.string.chat_video_load_failed)
-            true
-        }
-        videoView.setOnClickListener {
+        val clickListener = View.OnClickListener {
             onAssistantVideoClick?.invoke(videoUrl)
         }
-        videoView.start()
+        videoContainer.setOnClickListener(clickListener)
+        fun loadCover(resolvedCoverUrl: String, tagKey: String) {
+            videoCard.visibility = View.VISIBLE
+            setVideoContainerHeight(videoContainer, 16f / 9f)
+            coverView.tag = tagKey
+            progressBar.visibility = View.VISIBLE
+            statusView.visibility = View.VISIBLE
+            statusView.setText(R.string.chat_image_loading)
+            coverView.setOnClickListener(clickListener)
+            loadImage(
+                context = binding.root.context,
+                url = resolvedCoverUrl,
+                onSuccess = { bitmap ->
+                    if (coverView.tag == tagKey) {
+                        setVideoContainerHeight(videoContainer, bitmap.width.toFloat() / bitmap.height.toFloat())
+                        coverView.setImageBitmap(bitmap)
+                        coverView.visibility = View.VISIBLE
+                        playButton.visibility = View.VISIBLE
+                        playButton.setOnClickListener(clickListener)
+                        progressBar.visibility = View.GONE
+                        statusView.visibility = View.GONE
+                    }
+                },
+                onFailure = {
+                    if (coverView.tag == tagKey) {
+                        progressBar.visibility = View.GONE
+                        statusView.visibility = View.VISIBLE
+                        statusView.setText(R.string.chat_video_load_failed)
+                    }
+                }
+            )
+        }
+
+        if (!coverUrl.isNullOrBlank()) {
+            loadCover(coverUrl, coverUrl)
+            return
+        }
+
+        if (!taskId.isNullOrBlank()) {
+            val taskKey = "video-task:$taskId"
+            videoCard.visibility = View.VISIBLE
+            setVideoContainerHeight(videoContainer, 16f / 9f)
+            coverView.tag = taskKey
+            progressBar.visibility = View.VISIBLE
+            statusView.visibility = View.VISIBLE
+            statusView.setText(R.string.chat_image_loading)
+            loadVideoCoverUrl(
+                taskId = taskId,
+                onSuccess = { resolvedCoverUrl ->
+                    if (coverView.tag == taskKey) {
+                        loadCover(resolvedCoverUrl, taskKey)
+                    }
+                },
+                onFailure = {
+                    if (coverView.tag == taskKey) {
+                        progressBar.visibility = View.GONE
+                        statusView.visibility = View.GONE
+                        playButton.visibility = View.VISIBLE
+                        playButton.setOnClickListener(clickListener)
+                    }
+                }
+            )
+            return
+        }
+
+        videoCard.visibility = View.VISIBLE
+        setVideoContainerHeight(videoContainer, 16f / 9f)
+        playButton.visibility = View.VISIBLE
+        playButton.setOnClickListener(clickListener)
+        statusView.visibility = View.GONE
+    }
+
+    private fun setVideoContainerHeight(container: View, aspectRatio: Float) {
+        val safeRatio = aspectRatio.takeIf { it.isFinite() && it > 0f } ?: (16f / 9f)
+        container.setTag(R.id.tag_video_aspect_ratio, safeRatio)
+        updateVideoContainerHeight(container, safeRatio)
+        if (container.getTag(R.id.tag_video_layout_listener_bound) != true) {
+            container.setTag(R.id.tag_video_layout_listener_bound, true)
+            container.addOnLayoutChangeListener { view, left, _, right, _, oldLeft, _, oldRight, _ ->
+                if (right - left != oldRight - oldLeft) {
+                    val ratio = (view.getTag(R.id.tag_video_aspect_ratio) as? Float) ?: (16f / 9f)
+                    updateVideoContainerHeight(view, ratio)
+                }
+            }
+        }
+        container.post {
+            updateVideoContainerHeight(container, safeRatio)
+        }
+    }
+
+    private fun updateVideoContainerHeight(container: View, aspectRatio: Float) {
+        val safeRatio = aspectRatio.takeIf { it.isFinite() && it > 0f } ?: (16f / 9f)
+        val displayWidth = container.context.resources.displayMetrics.widthPixels
+        val width = listOf(
+            container.width,
+            (container.parent as? View)?.width ?: 0,
+            contentWidthPx,
+            displayWidth - dp(container.context, 40f)
+        ).firstOrNull { it > 0 } ?: return
+        val targetHeight = (width / safeRatio).toInt().coerceAtLeast(dp(container.context, 120f))
+        if (container.layoutParams.height != targetHeight) {
+            container.layoutParams = container.layoutParams.apply {
+                height = targetHeight
+            }
+            container.requestLayout()
+        }
+    }
+
+    private fun dp(context: Context, value: Float): Int {
+        return (value * context.resources.displayMetrics.density + 0.5f).toInt()
     }
 
     private fun showAssistantActions(
@@ -481,11 +603,13 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
         private val mainHandler = Handler(Looper.getMainLooper())
         private val imageExecutor = Executors.newFixedThreadPool(3)
         private val imageClient = OkHttpClient()
+        private const val VIDEO_BASE_URL = "https://www.cjym123.cn/v1"
         private val bitmapCache = object : LruCache<String, Bitmap>(32 * 1024) {
             override fun sizeOf(key: String, value: Bitmap): Int {
                 return value.byteCount / 1024
             }
         }
+        private val videoCoverCache = LruCache<String, String>(64)
 
         private fun extractFirstImageUrl(content: String): String? {
             imageRegex.find(content)?.groupValues?.getOrNull(1)?.let { return it.trim() }
@@ -542,6 +666,45 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
                     mainHandler.post { onSuccess(bitmap) }
                 } else {
                     mainHandler.post { onFailure() }
+                }
+            }
+        }
+
+        private fun loadVideoCoverUrl(
+            taskId: String,
+            onSuccess: (String) -> Unit,
+            onFailure: () -> Unit
+        ) {
+            videoCoverCache.get(taskId)?.let { cachedUrl ->
+                onSuccess(cachedUrl)
+                return
+            }
+
+            imageExecutor.execute {
+                val coverUrl = runCatching {
+                    val request = Request.Builder()
+                        .url("$VIDEO_BASE_URL/videos/generations/$taskId")
+                        .build()
+                    imageClient.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) return@runCatching null
+                        val json = JSONObject(response.body?.string().orEmpty())
+                        val results = json.optJSONArray("video_result") ?: return@runCatching null
+                        for (index in 0 until results.length()) {
+                            val url = results.optJSONObject(index)
+                                ?.optString("cover_image_url")
+                                ?.trim()
+                                .orEmpty()
+                            if (url.isNotBlank()) return@runCatching url
+                        }
+                        null
+                    }
+                }.getOrNull()
+
+                if (coverUrl.isNullOrBlank()) {
+                    mainHandler.post { onFailure() }
+                } else {
+                    videoCoverCache.put(taskId, coverUrl)
+                    mainHandler.post { onSuccess(coverUrl) }
                 }
             }
         }

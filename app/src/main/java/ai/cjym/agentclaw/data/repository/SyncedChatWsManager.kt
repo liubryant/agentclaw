@@ -291,7 +291,8 @@ class SyncedChatWsManager(
             } else {
                 MessageSendStatus.PENDING_RETRY_OFFLINE
             },
-            segments = listOf(ContentSegment.Text(messageContent))
+            segments = listOf(ContentSegment.Text(messageContent)),
+            imageBase64 = imageBase64
         )
         appendLocalUserMessage(sessionKey, localUserMessage)
 
@@ -382,7 +383,29 @@ class SyncedChatWsManager(
         imageBase64: String? = null
     ) {
         val assistantId = UUID.randomUUID().toString()
-        val outboundMessage = when (resolveSessionEntryMode(sessionKey)) {
+        val entryMode = resolveSessionEntryMode(sessionKey)
+        if (entryMode == ChatEntryMode.VIDEO) {
+            sendVideoGenerationMessage(
+                sessionKey = sessionKey,
+                uiMessageId = uiMessageId,
+                assistantId = assistantId,
+                transportRunId = transportRunId,
+                prompt = text
+            )
+            return
+        }
+        if (entryMode == ChatEntryMode.IMAGE && !imageBase64.isNullOrBlank()) {
+            sendImageEditMessage(
+                sessionKey = sessionKey,
+                uiMessageId = uiMessageId,
+                assistantId = assistantId,
+                transportRunId = transportRunId,
+                prompt = text,
+                imageBase64 = imageBase64
+            )
+            return
+        }
+        val outboundMessage = when (entryMode) {
             ChatEntryMode.IMAGE -> "$IMAGE_MODE_MARKER ${text.trim()}"
             ChatEntryMode.VIDEO -> "$VIDEO_MODE_MARKER ${text.trim()}"
             else -> text.trim()
@@ -445,6 +468,132 @@ class SyncedChatWsManager(
                 markActiveUserMessagePendingRetry()
                 stopRunLocally(emitReplyFinished = false)
             }
+        }
+    }
+
+    private suspend fun sendVideoGenerationMessage(
+        sessionKey: String,
+        uiMessageId: String,
+        assistantId: String,
+        transportRunId: String,
+        prompt: String
+    ) {
+        try {
+            _activeAssistantMessageId.value = assistantId
+            activeUserMessageId = uiMessageId
+            _isGenerating.value = true
+            _generatingPhase.value = GeneratingPhase.THINKING
+            clearTransientRunState()
+            currentRunId = transportRunId
+            draftSessionKeys.remove(sessionKey)
+            startGenerationTimeoutWatchdog(
+                sessionKey = sessionKey,
+                runId = transportRunId
+            )
+
+            val content = chatService.generateVideo(prompt) { statusText ->
+                _streamingToolChain.value = StreamingToolChain(pendingText = statusText)
+            }
+            val now = System.currentTimeMillis()
+            val assistantMessage = SyncedMessage(
+                id = assistantId,
+                role = "assistant",
+                content = content,
+                createdAt = now,
+                messageIndex = _messages.value.size,
+                sendStatus = MessageSendStatus.SENT,
+                segments = listOf(ContentSegment.Text(content))
+            )
+            updateUserMessageSendStatus(
+                messageId = uiMessageId,
+                sendStatus = MessageSendStatus.SENT
+            )
+            _messages.value = _messages.value + assistantMessage
+            cacheRepo.appendMessage(sessionKey, assistantMessage)
+            stopRunLocally(emitReplyFinished = true)
+        } catch (t: Throwable) {
+            Logger.e(TAG, "Video generation failed: ${t.message}")
+            val userMsg = when {
+                t is java.net.SocketTimeoutException || t.message?.contains("timeout", ignoreCase = true) == true ->
+                    "视频生成超时，请稍后重试"
+                t.message?.contains("401", ignoreCase = true) == true ||
+                    t.message?.contains("403", ignoreCase = true) == true ->
+                    "认证失败，请在设置中填写正确的 API Token"
+                t.message?.contains("HTTP 4", ignoreCase = true) == true ->
+                    "视频生成请求失败（${t.message}），请检查 Token 配置"
+                else -> t.message ?: "视频生成失败，请重试"
+            }
+            finishRunWithError(userMsg)
+        }
+    }
+
+    private suspend fun sendImageEditMessage(
+        sessionKey: String,
+        uiMessageId: String,
+        assistantId: String,
+        transportRunId: String,
+        prompt: String,
+        imageBase64: String
+    ) {
+        try {
+            _activeAssistantMessageId.value = assistantId
+            activeUserMessageId = uiMessageId
+            _isGenerating.value = true
+            _generatingPhase.value = GeneratingPhase.THINKING
+            clearTransientRunState()
+            currentRunId = transportRunId
+            draftSessionKeys.remove(sessionKey)
+            startGenerationTimeoutWatchdog(
+                sessionKey = sessionKey,
+                runId = transportRunId
+            )
+            _streamingToolChain.value = StreamingToolChain(pendingText = "正在处理图片，请稍候...")
+
+            val content = runCatching { chatService.generateImageEdit(prompt, imageBase64) }
+                .recoverCatching { first ->
+                    // 首次连接中断自动重试一次（服务端处理耗时长，可能被 TCP 中间层 RST）
+                    if (first is java.net.SocketException || first.message?.contains("connection abort", ignoreCase = true) == true) {
+                        Logger.w(TAG, "Image edit connection abort, retrying once: ${first.message}")
+                        kotlinx.coroutines.delay(1_500L)
+                        chatService.generateImageEdit(prompt, imageBase64)
+                    } else {
+                        throw first
+                    }
+                }
+                .getOrThrow()
+            val now = System.currentTimeMillis()
+            val assistantMessage = SyncedMessage(
+                id = assistantId,
+                role = "assistant",
+                content = content,
+                createdAt = now,
+                messageIndex = _messages.value.size,
+                sendStatus = MessageSendStatus.SENT,
+                segments = listOf(ContentSegment.Text(content))
+            )
+            updateUserMessageSendStatus(
+                messageId = uiMessageId,
+                sendStatus = MessageSendStatus.SENT
+            )
+            _messages.value = _messages.value + assistantMessage
+            cacheRepo.appendMessage(sessionKey, assistantMessage)
+            stopRunLocally(emitReplyFinished = true)
+        } catch (t: Throwable) {
+            Logger.e(TAG, "Image edit failed: ${t.message}")
+            val userMsg = when {
+                t is java.net.SocketTimeoutException || t.message?.contains("timeout", ignoreCase = true) == true ->
+                    "图片处理时间较长，请稍后重试"
+                t is java.net.SocketException || t.message?.contains("connection abort", ignoreCase = true) == true ||
+                    t.message?.contains("connection reset", ignoreCase = true) == true ->
+                    "网络连接中断，图片可能已生成，请稍后重试"
+                t.message?.contains("HTTP 4", ignoreCase = true) == true ->
+                    "图片生成请求失败，请稍后重试"
+                t.message?.contains("返回格式不是 JSON", ignoreCase = true) == true ||
+                    t.message?.contains("接口被拦截", ignoreCase = true) == true ->
+                    "图生图接口返回异常，请稍后重试"
+                else -> t.message ?: "图片生成失败，请重试"
+            }
+            finishRunWithError(userMsg)
         }
     }
 
