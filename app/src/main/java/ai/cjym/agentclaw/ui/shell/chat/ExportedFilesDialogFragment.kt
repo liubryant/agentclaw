@@ -9,17 +9,21 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.webkit.MimeTypeMap
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
@@ -30,6 +34,7 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.Executors
 
 class ExportedFilesDialogFragment : DialogFragment() {
 
@@ -153,8 +158,8 @@ class ExportedFilesDialogFragment : DialogFragment() {
             MediaStore.Downloads.MIME_TYPE,
             MediaStore.Downloads.RELATIVE_PATH
         )
-        val selection = "${MediaStore.Downloads.RELATIVE_PATH} LIKE ?"
-        val selectionArgs = arrayOf("Download/AgentClaw/%")
+        val selection = "(${MediaStore.Downloads.RELATIVE_PATH} LIKE ? OR ${MediaStore.Downloads.RELATIVE_PATH} LIKE ?)"
+        val selectionArgs = arrayOf("%/AgentClaw/%", "%/AgentClaw")
         val sortOrder = "${MediaStore.Downloads.DATE_MODIFIED} DESC"
 
         val cursor: Cursor? = context.contentResolver.query(
@@ -240,6 +245,9 @@ class ExportedFilesAdapter(
     private val onShare: (ExportedFileItem) -> Unit
 ) : RecyclerView.Adapter<ExportedFilesAdapter.ViewHolder>() {
 
+    private val thumbnailExecutor = Executors.newFixedThreadPool(2)
+    private val imageMimeTypes = setOf("image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif")
+
     inner class ViewHolder(val binding: ItemExportedFileBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -256,12 +264,63 @@ class ExportedFilesAdapter(
         val item = items[position]
         with(holder.binding) {
             val ext = item.name.substringAfterLast('.', "").uppercase(Locale.getDefault())
-            fileTypeLabel.text = ext.take(4).ifEmpty { "FILE" }
+            val isImage = isImageFile(item)
+
+            if (isImage) {
+                fileTypeLabel.visibility = View.GONE
+                fileThumbnail.visibility = View.VISIBLE
+                fileThumbnail.setImageBitmap(null)
+                fileThumbnail.tag = item.contentUri
+                loadThumbnail(item, fileThumbnail)
+            } else {
+                fileThumbnail.visibility = View.GONE
+                fileTypeLabel.visibility = View.VISIBLE
+                fileTypeLabel.text = ext.take(4).ifEmpty { "FILE" }
+            }
+
             fileName.text = item.name
             fileMeta.text = "${formatSize(item.size)}  ·  ${formatDate(item.dateModified)}"
             previewButton.setOnClickListener { onPreview(item) }
             shareButton.setOnClickListener { onShare(item) }
             root.setOnClickListener { onPreview(item) }
+        }
+    }
+
+    private fun isImageFile(item: ExportedFileItem): Boolean {
+        val mime = item.mimeType?.lowercase(Locale.US)
+        if (mime != null && imageMimeTypes.contains(mime)) return true
+        val ext = item.name.substringAfterLast('.', "").lowercase(Locale.US)
+        return ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "webp" || ext == "gif"
+    }
+
+    private fun loadThumbnail(item: ExportedFileItem, imageView: ImageView) {
+        val tag = item.contentUri
+        thumbnailExecutor.execute {
+            val bitmap = runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    imageView.context.contentResolver.loadThumbnail(
+                        item.contentUri, Size(120, 120), null
+                    )
+                } else {
+                    null
+                }
+            }.getOrNull()
+            imageView.post {
+                if (imageView.tag == tag) {
+                    if (bitmap != null) {
+                        imageView.setImageBitmap(bitmap)
+                    } else {
+                        imageView.visibility = View.GONE
+                        (imageView.parent as? android.view.ViewGroup)
+                            ?.findViewById<TextView>(R.id.fileTypeLabel)
+                            ?.let { label ->
+                                label.visibility = View.VISIBLE
+                                label.text = item.name.substringAfterLast('.', "")
+                                    .uppercase(Locale.getDefault()).take(4).ifEmpty { "IMG" }
+                            }
+                    }
+                }
+            }
         }
     }
 

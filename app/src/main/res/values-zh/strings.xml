@@ -219,8 +219,8 @@
 
     <string name="setting_title">设置</string>
     <string name="setting_menu_usage_stats">用量统计</string>
-    <string name="setting_menu_skill_management">技能管理</string>
-    <string name="setting_menu_about_us">关于我们</string>
+    <string name="setting_menu_skill_management">技能</string>
+    <string name="setting_menu_about_us">关于</string>
     <string name="setting_skill_page_title">技能管理</string>
     <string name="setting_skill_page_subtitle">扩展智能体的能力：一键集成精选技能与工具</string>
     <string name="setting_skill_search_hint">搜索</string>

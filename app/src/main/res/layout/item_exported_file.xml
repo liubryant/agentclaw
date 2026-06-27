@@ -10,17 +10,31 @@
     android:paddingEnd="12dp"
     android:paddingBottom="12dp">
 
-    <!-- 文件类型标签 -->
-    <TextView
-        android:id="@+id/fileTypeLabel"
+    <!-- 文件类型图标区域：非图片显示文字标签，图片显示缩略图 -->
+    <FrameLayout
         android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_skill_tag"
-        android:gravity="center"
-        android:textColor="@color/brand_primary"
-        android:textSize="9sp"
-        android:fontFamily="@font/misans_medium"
-        android:textStyle="bold" />
+        android:layout_height="40dp">
+
+        <TextView
+            android:id="@+id/fileTypeLabel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_skill_tag"
+            android:gravity="center"
+            android:textColor="@color/brand_primary"
+            android:textSize="9sp"
+            android:fontFamily="@font/misans_medium"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/fileThumbnail"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:background="@drawable/bg_skill_tag" />
+
+    </FrameLayout>
 
     <!-- 文件信息 -->
     <LinearLayout

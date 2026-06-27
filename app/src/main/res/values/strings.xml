@@ -221,8 +221,8 @@
     <string name="chat_export_failed_retry">Export failed, please try again later</string>
     <string name="setting_title">Settings</string>
     <string name="setting_menu_usage_stats">Usage Statistics</string>
-    <string name="setting_menu_skill_management">Skill Management</string>
-    <string name="setting_menu_about_us">About Us</string>
+    <string name="setting_menu_skill_management">技能</string>
+    <string name="setting_menu_about_us">关于</string>
     <string name="setting_skill_page_title">Skill Management</string>
     <string name="setting_skill_page_subtitle">Expand your agent capabilities: one-click integration of curated skills and tools</string>
     <string name="setting_skill_search_hint">Search</string>

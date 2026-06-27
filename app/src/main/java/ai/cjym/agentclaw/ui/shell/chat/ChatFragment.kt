@@ -700,16 +700,30 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
     ): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val relativePath = Environment.DIRECTORY_DOWNLOADS + "/AgentClaw/"
+            val existingUri = context.contentResolver.query(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Downloads._ID),
+                "${MediaStore.Downloads.DISPLAY_NAME}=? AND ${MediaStore.Downloads.RELATIVE_PATH}=?",
+                arrayOf(fileName, relativePath),
+                null
+            )?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    Uri.withAppendedPath(MediaStore.Downloads.EXTERNAL_CONTENT_URI, cursor.getLong(0).toString())
+                } else null
+            }
             val values = ContentValues().apply {
                 put(MediaStore.Downloads.DISPLAY_NAME, fileName)
                 put(MediaStore.Downloads.MIME_TYPE, mimeType)
                 put(MediaStore.Downloads.RELATIVE_PATH, relativePath)
             }
-            val uri = context.contentResolver.insert(
+            val uri = existingUri ?: context.contentResolver.insert(
                 MediaStore.Downloads.EXTERNAL_CONTENT_URI,
                 values
             ) ?: error("Unable to create generated file in Downloads")
-            context.contentResolver.openOutputStream(uri, "w")?.use { output ->
+            if (existingUri != null) {
+                context.contentResolver.update(uri, values, null, null)
+            }
+            context.contentResolver.openOutputStream(uri, "wt")?.use { output ->
                 output.write(bytes)
             } ?: error("Unable to write generated file")
             uri.toString()
