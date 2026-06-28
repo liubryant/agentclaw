@@ -5,6 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="12dp"
     android:layout_marginBottom="6dp"
-    android:fontFamily="sans-serif-medium"
+    android:fontFamily="@font/misans_demibold"
     android:textColor="@color/sidebar_muted"
     android:textSize="12sp" />

@@ -33,7 +33,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <TextView android:id="@+id/licenseText" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:fontFamily="monospace" android:textColor="@color/text_primary" />
+        <TextView android:id="@+id/licenseText" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:fontFamily="@font/misans_normal" android:textColor="@color/text_primary" />
         <Button android:id="@+id/openSourceButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/license_open_source_packages" />
     </LinearLayout>
 </ScrollView>

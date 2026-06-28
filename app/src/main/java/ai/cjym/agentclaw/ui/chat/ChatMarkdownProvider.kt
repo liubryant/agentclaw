@@ -1,11 +1,11 @@
 package ai.cjym.agentclaw.ui.chat
 
 import android.content.Context
-import android.graphics.Typeface
 import android.text.SpannableString
 import android.text.Spanned
 import android.util.LruCache
 import ai.inmo.core_common.utils.Logger
+import ai.cjym.agentclaw.ui.theme.AppFonts
 import androidx.core.text.PrecomputedTextCompat
 import androidx.core.widget.TextViewCompat
 import io.noties.markwon.AbstractMarkwonPlugin
@@ -134,8 +134,8 @@ object ChatMarkdownProvider {
             .usePlugin(object : AbstractMarkwonPlugin() {
                 override fun configureTheme(builder: MarkwonTheme.Builder) {
                     builder
-                        .codeBlockTypeface(Typeface.MONOSPACE)
-                        .codeTypeface(Typeface.MONOSPACE)
+                        .codeBlockTypeface(AppFonts.miSans(context))
+                        .codeTypeface(AppFonts.miSans(context))
                         .codeBlockMargin(16)
                         .codeTextSize((context.resources.displayMetrics.scaledDensity * 13).toInt())
                 }

@@ -93,6 +93,7 @@ android {
             }
             minifyEnabled = false
             shrinkResources = false
+            manifestPlaceholders = [ALIPAY_SCHEME: "alipayagentclaw"]
         }
 
         release {
@@ -109,13 +110,14 @@ android {
                 nativeSymbolUploadEnabled = false
             }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [ALIPAY_SCHEME: "alipayagentclaw"]
         }
     }
 
     aaptOptions {
         // Asset files that are already compressed; prevent aapt2 from
         // double-compressing them. Required for openFd() to work on large assets.
-        noCompress 'gz', 'xz', 'bin', 'tar.gz', 'tar.xz'
+        noCompress 'gz', 'xz', 'bin', 'tar.gz', 'tar.xz', 'mp4'
     }
 
     packagingOptions {
@@ -145,6 +147,10 @@ android {
 }
 
 dependencies {
+    // Payment SDKs
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.24@aar'
+    implementation 'com.alipay.sdk:alipaysdk-android:15.8.11@aar'
+
     // 穿山甲融合广告 SDK（GroMore）
     implementation 'com.pangle.cn:mediation-sdk:7.6.1.1'
 
@@ -208,4 +214,3 @@ dependencies {
     implementation(libs.firebase.crashlytics.ndk)
     implementation(libs.firebase.analytics)
 }
-

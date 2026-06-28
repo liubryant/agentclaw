@@ -1,7 +1,7 @@
 package ai.cjym.agentclaw.ui.shell
 
 data class ShellUiState(
-    val currentDestination: ShellDestination = ShellDestination.CHAT,
+    val currentDestination: ShellDestination = ShellDestination.CREATE,
     val sidebarQuery: String = "",
     val chatDrafts: Map<String, String> = emptyMap(),
     val chatEntryModes: Map<String, ChatEntryMode> = emptyMap(),

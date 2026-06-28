@@ -61,7 +61,7 @@
             android:id="@+id/logsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="monospace"
+            android:fontFamily="@font/misans_normal"
             android:textColor="@color/text_primary"
             android:textSize="12sp" />
     </androidx.core.widget.NestedScrollView>

@@ -67,7 +67,7 @@
 
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/ssh_connect_command" android:textColor="@color/text_secondary" />
             <LinearLayout android:id="@+id/commandsContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:orientation="vertical" />
-            <TextView android:id="@+id/commandValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:fontFamily="monospace" android:textColor="@color/text_primary" android:visibility="gone" />
+            <TextView android:id="@+id/commandValue" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:fontFamily="@font/misans_normal" android:textColor="@color/text_primary" android:visibility="gone" />
             <Button android:id="@+id/copyCommandButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/ssh_copy_command" android:visibility="gone" />
         </LinearLayout>
 

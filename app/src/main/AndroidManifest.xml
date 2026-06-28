@@ -36,6 +36,9 @@
         <!-- Tencent App Store (应用宝), used for app installation/download handoff. -->
         <package android:name="com.tencent.android.qqdownloader" />
 
+        <!-- Alipay app, for in-app Alipay payment. -->
+        <package android:name="com.eg.android.AlipayGphone" />
+
         <!-- Allow resolving market links when handing installation to an app store. -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -88,6 +91,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".ui.creation.CreationViewerActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.AgentClaw.CreationViewer" />
+        <activity
             android:name=".ui.search.ChatSearchActivity"
             android:exported="false"
             android:theme="@style/Theme.AgentClaw.SearchOverlay"
@@ -112,6 +120,30 @@
         <activity
             android:name=".SettingActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".VipActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- WeChat Pay callback — must be at <packageId>.wxapi.WXPayEntryActivity -->
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity="ai.cjym.agentclaw" />
+
+        <!-- Alipay scheme callback -->
+        <activity
+            android:name=".pay.AlipayResultActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="${ALIPAY_SCHEME}" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".ui.splash.SplashActivity"

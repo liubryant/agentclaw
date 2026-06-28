@@ -19,6 +19,8 @@ import ai.cjym.agentclaw.ui.chat.ChatSessionListItem
 import ai.cjym.agentclaw.ui.fancyideas.FancyIdeasFragment
 import ai.cjym.agentclaw.ui.search.ChatSearchActivity
 import ai.cjym.agentclaw.ui.shell.chat.ChatFragment
+import ai.cjym.agentclaw.ui.creation.CreationGalleryFragment
+import ai.cjym.agentclaw.ui.profile.ProfileFragment
 import ai.cjym.agentclaw.ui.shell.schedule.ScheduleFragment
 import android.app.Dialog
 import android.content.Intent
@@ -57,6 +59,7 @@ import java.time.temporal.TemporalAdjusters
 
 class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBinding::inflate),
     ShellChromeController,
+    ShellProfileActions,
     WifiNetworkMonitor.Listener {
     companion object {
         private const val TAG = "ShellActivity"
@@ -104,18 +107,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         binding.sidebarSessionsRecycler.adapter = sessionAdapter
         binding.sidebarSessionsRecycler.itemAnimator = null
 
-        if (supportFragmentManager.findFragmentByTag(ShellDestination.CHAT.name) == null) {
-            val chatFragment = ChatFragment()
-            val ideasFragment = FancyIdeasFragment()
-            val scheduleFragment = ScheduleFragment()
-            supportFragmentManager.beginTransaction()
-                .add(R.id.shellFragmentContainer, chatFragment, ShellDestination.CHAT.name)
-                .add(R.id.shellFragmentContainer, ideasFragment, ShellDestination.IDEAS.name)
-                .hide(ideasFragment)
-                .add(R.id.shellFragmentContainer, scheduleFragment, ShellDestination.SCHEDULE.name)
-                .hide(scheduleFragment)
-                .commitNow()
-        }
+        ensureShellFragments()
 
         lifecycleScope.launch {
             shellViewModel.uiState.collectLatest { state ->
@@ -133,7 +125,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         }
 
         if (shellViewModel.uiState.value.topBarTitle.isBlank()) {
-            navigateTo(ShellDestination.CHAT)
+            navigateTo(ShellDestination.CREATE)
         }
         handleInitialDraftFromIntent()
         handleSearchNavigationIntent(intent)
@@ -160,6 +152,13 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         }
 
         binding.navIdeas.setOnClickListener { navigateTo(ShellDestination.IDEAS) }
+        binding.bottomConversationTab.setOnClickListener { navigateTo(ShellDestination.CHAT) }
+        binding.bottomCreationTab.setOnClickListener {
+            navigateTo(ShellDestination.CREATE)
+            (supportFragmentManager.findFragmentByTag(ShellDestination.CREATE.name) as? CreationGalleryFragment)
+                ?.shuffleMedia()
+        }
+        binding.bottomProfileTab.setOnClickListener { navigateTo(ShellDestination.PROFILE) }
 //        binding.navSchedule.setOnClickListener { navigateTo(ShellDestination.SCHEDULE) }
         binding.navAgentclawDocs.setOnClickListener {
             shellViewModel.requestClearChatComposerFocus()
@@ -172,6 +171,9 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         binding.navSetting.setOnClickListener {
             shellViewModel.requestClearChatComposerFocus()
             showSettingDialogPopup()
+        }
+        binding.navVipMembership.setOnClickListener {
+            startActivity(ai.cjym.agentclaw.VipActivity.createIntent(this))
         }
         binding.newChatButton.setOnClickListener {
             handleCreateSessionClick()
@@ -287,11 +289,15 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
     private fun navigateTo(destination: ShellDestination) {
         val titleRes = when (destination) {
             ShellDestination.CHAT -> R.string.chat_title
+            ShellDestination.CREATE -> R.string.creation_title
+            ShellDestination.PROFILE -> R.string.profile_title
             ShellDestination.IDEAS -> R.string.ideas_title
             ShellDestination.SCHEDULE -> R.string.schedule_title
         }
         val subtitleRes = when (destination) {
             ShellDestination.CHAT -> R.string.chat_shell_subtitle
+            ShellDestination.CREATE -> R.string.creation_subtitle
+            ShellDestination.PROFILE -> R.string.profile_subtitle
             ShellDestination.IDEAS -> R.string.ideas_subtitle
             ShellDestination.SCHEDULE -> R.string.schedule_subtitle
         }
@@ -302,10 +308,19 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         //binding.topBarTitle.text = state.topBarTitle
         //binding.topBarSubtitle.text = state.topBarSubtitle
         binding.navIdeas.isSelected = state.currentDestination == ShellDestination.IDEAS
+        renderBottomNavigation(state.currentDestination)
 //        binding.navSchedule.isSelected = state.currentDestination == ShellDestination.SCHEDULE
         val isChatDestination = state.currentDestination == ShellDestination.CHAT
-        if (!isChatDestination) {
-            setSidebarVisible(true)
+        when (state.currentDestination) {
+            ShellDestination.IDEAS, ShellDestination.SCHEDULE -> setSidebarVisible(true)
+            ShellDestination.CREATE, ShellDestination.PROFILE -> binding.sidebarContainer.visibility = View.GONE
+            ShellDestination.CHAT -> {
+                binding.sidebarContainer.visibility = if (AppGraph.preferences.sidebarVisible) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+            }
         }
         setTopBarVisible(!isChatDestination)
         if (state.usageText.isNotBlank()) {
@@ -313,6 +328,71 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             binding.usageText.text = state.usageText
         }
     }
+
+    private fun renderBottomNavigation(destination: ShellDestination) {
+        val isCreation = destination == ShellDestination.CREATE
+        val isProfile = destination == ShellDestination.PROFILE
+        val isConversation = !isCreation && !isProfile
+        binding.bottomConversationTab.isSelected = isConversation
+        binding.bottomCreationTab.isSelected = isCreation
+        binding.bottomProfileTab.isSelected = isProfile
+        binding.bottomConversationIcon.isSelected = isConversation
+        binding.bottomCreationIcon.isSelected = isCreation
+        binding.bottomProfileIcon.isSelected = isProfile
+        binding.bottomConversationText.isSelected = isConversation
+        binding.bottomCreationText.isSelected = isCreation
+        binding.bottomProfileText.isSelected = isProfile
+        binding.bottomConversationTab.visibility = if (destination == ShellDestination.CHAT) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+
+        val conversationScale = if (isConversation) 1f else 0.94f
+        val creationScale = if (isCreation) 1f else 0.94f
+        val profileScale = if (isProfile) 1f else 0.94f
+        binding.bottomConversationTab.animate().scaleX(conversationScale).scaleY(conversationScale).setDuration(180L).start()
+        binding.bottomCreationTab.animate().scaleX(creationScale).scaleY(creationScale).setDuration(180L).start()
+        binding.bottomProfileTab.animate().scaleX(profileScale).scaleY(profileScale).setDuration(180L).start()
+    }
+
+    private fun ensureShellFragments() {
+        val transaction = supportFragmentManager.beginTransaction()
+        var changed = false
+
+        fun addIfMissing(destination: ShellDestination, fragment: () -> Fragment, hidden: Boolean) {
+            if (supportFragmentManager.findFragmentByTag(destination.name) != null) return
+            val newFragment = fragment()
+            transaction.add(R.id.shellFragmentContainer, newFragment, destination.name)
+            if (hidden) transaction.hide(newFragment)
+            changed = true
+        }
+
+        val activeDestination = shellViewModel.uiState.value.currentDestination
+        addIfMissing(ShellDestination.CHAT, ::ChatFragment, hidden = activeDestination != ShellDestination.CHAT)
+        addIfMissing(ShellDestination.CREATE, ::CreationGalleryFragment, hidden = activeDestination != ShellDestination.CREATE)
+        addIfMissing(ShellDestination.PROFILE, ::ProfileFragment, hidden = activeDestination != ShellDestination.PROFILE)
+        addIfMissing(ShellDestination.IDEAS, ::FancyIdeasFragment, hidden = true)
+        addIfMissing(ShellDestination.SCHEDULE, ::ScheduleFragment, hidden = true)
+        if (changed) transaction.commitNow()
+
+        supportFragmentManager.beginTransaction().apply {
+            ShellDestination.entries.forEach { destination ->
+                val fragment = requireFragment(destination)
+                if (destination == activeDestination) show(fragment) else hide(fragment)
+            }
+        }.commitNow()
+    }
+
+    override fun openProfileLogin() = showLoginDialog()
+
+    override fun openProfileMembership() {
+        startActivity(ai.cjym.agentclaw.VipActivity.createIntent(this))
+    }
+
+    override fun openProfileSettings() = showSettingDialogPopup()
+
+    override fun openProfileDocuments() = showExportedFilesDialog()
 
     private fun renderSidebar(chatState: ChatScreenState, shellState: ShellUiState) {
         val sessions = chatState.sessions
@@ -897,6 +977,9 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
                 result.onSuccess { loginResult ->
                     AppGraph.preferences.isLoggedIn = true
                     AppGraph.preferences.userPhone = loginResult.phone
+                    if (loginResult.accessToken.isNotEmpty()) {
+                        AppGraph.preferences.userAccessToken = loginResult.accessToken
+                    }
                     setLoading(false)
                     dialog.dismiss()
                     Toast.makeText(this@ShellActivity, getString(R.string.login_success), Toast.LENGTH_SHORT).show()
@@ -913,6 +996,8 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             if (activeLoginDialog === dialog) {
                 activeLoginDialog = null
             }
+            (supportFragmentManager.findFragmentByTag(ShellDestination.PROFILE.name) as? ProfileFragment)
+                ?.refreshUserState()
         }
 
         dialog.show()

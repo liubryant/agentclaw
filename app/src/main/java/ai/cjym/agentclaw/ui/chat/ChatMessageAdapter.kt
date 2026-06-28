@@ -8,13 +8,13 @@ import ai.cjym.agentclaw.databinding.ItemChatMessageUserBinding
 import ai.cjym.agentclaw.databinding.ItemToolCallBinding
 import ai.cjym.agentclaw.databinding.ItemToolTimelineTextBinding
 import ai.cjym.agentclaw.domain.model.MessageSendStatus
+import ai.cjym.agentclaw.ui.theme.AppFonts
 import ai.inmo.core_common.ui.adapter.BaseListViewTypePlusAdapter
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Typeface
 import android.os.Build
 import android.text.Html
 import android.net.Uri
@@ -717,8 +717,8 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
                     .usePlugin(object : AbstractMarkwonPlugin() {
                         override fun configureTheme(builder: MarkwonTheme.Builder) {
                             builder
-                                .codeBlockTypeface(Typeface.MONOSPACE)
-                                .codeTypeface(Typeface.MONOSPACE)
+                                .codeBlockTypeface(AppFonts.miSans(context))
+                                .codeTypeface(AppFonts.miSans(context))
                                 .codeBlockMargin(16)
                                 .codeTextSize(
                                     (context.resources.displayMetrics.scaledDensity * 13).toInt()

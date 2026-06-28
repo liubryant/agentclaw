@@ -233,6 +233,9 @@ class SettingPanelController(
     }
 
     private fun bindAboutActions() {
+        rootView.findViewById<View>(R.id.rowVipMembership)?.setOnClickListener {
+            context.startActivity(VipActivity.createIntent(context))
+        }
         rootView.findViewById<View>(R.id.rowUserAgreement)?.setOnClickListener {
             openLegalPage(context.getString(R.string.setting_user_agreement), AppConstants.USER_AGREEMENT_URL)
         }

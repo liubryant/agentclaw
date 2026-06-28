@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D0703">
+
+    <ImageView
+        android:id="@+id/iv_top_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/bg_vip_top2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vip_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/vip_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="12dp"
+            android:src="@mipmap/ic_back_black_dark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="VIP 会员"
+            android:textColor="#FFEDBD"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingTop="8dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/vip_bottom_bar"
+        app:layout_constraintTop_toBottomOf="@+id/vip_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- User info -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="8dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/vip_avatar"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_vip_avatar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/vip_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:text="登录后开通会员"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/vip_avatar"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/vip_member_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="开通会员，解锁AI助手全部功能"
+                    android:textColor="#FFEDBD"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toStartOf="@+id/vip_phone"
+                    app:layout_constraintTop_toBottomOf="@+id/vip_phone" />
+
+                <TextView
+                    android:id="@+id/vip_login_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_vip_login_button"
+                    android:gravity="center"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:text="去登录"
+                    android:textColor="#864F2D"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Benefits card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="13dp"
+                android:background="@mipmap/bg_new_vip_right_back"
+                android:orientation="vertical"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:text="会员权益"
+                    android:textColor="#FFEDBD"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView android:layout_width="36dp" android:layout_height="36dp" android:src="@mipmap/icon_vip_rights_no_ad" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="无限对话" android:textColor="#FFFFFF" android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView android:layout_width="36dp" android:layout_height="36dp" android:src="@mipmap/icon_vip_rights_watch_all" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="专属功能" android:textColor="#FFFFFF" android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView android:layout_width="36dp" android:layout_height="36dp" android:src="@mipmap/icon_vip_rights_new" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="优先体验" android:textColor="#FFFFFF" android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Product list -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="132dp"
+                android:layout_marginTop="18dp"
+                android:clipToPadding="false"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/vip_products"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/vip_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:gravity="center"
+                android:textColor="#999999"
+                android:textSize="12sp" />
+
+            <!-- Payment method divider -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="10dp"
+                    android:background="#DCDCDC" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="支付方式"
+                    android:textColor="#999999"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="#DCDCDC" />
+            </LinearLayout>
+
+            <!-- Payment channel rows -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <!-- WeChat (hidden for now) -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/vip_pay_channel_wechat"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/selector_vip_pay_channel_bg"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@+id/vip_pay_channel_alipay"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@mipmap/icon_pay_wechat" />
+
+                        <TextView
+                            android:id="@+id/vip_wechat_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="微信支付"
+                            android:textColor="#FEEBB9"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/vip_pay_channel_wechat_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_vip_payment_corner_mark"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/vip_pay_channel_wechat"
+                    app:layout_constraintTop_toTopOf="@+id/vip_pay_channel_wechat" />
+
+                <!-- Alipay (full width since WeChat is gone) -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/vip_pay_channel_alipay"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:background="@drawable/selector_vip_pay_channel_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@mipmap/icon_pay_ali" />
+
+                        <TextView
+                            android:id="@+id/vip_alipay_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="支付宝支付"
+                            android:textColor="#FEEBB9"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/vip_pay_channel_alipay_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_vip_payment_corner_mark"
+                    app:layout_constraintEnd_toEndOf="@+id/vip_pay_channel_alipay"
+                    app:layout_constraintTop_toTopOf="@+id/vip_pay_channel_alipay" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
+                android:text="温馨提示"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="18dp"
+                android:lineSpacingExtra="3dp"
+                android:text="1. 会员服务开通后立即生效。\n2. 支付完成后以服务端订单状态为准。\n3. 如遇支付异常，请稍后重新进入会员页查看。"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom bar -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vip_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <FrameLayout
+            android:id="@+id/vip_pay_surface"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="28dp"
+            android:background="@drawable/bg_vip_pay_button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/vip_pay_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="28dp"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:stateListAnimator="@null"
+            android:text=""
+            android:textAllCaps="false"
+            android:textColor="#864F2D"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/vip_bottom_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="￥--"
+            android:textColor="#864F2D"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/vip_pay_button"
+            app:layout_constraintEnd_toStartOf="@+id/vip_bottom_hint"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/vip_pay_button" />
+
+        <TextView
+            android:id="@+id/vip_bottom_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="立即开通"
+            android:textColor="#864F2D"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/vip_bottom_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/vip_bottom_price"
+            app:layout_constraintTop_toTopOf="@+id/vip_bottom_price" />
+
+        <ImageView
+            android:id="@+id/vip_agreement_check"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="8dp"
+            android:paddingRight="4dp"
+            android:paddingBottom="8dp"
+            android:scaleType="center"
+            android:src="@drawable/vip_check_btn"
+            app:layout_constraintEnd_toStartOf="@+id/vip_agreement_text"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/vip_agreement_text" />
+
+        <TextView
+            android:id="@+id/vip_agreement_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:text="点击开通按钮即代表同意《会员服务协议》"
+            android:textColor="#999999"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/vip_agreement_check"
+            app:layout_constraintTop_toBottomOf="@+id/vip_pay_button" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_shell_hover_tooltip_bubble"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="@font/misans_demibold"
         android:gravity="center"
         android:minWidth="88dp"
         android:paddingHorizontal="10dp"

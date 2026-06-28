@@ -61,6 +61,7 @@ import java.security.MessageDigest
 import java.util.Locale
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
@@ -937,6 +938,9 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         binding.sendButton.isEnabled = state.canSend
         binding.sendButton.setImageResource(
             if (!hasContent) R.drawable.ic_chat_unsend else R.drawable.ic_chat_send
+        )
+        binding.sendButton.imageTintList = ColorStateList.valueOf(
+            Color.parseColor(if (!hasContent) "#666666" else "#111111")
         )
     }
 

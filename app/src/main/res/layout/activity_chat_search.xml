@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textStyle="bold"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/misans_demibold"
                 android:text="@string/chat_search_title"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp" />
@@ -78,7 +78,7 @@
                 android:background="@android:color/transparent"
                 android:drawableStart="@drawable/ic_shell_search"
                 android:drawablePadding="8dp"
-                android:fontFamily="sans-serif"
+                android:fontFamily="@font/misans_normal"
                 android:gravity="center_vertical"
                 android:hint="@string/chat_search_input_hint"
                 android:imeOptions="actionSearch"

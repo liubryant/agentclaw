@@ -126,8 +126,14 @@ class PreferencesManager(context: Context) {
             prefs.encodeOrRemove(KEY_USER_PHONE, value)
         }
 
+    var userAccessToken: String?
+        get() = prefs.decodeString(KEY_USER_ACCESS_TOKEN, null)
+        set(value) {
+            prefs.encodeOrRemove(KEY_USER_ACCESS_TOKEN, value)
+        }
+
 //    切测试服：DEFAULT_AGENTCLAW_BASE_URL = "http://192.168.1.37:8066/v1"
-//    切正式服：DEFAULT_AGENTCLAW_BASE_URL = "https://www.cjym123.cn/v1"  ← 当前
+//    切正式服：DEFAULT_AGENTCLAW_BASE_URL = "https://www.cjym123.cn/v1"
     var nodeGatewayPort: Int?
         get() {
             val v = prefs.decodeInt(KEY_NODE_GATEWAY_PORT, -1)
@@ -143,6 +149,8 @@ class PreferencesManager(context: Context) {
         private const val LEGACY_PROD_BASE_URL_NO_V1 = "http://39.108.144.196:8066"
         private const val LEGACY_PROD_HTTPS_BASE_URL = "https://39.108.144.196:8066/v1"
         private const val LEGACY_PROD_HTTPS_BASE_URL_NO_V1 = "https://39.108.144.196:8066"
+        private const val LEGACY_TEST_BASE_URL = "http://192.168.1.37:8066/v1"
+        private const val LEGACY_TEST_BASE_URL_NO_V1 = "http://192.168.1.37:8066"
         private const val KEY_AUTO_START = "auto_start_gateway"
         private const val KEY_SETUP_COMPLETE = "setup_complete"
         private const val KEY_FIRST_RUN = "first_run"
@@ -159,6 +167,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_TERMS_ACCEPTED = "terms_accepted"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
         private const val KEY_USER_PHONE = "user_phone"
+        private const val KEY_USER_ACCESS_TOKEN = "user_access_token"
         private const val KEY_AGENTCLAW_BASE_URL = "inmoclaw_base_url"
         private const val KEY_SIDEBAR_VISIBLE = "sidebar_visible"
         private const val KEY_PREFIX_SESSION_ENTRY_MODE = "session_entry_mode:"
@@ -196,7 +205,9 @@ class PreferencesManager(context: Context) {
             LEGACY_PROD_BASE_URL,
             LEGACY_PROD_BASE_URL_NO_V1,
             LEGACY_PROD_HTTPS_BASE_URL,
-            LEGACY_PROD_HTTPS_BASE_URL_NO_V1 -> DEFAULT_AGENTCLAW_BASE_URL
+            LEGACY_PROD_HTTPS_BASE_URL_NO_V1,
+            LEGACY_TEST_BASE_URL,
+            LEGACY_TEST_BASE_URL_NO_V1 -> DEFAULT_AGENTCLAW_BASE_URL
             else -> trimmed
         }
     }

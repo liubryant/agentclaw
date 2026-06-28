@@ -4,11 +4,11 @@ import ai.inmo.core_common.ui.activity.BaseBindingActivity
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.databinding.ActivitySshBinding
 import ai.cjym.agentclaw.ui.packages.PackagesActivity
+import ai.cjym.agentclaw.ui.theme.AppFonts
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -81,7 +81,7 @@ class SshActivity : BaseBindingActivity<ActivitySshBinding>(ActivitySshBinding::
         if (ips.isEmpty()) {
             val placeholder = TextView(this).apply {
                 text = getString(R.string.ssh_command_placeholder, port)
-                typeface = Typeface.MONOSPACE
+                typeface = AppFonts.miSans(this@SshActivity)
                 setTextColor(resources.getColor(R.color.text_primary, theme))
             }
             binding.commandsContainer.addView(placeholder)
@@ -96,7 +96,7 @@ class SshActivity : BaseBindingActivity<ActivitySshBinding>(ActivitySshBinding::
             }
             val textView = TextView(this).apply {
                 text = cmd
-                typeface = Typeface.MONOSPACE
+                typeface = AppFonts.miSans(this@SshActivity)
                 setTextColor(resources.getColor(R.color.text_primary, theme))
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }

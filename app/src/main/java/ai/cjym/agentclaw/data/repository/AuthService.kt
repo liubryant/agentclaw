@@ -21,7 +21,7 @@ class AuthService(private val context: Context) {
             return url.removeSuffix("/v1")
         }
 
-    data class LoginResult(val phone: String, val isNewUser: Boolean)
+    data class LoginResult(val phone: String, val isNewUser: Boolean, val accessToken: String = "")
 
     suspend fun sendSmsCode(phone: String): Result<Unit> = withContext(Dispatchers.IO) {
         runCatching {
@@ -68,7 +68,9 @@ class AuthService(private val context: Context) {
                 val data = json.optJSONObject("data")
                 LoginResult(
                     phone = data?.optString("phone")?.takeIf { p -> p.isNotEmpty() } ?: phone,
-                    isNewUser = data?.optBoolean("newUser") ?: false
+                    isNewUser = data?.optBoolean("newUser") ?: false,
+                    accessToken = data?.optString("accessToken")?.takeIf { t -> t.isNotEmpty() }
+                        ?: data?.optString("token")?.takeIf { t -> t.isNotEmpty() } ?: ""
                 )
             }
         }
@@ -98,7 +100,9 @@ class AuthService(private val context: Context) {
                 val data = json.optJSONObject("data")
                 LoginResult(
                     phone = data?.optString("phone")?.takeIf { p -> p.isNotEmpty() } ?: phone,
-                    isNewUser = data?.optBoolean("newUser") ?: false
+                    isNewUser = data?.optBoolean("newUser") ?: false,
+                    accessToken = data?.optString("accessToken")?.takeIf { t -> t.isNotEmpty() }
+                        ?: data?.optString("token")?.takeIf { t -> t.isNotEmpty() } ?: ""
                 )
             }
         }

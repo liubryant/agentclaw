@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFDFD"
+    android:orientation="vertical">
+
+    <ai.cjym.agentclaw.ui.widget.GradientTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/misans_demibold"
+        android:gravity="center"
+        android:text="@string/creation_gallery_prompt_title"
+        android:textSize="27sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_creation_tabs"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/imageTab"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_creation_tab_item"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/misans_demibold"
+            android:gravity="center"
+            android:text="@string/creation_tab_image"
+            android:textColor="@color/creation_tab_text"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/videoTab"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/videoTab"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/bg_creation_tab_item"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/misans_demibold"
+            android:gravity="center"
+            android:text="@string/creation_tab_video"
+            android:textColor="@color/creation_tab_text"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/imageTab"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ai.cjym.agentclaw.ui.widget.HorizontalSwipeViewFlipper
+        android:id="@+id/pageFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>

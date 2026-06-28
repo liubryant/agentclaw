@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#050507">
+
+    <ImageView
+        android:id="@+id/imagePreview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/creation_view_media"
+        android:scaleType="fitCenter" />
+
+    <ai.cjym.agentclaw.ui.widget.AssetVideoPlayerView
+        android:id="@+id/videoPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/imageLoading"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/playPauseButton"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_creation_viewer_round_button"
+        android:contentDescription="@string/creation_play_video"
+        android:padding="19dp"
+        android:src="@drawable/ic_creation_play"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/closeButton"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_creation_viewer_round_button"
+        android:contentDescription="@string/creation_close_viewer"
+        android:padding="12dp"
+        android:src="@drawable/ic_creation_close" />
+
+    <TextView
+        android:id="@+id/createSameButton"
+        android:layout_width="220dp"
+        android:layout_height="54dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/bg_creation_same_button"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        android:fontFamily="@font/misans_demibold"
+        android:gravity="center"
+        android:text="@string/creation_same_style"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+</FrameLayout>
