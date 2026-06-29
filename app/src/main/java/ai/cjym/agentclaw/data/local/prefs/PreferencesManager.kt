@@ -114,6 +114,51 @@ class PreferencesManager(context: Context) {
             prefs.encode(KEY_TERMS_ACCEPTED, value)
         }
 
+    var isVipActive: Boolean
+        get() = prefs.decodeBool(KEY_VIP_ACTIVE, false)
+        set(value) { prefs.encode(KEY_VIP_ACTIVE, value) }
+
+    var vipExpiresAt: String?
+        get() = prefs.decodeString(KEY_VIP_EXPIRES_AT, null)
+        set(value) { prefs.encodeOrRemove(KEY_VIP_EXPIRES_AT, value) }
+
+    var quotaVideoDate: String?
+        get() = prefs.decodeString(KEY_QUOTA_VIDEO_DATE, null)
+        set(value) { prefs.encodeOrRemove(KEY_QUOTA_VIDEO_DATE, value) }
+
+    var quotaVideoCount: Int
+        get() = prefs.decodeInt(KEY_QUOTA_VIDEO_COUNT, 0)
+        set(value) { prefs.encode(KEY_QUOTA_VIDEO_COUNT, value) }
+
+    var quotaImageDate: String?
+        get() = prefs.decodeString(KEY_QUOTA_IMAGE_DATE, null)
+        set(value) { prefs.encodeOrRemove(KEY_QUOTA_IMAGE_DATE, value) }
+
+    var quotaImageCount: Int
+        get() = prefs.decodeInt(KEY_QUOTA_IMAGE_COUNT, 0)
+        set(value) { prefs.encode(KEY_QUOTA_IMAGE_COUNT, value) }
+
+    // Server-configured quota limits (refreshed from /membership API)
+    var serverFreeVideoDaily: Int
+        get() = prefs.decodeInt(KEY_SERVER_FREE_VIDEO_DAILY, -1)
+        set(value) { prefs.encode(KEY_SERVER_FREE_VIDEO_DAILY, value) }
+
+    var serverFreeImageDaily: Int
+        get() = prefs.decodeInt(KEY_SERVER_FREE_IMAGE_DAILY, -1)
+        set(value) { prefs.encode(KEY_SERVER_FREE_IMAGE_DAILY, value) }
+
+    var serverVipVideoDaily: Int
+        get() = prefs.decodeInt(KEY_SERVER_VIP_VIDEO_DAILY, -1)
+        set(value) { prefs.encode(KEY_SERVER_VIP_VIDEO_DAILY, value) }
+
+    var serverVipImageDaily: Int
+        get() = prefs.decodeInt(KEY_SERVER_VIP_IMAGE_DAILY, -1)
+        set(value) { prefs.encode(KEY_SERVER_VIP_IMAGE_DAILY, value) }
+
+    var serverVipRemindDays: Int
+        get() = prefs.decodeInt(KEY_SERVER_VIP_REMIND_DAYS, 3)
+        set(value) { prefs.encode(KEY_SERVER_VIP_REMIND_DAYS, value) }
+
     var isLoggedIn: Boolean
         get() = prefs.decodeBool(KEY_IS_LOGGED_IN, false)
         set(value) {
@@ -171,6 +216,17 @@ class PreferencesManager(context: Context) {
         private const val KEY_AGENTCLAW_BASE_URL = "inmoclaw_base_url"
         private const val KEY_SIDEBAR_VISIBLE = "sidebar_visible"
         private const val KEY_PREFIX_SESSION_ENTRY_MODE = "session_entry_mode:"
+        private const val KEY_VIP_ACTIVE = "vip_active"
+        private const val KEY_VIP_EXPIRES_AT = "vip_expires_at"
+        private const val KEY_QUOTA_VIDEO_DATE = "quota_video_date"
+        private const val KEY_QUOTA_VIDEO_COUNT = "quota_video_count"
+        private const val KEY_QUOTA_IMAGE_DATE = "quota_image_date"
+        private const val KEY_QUOTA_IMAGE_COUNT = "quota_image_count"
+        private const val KEY_SERVER_FREE_VIDEO_DAILY = "server_free_video_daily"
+        private const val KEY_SERVER_FREE_IMAGE_DAILY = "server_free_image_daily"
+        private const val KEY_SERVER_VIP_VIDEO_DAILY = "server_vip_video_daily"
+        private const val KEY_SERVER_VIP_IMAGE_DAILY = "server_vip_image_daily"
+        private const val KEY_SERVER_VIP_REMIND_DAYS = "server_vip_remind_days"
         const val DEFAULT_AGENTCLAW_BASE_URL = "https://www.cjym123.cn/v1"
 
         /**

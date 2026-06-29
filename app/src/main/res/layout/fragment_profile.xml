@@ -96,58 +96,123 @@
         <LinearLayout
             android:id="@+id/vipCard"
             android:layout_width="match_parent"
-            android:layout_height="88dp"
+            android:layout_height="134dp"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_profile_vip_card"
             android:clickable="true"
             android:elevation="2dp"
             android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="18dp">
+            android:orientation="vertical"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="14dp">
 
-            <TextView
-                android:layout_width="46dp"
-                android:layout_height="46dp"
-                android:background="@drawable/bg_profile_vip_icon"
-                android:gravity="center"
-                android:text="✦"
-                android:textColor="#4B2A12"
-                android:textSize="22sp" />
-
+            <!-- Top row: icon + title/subtitle + action button -->
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_profile_vip_icon"
+                    android:gravity="center"
+                    android:text="✦"
+                    android:textColor="#4B2A12"
+                    android:textSize="21sp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/misans_demibold"
+                        android:text="@string/profile_vip_title"
+                        android:textColor="#FFF2D2"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/vipSubtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="#C8A97E"
+                        android:textSize="11sp" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/misans_demibold"
-                    android:text="@string/profile_vip_title"
-                    android:textColor="#FFF2D2"
-                    android:textSize="17sp" />
-
-                <TextView
-                    android:id="@+id/vipSubtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="#D9C09B"
-                    android:textSize="11sp" />
+                    android:layout_height="34dp"
+                    android:background="@drawable/bg_profile_vip_action"
+                    android:gravity="center"
+                    android:paddingHorizontal="15dp"
+                    android:text="@string/profile_vip_action"
+                    android:textColor="#4F2D16"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/misans_demibold" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:background="@drawable/bg_profile_vip_action"
-                android:gravity="center"
-                android:paddingHorizontal="15dp"
-                android:text="@string/profile_vip_action"
-                android:textColor="#4F2D16"
-                android:textSize="12sp" />
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#22FFFFFF" />
+
+            <!-- Benefits row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="✦ AI 图像生成"
+                    android:textColor="#EECC9A"
+                    android:textSize="11sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="12dp"
+                    android:background="#33FFFFFF" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="✦ AI 视频生成"
+                    android:textColor="#EECC9A"
+                    android:textSize="11sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="12dp"
+                    android:background="#33FFFFFF" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="✦ 无限对话"
+                    android:textColor="#EECC9A"
+                    android:textSize="11sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
@@ -193,7 +258,23 @@
             <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="54dp" android:background="#0F000000" />
             <include android:id="@+id/privacyPolicyRow" layout="@layout/item_profile_entry_privacy" />
             <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="54dp" android:background="#0F000000" />
-            <include android:id="@+id/openSourceRow" layout="@layout/item_profile_entry_open_source" />
+            <include android:id="@+id/feedbackRow" layout="@layout/item_profile_entry_feedback" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="54dp" android:background="#0F000000" />
+            <include android:id="@+id/ratingRow" layout="@layout/item_profile_entry_rating" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/logoutCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_profile_section"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <include android:id="@+id/logoutRow" layout="@layout/item_profile_entry_logout" />
         </LinearLayout>
 
         <TextView

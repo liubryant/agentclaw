@@ -2,8 +2,11 @@ package ai.cjym.agentclaw.ui.creation
 
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.databinding.FragmentCreationGalleryBinding
+import ai.cjym.agentclaw.pay.PaymentApi
+import ai.cjym.agentclaw.quota.QuotaManager
 import ai.cjym.agentclaw.ui.common.BaseBindingFragment
 import ai.cjym.agentclaw.ui.shell.ShellSharedViewModel
+import ai.cjym.agentclaw.ui.vip.VipUpgradeBottomSheet
 import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,9 +18,13 @@ import android.view.animation.TranslateAnimation
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CreationGalleryFragment :
     BaseBindingFragment<FragmentCreationGalleryBinding>(FragmentCreationGalleryBinding::inflate) {
@@ -36,9 +43,63 @@ class CreationGalleryFragment :
     ) { result ->
         if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
         when (result.data?.getStringExtra(CreationViewerActivity.EXTRA_MEDIA_TYPE)) {
-            CreationMedia.Type.VIDEO.name -> shellViewModel.launchVideoChat()
-            else -> shellViewModel.launchImageChat()
+            CreationMedia.Type.VIDEO.name -> tryLaunchVideoChat()
+            else -> tryLaunchImageChat()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshVipStatusInBackground()
+    }
+
+    private fun refreshVipStatusInBackground() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val result = runCatching { PaymentApi(requireContext()).refreshVipStatus() }.getOrNull()
+            if (result?.showRenewReminder == true) {
+                withContext(Dispatchers.Main) {
+                    showVipRenewReminder()
+                }
+            }
+        }
+    }
+
+    private fun showVipRenewReminder() {
+        val ctx = context ?: return
+        val prefs = ai.cjym.agentclaw.data.local.prefs.PreferencesManager(ctx)
+        val expires = prefs.vipExpiresAt ?: return
+        val today = java.time.LocalDate.now()
+        val expiry = runCatching { java.time.LocalDate.parse(expires) }.getOrNull() ?: return
+        val days = java.time.temporal.ChronoUnit.DAYS.between(today, expiry)
+        val msg = if (days <= 0) "会员已到期，续费后继续享受会员权益" else "会员还有 ${days} 天到期，续费后不间断享受权益"
+        android.app.AlertDialog.Builder(ctx)
+            .setTitle("会员即将到期")
+            .setMessage(msg)
+            .setPositiveButton("立即续费") { _, _ ->
+                startActivity(ai.cjym.agentclaw.VipActivity.createIntent(ctx))
+            }
+            .setNegativeButton("稍后再说", null)
+            .show()
+    }
+
+    private fun tryLaunchVideoChat() {
+        val ctx = requireContext()
+        if (!QuotaManager.canGenerateVideo(ctx)) {
+            VipUpgradeBottomSheet.forVideo()
+                .show(parentFragmentManager, "vip_upgrade_video")
+            return
+        }
+        shellViewModel.launchVideoChat()
+    }
+
+    private fun tryLaunchImageChat() {
+        val ctx = requireContext()
+        if (!QuotaManager.canGenerateImage(ctx)) {
+            VipUpgradeBottomSheet.forImage()
+                .show(parentFragmentManager, "vip_upgrade_image")
+            return
+        }
+        shellViewModel.launchImageChat()
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -99,7 +160,7 @@ class CreationGalleryFragment :
         )
 
         val launchCreation = {
-            if (isVideo) shellViewModel.launchVideoChat() else shellViewModel.launchImageChat()
+            if (isVideo) tryLaunchVideoChat() else tryLaunchImageChat()
         }
         page.findViewById<View>(R.id.primaryFeatureCard).setOnClickListener { view ->
             animateCardPress(view, launchCreation)

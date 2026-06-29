@@ -2,4 +2,8 @@
 <resources>
     <item name="tag_video_aspect_ratio" type="id" />
     <item name="tag_video_layout_listener_bound" type="id" />
+    <item name="vip_product_card" type="id" />
+    <item name="vip_product_price" type="id" />
+    <item name="vip_product_name" type="id" />
+    <item name="vip_product_desc" type="id" />
 </resources>

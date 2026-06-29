@@ -120,12 +120,15 @@
 
             <!-- Benefits card -->
             <LinearLayout
+                android:id="@+id/vip_benefits_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="13dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginRight="13dp"
                 android:background="@mipmap/bg_new_vip_right_back"
+                android:clickable="true"
+                android:focusable="true"
                 android:orientation="vertical"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
@@ -140,6 +143,15 @@
                     android:textColor="#FFEDBD"
                     android:textSize="14sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:text="查看套餐详情  ›"
+                    android:textColor="#CDAF7A"
+                    android:textSize="11sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -182,9 +194,10 @@
             <!-- Product list -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="132dp"
-                android:layout_marginTop="18dp"
+                android:layout_height="164dp"
+                android:layout_marginTop="24dp"
                 android:clipToPadding="false"
+                android:clipChildren="false"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:scrollbars="none">
@@ -193,7 +206,8 @@
                     android:id="@+id/vip_products"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:gravity="bottom"
+                    android:clipChildren="false"
                     android:orientation="horizontal" />
             </HorizontalScrollView>
 

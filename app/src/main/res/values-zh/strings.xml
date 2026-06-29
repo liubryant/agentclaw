@@ -449,9 +449,9 @@
     <string name="profile_title">我的</string>
     <string name="profile_subtitle">账号、会员与应用信息</string>
     <string name="bottom_profile">我的</string>
-    <string name="profile_login_title">登录 AgentClaw</string>
+    <string name="profile_login_title">登录Agent智能体</string>
     <string name="profile_login_hint">同步账号，解锁更多功能</string>
-    <string name="profile_logged_in_hint">账号已连接</string>
+    <string name="profile_logged_in_hint">账号已登录</string>
     <string name="profile_account_manage">账号</string>
     <string name="profile_vip_title">Agent智能体会员</string>
     <string name="profile_vip_hint">登录后开通会员权益</string>

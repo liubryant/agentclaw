@@ -9,6 +9,7 @@ import ai.cjym.agentclaw.pay.PaymentApi
 import ai.cjym.agentclaw.pay.VipProduct
 import ai.cjym.agentclaw.pay.WeChatPayManager
 import ai.cjym.agentclaw.pay.WeChatPayParams
+import ai.cjym.agentclaw.quota.QuotaManager
 import ai.cjym.agentclaw.ui.legal.LegalWebActivity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -24,18 +25,26 @@ import android.text.InputType
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
-import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.graphics.Typeface
+import android.text.method.LinkMovementMethod
+import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -58,8 +67,24 @@ class VipActivity : AppCompatActivity() {
     private var orderQueryJob: Job? = null
     private var codeCountdownJob: Job? = null
     private var productViews = mutableListOf<View>()
+    private var productCardViews = mutableListOf<LinearLayout>()
+    private var productPriceViews = mutableListOf<TextView>()
+    private var productNameViews = mutableListOf<TextView>()
+    private var productDescViews = mutableListOf<TextView?>()
     private var memberActive = false
     private var memberStatusLoaded = false
+
+    private val badgeTexts = listOf("限时特惠", "超值特惠", "80%用户选择")
+    private val badgeStartColors = listOf(
+        Color.parseColor("#9C27B0"),
+        Color.parseColor("#FFB300"),
+        Color.parseColor("#FF6B35")
+    )
+    private val badgeEndColors = listOf(
+        Color.parseColor("#6A1B9A"),
+        Color.parseColor("#F57C00"),
+        Color.parseColor("#E53935")
+    )
 
     private val wxPayReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -97,13 +122,15 @@ class VipActivity : AppCompatActivity() {
         WeChatPayManager.init(this)
 
         binding.vipBack.setOnClickListener { finish() }
-        binding.vipAgreementCheck.isSelected = true
-        binding.vipAgreementText.setOnClickListener {
-            startActivity(LegalWebActivity.createIntent(this, "会员服务协议", AppConstants.USER_AGREEMENT_URL))
+        binding.vipAgreementCheck.isSelected = false
+        binding.vipAgreementCheck.setOnClickListener {
+            binding.vipAgreementCheck.isSelected = !binding.vipAgreementCheck.isSelected
         }
+        setupAgreementText()
 
         setupPayChannels()
         binding.vipPayButton.setOnClickListener { startPayment() }
+        binding.vipBenefitsCard.setOnClickListener { showBenefitsDetailDialog() }
 
         val filter = IntentFilter(ACTION_WX_PAY_RESULT)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -224,6 +251,10 @@ class VipActivity : AppCompatActivity() {
     private fun showProductPlaceholder() {
         binding.vipProducts.removeAllViews()
         productViews.clear()
+        productCardViews.clear()
+        productPriceViews.clear()
+        productNameViews.clear()
+        productDescViews.clear()
         val dp = resources.displayMetrics.density
         val tv = TextView(this).apply {
             text = "会员套餐\n\n加载中…"
@@ -232,8 +263,8 @@ class VipActivity : AppCompatActivity() {
             textSize = 14f
             setBackgroundResource(R.drawable.selector_vip_product_bg)
         }
-        val params = LinearLayout.LayoutParams((160 * dp).toInt(), (112 * dp).toInt())
-        params.setMargins((6 * dp).toInt(), 0, (6 * dp).toInt(), 0)
+        val params = LinearLayout.LayoutParams((140 * dp).toInt(), (148 * dp).toInt())
+        params.setMargins((6 * dp).toInt(), (16 * dp).toInt(), (6 * dp).toInt(), 0)
         binding.vipProducts.addView(tv, params)
         binding.vipBottomPrice.text = "￥--"
         binding.vipBottomHint.text = "立即开通"
@@ -242,30 +273,29 @@ class VipActivity : AppCompatActivity() {
     private fun renderProducts(list: List<VipProduct>) {
         binding.vipProducts.removeAllViews()
         productViews.clear()
+        productCardViews.clear()
+        productPriceViews.clear()
+        productNameViews.clear()
+        productDescViews.clear()
         val dp = resources.displayMetrics.density
-        val w = (132 * dp).toInt()
-        val h = (124 * dp).toInt()
-        val margin = (4 * dp).toInt()
-        val pad = (10 * dp).toInt()
 
         list.forEachIndexed { index, product ->
-            val tv = TextView(this).apply {
-                text = "${product.name}\n¥${product.price}\n${product.description}"
-                textSize = 12f
-                setLineSpacing(dp * 3, 1f)
-                maxLines = 4
-                ellipsize = android.text.TextUtils.TruncateAt.END
-                setTextColor(Color.parseColor("#B6A58E"))
-                gravity = Gravity.CENTER
-                setPadding(pad, pad, pad, pad)
-                setBackgroundResource(R.drawable.selector_vip_product_bg)
-                isSelected = index == 0
-            }
-            val params = LinearLayout.LayoutParams(w, h)
-            params.setMargins(margin, 0, margin, 0)
-            tv.setOnClickListener { selectProduct(index) }
-            binding.vipProducts.addView(tv, params)
-            productViews.add(tv)
+            val wrapper = buildProductCard(product, index, dp)
+            val cardView = wrapper.getTag(R.id.vip_product_card) as LinearLayout
+            val priceView = wrapper.getTag(R.id.vip_product_price) as TextView
+            val nameView = wrapper.getTag(R.id.vip_product_name) as TextView
+            val descView = wrapper.getTag(R.id.vip_product_desc) as? TextView
+
+            val outerParams = LinearLayout.LayoutParams((138 * dp).toInt(), ViewGroup.LayoutParams.MATCH_PARENT)
+            outerParams.setMargins((5 * dp).toInt(), 0, (5 * dp).toInt(), 0)
+            wrapper.setOnClickListener { selectProduct(index) }
+
+            binding.vipProducts.addView(wrapper, outerParams)
+            productViews.add(wrapper)
+            productCardViews.add(cardView)
+            productPriceViews.add(priceView)
+            productNameViews.add(nameView)
+            productDescViews.add(descView)
         }
 
         if (list.isNotEmpty()) {
@@ -281,11 +311,118 @@ class VipActivity : AppCompatActivity() {
         }
     }
 
+    private fun buildProductCard(product: VipProduct, index: Int, dp: Float): FrameLayout {
+        val badgeText = badgeTexts.getOrNull(index)
+        val badgeStartColor = badgeStartColors.getOrElse(index) { Color.parseColor("#666666") }
+        val badgeEndColor = badgeEndColors.getOrElse(index) { Color.parseColor("#444444") }
+
+        val wrapper = FrameLayout(this).apply { clipChildren = false }
+
+        // Card body
+        val card = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            val topPad = if (badgeText != null) (18 * dp).toInt() else (20 * dp).toInt()
+            setPadding((10 * dp).toInt(), topPad, (10 * dp).toInt(), (14 * dp).toInt())
+            setBackgroundResource(R.drawable.selector_vip_product_bg)
+        }
+
+        // Price
+        val priceView = TextView(this).apply {
+            text = "¥${product.price}"
+            textSize = 24f
+            gravity = Gravity.CENTER
+            setTextColor(Color.parseColor("#EBC783"))
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            includeFontPadding = false
+        }
+        card.addView(priceView, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+
+        // Name
+        val nameView = TextView(this).apply {
+            text = product.name
+            textSize = 12f
+            gravity = Gravity.CENTER
+            setTextColor(Color.parseColor("#B6A58E"))
+            LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
+                it.topMargin = (5 * dp).toInt()
+            }.let { layoutParams = it }
+        }
+        card.addView(nameView)
+
+        // Description
+        var descView: TextView? = null
+        if (product.description.isNotBlank()) {
+            descView = TextView(this).apply {
+                text = product.description
+                textSize = 10f
+                gravity = Gravity.CENTER
+                maxLines = 2
+                setTextColor(Color.parseColor("#7A6B58"))
+                LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
+                    it.topMargin = (4 * dp).toInt()
+                }.let { layoutParams = it }
+            }
+            card.addView(descView)
+        }
+
+        val cardParams = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).apply {
+            topMargin = (16 * dp).toInt()
+        }
+        wrapper.addView(card, cardParams)
+
+        // Badge floating above card top
+        if (badgeText != null) {
+            val badgeBg = GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT,
+                intArrayOf(badgeStartColor, badgeEndColor)
+            ).apply {
+                cornerRadius = 20 * dp
+            }
+            val badge = TextView(this).apply {
+                text = badgeText
+                textSize = 9.5f
+                setTextColor(Color.WHITE)
+                gravity = Gravity.CENTER
+                background = badgeBg
+                val ph = (5 * dp).toInt()
+                val pv = (3 * dp).toInt()
+                setPadding(ph * 2, pv, ph * 2, pv + (1 * dp).toInt())
+                elevation = 3 * dp
+            }
+            val badgeParams = FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                topMargin = (4 * dp).toInt()
+            }
+            wrapper.addView(badge, badgeParams)
+        }
+
+        // Store child view refs in wrapper tags for later color updates
+        wrapper.setTag(R.id.vip_product_card, card)
+        wrapper.setTag(R.id.vip_product_price, priceView)
+        wrapper.setTag(R.id.vip_product_name, nameView)
+        wrapper.setTag(R.id.vip_product_desc, descView)
+
+        return wrapper
+    }
+
     private fun selectProduct(index: Int) {
         selectedProduct = products.getOrNull(index)
-        productViews.forEachIndexed { i, v ->
-            v.isSelected = i == index
-            (v as? TextView)?.setTextColor(Color.parseColor(if (i == index) "#864F2D" else "#B6A58E"))
+        productCardViews.forEachIndexed { i, card ->
+            val isNow = i == index
+            card.isSelected = isNow
+            productPriceViews.getOrNull(i)?.setTextColor(
+                Color.parseColor(if (isNow) "#864F2D" else "#EBC783"))
+            productNameViews.getOrNull(i)?.setTextColor(
+                Color.parseColor(if (isNow) "#6B3820" else "#B6A58E"))
+            productDescViews.getOrNull(i)?.setTextColor(
+                Color.parseColor(if (isNow) "#9B5C38" else "#7A6B58"))
         }
         if (!memberStatusLoaded) {
             setPayEnabled(false)
@@ -314,7 +451,197 @@ class VipActivity : AppCompatActivity() {
         setPayEnabled(selectedProduct != null)
     }
 
+    private fun showBenefitsDetailDialog() {
+        val dialog = BottomSheetDialog(this)
+        val content = LayoutInflater.from(this).inflate(R.layout.dialog_vip_upgrade, null, false)
+        dialog.setContentView(content)
+
+        content.findViewById<TextView>(R.id.upgrade_title).text = "会员套餐详情"
+        content.findViewById<TextView>(R.id.upgrade_subtitle).text = "开通会员，解锁更多 AI 创作能力"
+        content.findViewById<View>(R.id.vip_detail_package_section).visibility = View.VISIBLE
+
+        val videoUsed = QuotaManager.todayVideoCount(this)
+        val imageUsed = QuotaManager.todayImageCount(this)
+        val videoFree = QuotaManager.freeVideoLimit(this)
+        val imageFree = QuotaManager.freeImageLimit(this)
+        content.findViewById<TextView>(R.id.quota_video_text).text = "$videoUsed/$videoFree"
+        content.findViewById<TextView>(R.id.quota_image_text).text = "$imageUsed/$imageFree"
+        content.findViewById<TextView>(R.id.quota_video_free_limit).text = "${videoFree}次/天"
+        content.findViewById<TextView>(R.id.quota_video_vip_limit).text = "${QuotaManager.vipVideoLimit(this)}次/天"
+        content.findViewById<TextView>(R.id.quota_image_free_limit).text = "${imageFree}张/天"
+        content.findViewById<TextView>(R.id.quota_image_vip_limit).text = "${QuotaManager.vipImageLimit(this)}张/天"
+        setDetailQuotaBar(content.findViewById(R.id.quota_video_bar), videoUsed, videoFree)
+        setDetailQuotaBar(content.findViewById(R.id.quota_image_bar), imageUsed, imageFree)
+
+        val productsContainer = content.findViewById<LinearLayout>(R.id.vip_detail_products)
+        val purchaseButton = content.findViewById<Button>(R.id.upgrade_button)
+        val detailCards = mutableListOf<LinearLayout>()
+        val detailChecks = mutableListOf<TextView>()
+        val dp = resources.displayMetrics.density
+
+        fun refreshDetailSelection() {
+            val selectedId = selectedProduct?.id
+            detailCards.forEachIndexed { index, card ->
+                val selected = products.getOrNull(index)?.id == selectedId
+                card.background = detailPackageBackground(selected, dp)
+                detailChecks.getOrNull(index)?.apply {
+                    text = if (selected) "✓" else "○"
+                    setTextColor(Color.parseColor(if (selected) "#F6D28F" else "#6E5C4B"))
+                }
+            }
+            purchaseButton.isEnabled = selectedProduct != null
+            purchaseButton.alpha = if (selectedProduct != null) 1f else 0.5f
+            purchaseButton.text = selectedProduct?.let {
+                "￥${it.price}  ${if (memberActive) "立即续费" else "立即开通会员"}"
+            } ?: "请选择会员套餐"
+        }
+
+        if (products.isEmpty()) {
+            productsContainer.addView(TextView(this).apply {
+                text = "暂无可购买的会员套餐"
+                textSize = 12f
+                gravity = Gravity.CENTER
+                setTextColor(Color.parseColor("#988571"))
+            }, LinearLayout.LayoutParams((240 * dp).toInt(), ViewGroup.LayoutParams.MATCH_PARENT))
+        } else {
+            products.forEachIndexed { index, product ->
+                val card = LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    gravity = Gravity.CENTER_VERTICAL
+                    setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
+                }
+                val topRow = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = Gravity.CENTER_VERTICAL
+                }
+                val check = TextView(this).apply {
+                    textSize = 18f
+                    gravity = Gravity.CENTER
+                }
+                val name = TextView(this).apply {
+                    text = product.name
+                    textSize = 13f
+                    setTypeface(typeface, Typeface.BOLD)
+                    setTextColor(Color.WHITE)
+                    setPadding((7 * dp).toInt(), 0, 0, 0)
+                    maxLines = 1
+                }
+                topRow.addView(check, LinearLayout.LayoutParams((24 * dp).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT))
+                topRow.addView(name, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                card.addView(topRow, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+
+                val price = TextView(this).apply {
+                    text = "￥${product.price}"
+                    textSize = 18f
+                    setTypeface(typeface, Typeface.BOLD)
+                    setTextColor(Color.parseColor("#F6D28F"))
+                    setPadding((31 * dp).toInt(), (5 * dp).toInt(), 0, 0)
+                }
+                card.addView(price, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                if (product.description.isNotBlank()) {
+                    card.addView(TextView(this).apply {
+                        text = product.description
+                        textSize = 10f
+                        maxLines = 1
+                        setTextColor(Color.parseColor("#988571"))
+                        setPadding((31 * dp).toInt(), (2 * dp).toInt(), 0, 0)
+                    }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+                }
+
+                card.setOnClickListener {
+                    selectProduct(index)
+                    refreshDetailSelection()
+                }
+                val params = LinearLayout.LayoutParams((164 * dp).toInt(), (86 * dp).toInt()).apply {
+                    marginEnd = (10 * dp).toInt()
+                }
+                productsContainer.addView(card, params)
+                detailCards.add(card)
+                detailChecks.add(check)
+            }
+        }
+
+        refreshDetailSelection()
+        purchaseButton.setOnClickListener {
+            if (selectedProduct == null) return@setOnClickListener
+            dialog.dismiss()
+            binding.vipPayButton.post { startPayment() }
+        }
+        content.findViewById<TextView>(R.id.upgrade_cancel).apply {
+            text = "关闭"
+            setOnClickListener { dialog.dismiss() }
+        }
+
+        dialog.setOnShowListener {
+            val sheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                ?: return@setOnShowListener
+            sheet.setBackgroundColor(Color.TRANSPARENT)
+            BottomSheetBehavior.from(sheet).apply {
+                state = BottomSheetBehavior.STATE_EXPANDED
+                skipCollapsed = true
+            }
+        }
+        dialog.show()
+    }
+
+    private fun setDetailQuotaBar(bar: View, used: Int, limit: Int) {
+        bar.post {
+            val parent = bar.parent as? FrameLayout ?: return@post
+            val ratio = if (limit > 0) (used.toFloat() / limit).coerceIn(0f, 1f) else 1f
+            val width = (parent.width * ratio).toInt().coerceAtLeast(if (ratio > 0f) 8 else 0)
+            bar.layoutParams = FrameLayout.LayoutParams(width, FrameLayout.LayoutParams.MATCH_PARENT)
+        }
+    }
+
+    private fun detailPackageBackground(selected: Boolean, dp: Float): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 12 * dp
+            setColor(Color.parseColor(if (selected) "#3A291B" else "#21160F"))
+            setStroke((if (selected) 2 else 1) * dp.toInt().coerceAtLeast(1),
+                Color.parseColor(if (selected) "#D3A85F" else "#483322"))
+        }
+    }
+
+    private fun setupAgreementText() {
+        val full = "请阅读并同意《会员服务协议》"
+        val start = full.indexOf("《")
+        val end = full.length
+        val span = SpannableString(full)
+        val gold = Color.parseColor("#C87830")
+        span.setSpan(ForegroundColorSpan(gold), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        span.setSpan(StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        span.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: android.view.View) {
+                startActivity(LegalWebActivity.createIntent(
+                    this@VipActivity, "会员服务协议", AppConstants.VIP_AGREEMENT_URL))
+            }
+            override fun updateDrawState(ds: TextPaint) {
+                ds.color = gold
+                ds.isUnderlineText = false
+            }
+        }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.vipAgreementText.text = span
+        binding.vipAgreementText.movementMethod = LinkMovementMethod.getInstance()
+        binding.vipAgreementText.highlightColor = Color.TRANSPARENT
+    }
+
     private fun startPayment() {
+        if (!binding.vipAgreementCheck.isSelected) {
+            AlertDialog.Builder(this)
+                .setTitle("请同意服务协议")
+                .setMessage("开通会员前，请先阅读并同意《会员服务协议》。")
+                .setPositiveButton("同意并继续") { _, _ ->
+                    binding.vipAgreementCheck.isSelected = true
+                    startPayment()
+                }
+                .setNegativeButton("去查看") { _, _ ->
+                    startActivity(LegalWebActivity.createIntent(
+                        this, "会员服务协议", AppConstants.VIP_AGREEMENT_URL))
+                }
+                .show()
+            return
+        }
         val prefs = AppGraph.preferences
         if (!prefs.isLoggedIn || prefs.userPhone.isNullOrEmpty()) {
             showLoginDialog { startPayment() }

@@ -32,6 +32,8 @@ object AppConstants {
 
     const val USER_AGREEMENT_URL =
         "https://www.cjym123.cn/agreement_agentclaw.html"
+    const val VIP_AGREEMENT_URL =
+        "https://www.cjym123.cn/agreement_agentclaw_vip.html"
     const val PRIVACY_POLICY_URL =
         "https://www.cjym123.cn/privacy_agentclaw.html"
 

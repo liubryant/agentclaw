@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#050507">
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imagePreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

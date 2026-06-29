@@ -94,6 +94,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
 
     private var cameraImageUri: Uri? = null
     private var pendingImageUri: Uri? = null
+    private var currentEntryMode: ChatEntryMode = ChatEntryMode.DEFAULT
 
     private data class DownloadedGeneratedFile(
         val uriOrPath: String,
@@ -328,6 +329,27 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             val text = binding.composerInput.text?.toString().orEmpty().trim()
             val hasImage = pendingImageUri != null
             if (text.isBlank() && !hasImage) return@setOnClickListener
+            // Quota check for image / video generation modes
+            val ctx = requireContext()
+            when (currentEntryMode) {
+                ChatEntryMode.IMAGE -> {
+                    if (!ai.cjym.agentclaw.quota.QuotaManager.canGenerateImage(ctx)) {
+                        ai.cjym.agentclaw.ui.vip.VipUpgradeBottomSheet.forImage()
+                            .show(parentFragmentManager, "vip_upgrade_image")
+                        return@setOnClickListener
+                    }
+                    ai.cjym.agentclaw.quota.QuotaManager.consumeImage(ctx)
+                }
+                ChatEntryMode.VIDEO -> {
+                    if (!ai.cjym.agentclaw.quota.QuotaManager.canGenerateVideo(ctx)) {
+                        ai.cjym.agentclaw.ui.vip.VipUpgradeBottomSheet.forVideo()
+                            .show(parentFragmentManager, "vip_upgrade_video")
+                        return@setOnClickListener
+                    }
+                    ai.cjym.agentclaw.quota.QuotaManager.consumeVideo(ctx)
+                }
+                else -> { /* text mode: no quota */ }
+            }
             val imageUri = pendingImageUri
             clearComposerImage()
             viewLifecycleOwner.lifecycleScope.launch {
@@ -893,6 +915,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
     }
 
     private fun updateEntryModeButtons(entryMode: ChatEntryMode) {
+        currentEntryMode = entryMode
         renderEntryModeButton(
             button = binding.imageChatEntryButton,
             selected = entryMode == ChatEntryMode.IMAGE,
@@ -903,6 +926,9 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             selected = entryMode == ChatEntryMode.VIDEO,
             startDrawableRes = R.drawable.ic_chat_entry_video
         )
+        // 纯文本模式下隐藏图片附件按钮
+        binding.attachButton.visibility = if (entryMode == ChatEntryMode.DEFAULT)
+            android.view.View.GONE else android.view.View.VISIBLE
     }
 
     private fun renderEntryModeButton(

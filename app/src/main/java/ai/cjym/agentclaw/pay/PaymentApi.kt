@@ -13,9 +13,10 @@ class PaymentApi(context: Context) {
 
     private val client = OkHttpClient()
     private val baseUrl: String
+    private val prefs = PreferencesManager(context)
 
     init {
-        val url = PreferencesManager(context).agentclawBaseUrl.trimEnd('/').removeSuffix("/v1")
+        val url = prefs.agentclawBaseUrl.trimEnd('/').removeSuffix("/v1")
         baseUrl = "$url/im/bot/navi/vip"
     }
 
@@ -97,6 +98,48 @@ class PaymentApi(context: Context) {
             return json.optJSONObject("data") ?: JSONObject()
         }
     }
+
+    /**
+     * Refresh VIP status and quota config from server.
+     * Returns [VipRefreshResult] with current status and whether renewal reminder should be shown.
+     */
+    fun refreshVipStatus(): VipRefreshResult {
+        val token = prefs.userAccessToken
+            ?: return VipRefreshResult(active = prefs.isVipActive, showRenewReminder = false)
+        return try {
+            val data = getMembership(token)
+            val active = data.optBoolean("active") || data.optBoolean("isVip") || data.optBoolean("isMember")
+            val expires = data.optString("expiresAt").takeIf { it.isNotEmpty() }
+            prefs.isVipActive = active
+            prefs.vipExpiresAt = expires
+
+            val quota = data.optJSONObject("quota")
+            if (quota != null) {
+                if (quota.has("freeVideoDaily")) prefs.serverFreeVideoDaily = quota.getInt("freeVideoDaily")
+                if (quota.has("freeImageDaily")) prefs.serverFreeImageDaily = quota.getInt("freeImageDaily")
+                if (quota.has("vipVideoDaily"))  prefs.serverVipVideoDaily  = quota.getInt("vipVideoDaily")
+                if (quota.has("vipImageDaily"))  prefs.serverVipImageDaily  = quota.getInt("vipImageDaily")
+                if (quota.has("vipRemindDays"))  prefs.serverVipRemindDays  = quota.getInt("vipRemindDays")
+            }
+
+            val showReminder = active && shouldRemindRenewal(expires, prefs.serverVipRemindDays)
+            VipRefreshResult(active = active, showRenewReminder = showReminder)
+        } catch (_: Exception) {
+            VipRefreshResult(active = prefs.isVipActive, showRenewReminder = false)
+        }
+    }
+
+    private fun shouldRemindRenewal(expiresAt: String?, remindDays: Int): Boolean {
+        if (expiresAt.isNullOrEmpty() || remindDays <= 0) return false
+        return try {
+            val formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val expiry = java.time.LocalDate.parse(expiresAt, formatter)
+            val today = java.time.LocalDate.now()
+            !today.isAfter(expiry) && java.time.temporal.ChronoUnit.DAYS.between(today, expiry) <= remindDays
+        } catch (_: Exception) { false }
+    }
+
+    data class VipRefreshResult(val active: Boolean, val showRenewReminder: Boolean)
 
     companion object {
         private val JSON_TYPE = "application/json".toMediaType()

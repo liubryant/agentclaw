@@ -6,6 +6,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -15,6 +18,12 @@ import androidx.core.view.WindowInsetsControllerCompat
 class CreationViewerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreationViewerBinding
     private lateinit var media: CreationMedia
+
+    private var videoScale = 1f
+    private var videoTransX = 0f
+    private var videoTransY = 0f
+    private lateinit var videoScaleDetector: ScaleGestureDetector
+    private lateinit var videoTapDetector: GestureDetector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +40,80 @@ class CreationViewerActivity : AppCompatActivity() {
             return
         }
         media = CreationMedia(path, type)
+        setupVideoGestures()
         renderMedia()
 
         binding.closeButton.setOnClickListener { finishViewer() }
         binding.playPauseButton.setOnClickListener { binding.videoPlayer.toggle() }
-        binding.videoPlayer.setOnClickListener { binding.videoPlayer.toggle() }
         binding.createSameButton.setOnClickListener {
             setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_MEDIA_TYPE, media.type.name))
             finishViewer()
         }
+    }
+
+    private fun setupVideoGestures() {
+        videoScaleDetector = ScaleGestureDetector(this,
+            object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                override fun onScale(detector: ScaleGestureDetector): Boolean {
+                    videoScale = (videoScale * detector.scaleFactor).coerceIn(1f, 5f)
+                    applyVideoTransform()
+                    return true
+                }
+            })
+
+        videoTapDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDoubleTap(e: MotionEvent): Boolean {
+                val target = if (videoScale > 1.2f) 1f else 2f
+                binding.videoPlayer.animate()
+                    .scaleX(target).scaleY(target)
+                    .translationX(0f).translationY(0f)
+                    .setDuration(220).start()
+                videoScale = target
+                videoTransX = 0f
+                videoTransY = 0f
+                return true
+            }
+
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                binding.videoPlayer.toggle()
+                return true
+            }
+
+            override fun onScroll(
+                e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float
+            ): Boolean {
+                if (videoScale > 1f && (e2.pointerCount == 1)) {
+                    videoTransX -= distanceX
+                    videoTransY -= distanceY
+                    clampVideoTranslation()
+                    applyVideoTransform()
+                    return true
+                }
+                return false
+            }
+        })
+
+        binding.videoPlayer.setOnTouchListener { _, event ->
+            videoScaleDetector.onTouchEvent(event)
+            if (!videoScaleDetector.isInProgress) {
+                videoTapDetector.onTouchEvent(event)
+            }
+            true
+        }
+    }
+
+    private fun clampVideoTranslation() {
+        val maxX = binding.videoPlayer.width * (videoScale - 1f) / 2f
+        val maxY = binding.videoPlayer.height * (videoScale - 1f) / 2f
+        videoTransX = videoTransX.coerceIn(-maxX, maxX)
+        videoTransY = videoTransY.coerceIn(-maxY, maxY)
+    }
+
+    private fun applyVideoTransform() {
+        binding.videoPlayer.scaleX = videoScale
+        binding.videoPlayer.scaleY = videoScale
+        binding.videoPlayer.translationX = videoTransX
+        binding.videoPlayer.translationY = videoTransY
     }
 
     override fun onResume() {
@@ -87,9 +161,7 @@ class CreationViewerActivity : AppCompatActivity() {
                     binding.imageLoading.visibility = View.GONE
                 }.start()
                 binding.imagePreview.alpha = 0f
-                binding.imagePreview.scaleX = 0.97f
-                binding.imagePreview.scaleY = 0.97f
-                binding.imagePreview.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(320L).start()
+                binding.imagePreview.animate().alpha(1f).setDuration(320L).start()
             }
         }
     }

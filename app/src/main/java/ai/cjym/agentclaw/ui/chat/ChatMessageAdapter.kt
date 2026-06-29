@@ -732,14 +732,11 @@ class ChatMessageAdapter : BaseListViewTypePlusAdapter<ChatMessageItem, ViewBind
 
         private fun extractHtmlFromContent(content: String): String? {
             val trimmed = content.trim()
-            val lower = trimmed.lowercase()
-            if (lower.startsWith("```html")) {
-                val afterFence = trimmed.drop("```html".length).trimStart('\n', '\r')
-                val html = if (afterFence.trimEnd().endsWith("```")) {
-                    afterFence.trimEnd().dropLast(3).trimEnd()
-                } else {
-                    afterFence
-                }
+            // Search for ```html block anywhere in the response
+            val fenceRegex = Regex("""```html\s*\n([\s\S]*?)(?:\n```|$)""")
+            val match = fenceRegex.find(trimmed)
+            if (match != null) {
+                val html = match.groupValues[1].trimEnd()
                 if (isHtmlContent(html)) return html
             }
             if (isHtmlContent(trimmed)) return trimmed

@@ -269,24 +269,32 @@
 
                 <FrameLayout
                     android:id="@+id/imageThumbnailContainer"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp">
+                    android:layout_width="84dp"
+                    android:layout_height="84dp">
 
-                    <ImageView
-                        android:id="@+id/imageThumbnail"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:background="@drawable/bg_chat_entry_button"
-                        android:clipToOutline="true"
-                        android:contentDescription="已选图片" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="0dp">
+
+                        <ImageView
+                            android:id="@+id/imageThumbnail"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:contentDescription="已选图片" />
+
+                    </com.google.android.material.card.MaterialCardView>
 
                     <ImageButton
                         android:id="@+id/removeThumbnailButton"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="top|end"
-                        android:layout_margin="-2dp"
+                        android:layout_marginTop="-2dp"
+                        android:layout_marginEnd="-2dp"
                         android:background="@android:color/transparent"
                         android:padding="0dp"
                         android:scaleType="fitCenter"
