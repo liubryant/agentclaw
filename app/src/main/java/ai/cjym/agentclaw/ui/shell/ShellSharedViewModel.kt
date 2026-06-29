@@ -79,6 +79,10 @@ class ShellSharedViewModel : BaseViewModel() {
         navigateToChatInNewSession(draft = "", entryMode = ChatEntryMode.VIDEO)
     }
 
+    fun launchDefaultChat() {
+        navigateToChatInNewSession(draft = "", entryMode = ChatEntryMode.DEFAULT)
+    }
+
     fun launchIdeaIntoChat(promptTemplate: String, sourceId: String) {
         navigateToChatInNewSession(promptTemplate, ideaId = sourceId)
     }

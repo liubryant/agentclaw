@@ -8,11 +8,15 @@ import ai.cjym.agentclaw.ui.shell.ShellActivity
 import ai.cjym.agentclaw.ui.startup.StartupActivity
 import ai.cjym.agentclaw.ui.widget.TermsDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.bytedance.sdk.openadsdk.AdSlot
 import com.bytedance.sdk.openadsdk.CSJAdError
@@ -41,6 +45,15 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        // 内容延伸到系统栏背后（edge-to-edge）
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        // 刘海屏/打孔屏：允许内容延伸到凹口区域
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes = window.attributes.also {
+                it.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
+        }
         setContentView(R.layout.activity_splash_ad)
         splashContainer = findViewById<FrameLayout>(R.id.splashAdContainer)!!
         lifecycle.addObserver(viewModel)
@@ -148,11 +161,14 @@ class SplashActivity : AppCompatActivity() {
 
     private fun loadSplashAd() {
         val adNativeLoader = TTAdSdk.getAdManager().createAdNative(this)
+        val (screenW, screenH) = realScreenSize()
         val adSlot = AdSlot.Builder()
             .setCodeId("104086778")
+            // 告知 SDK 预期展示尺寸（全屏物理像素），确保选到匹配素材并正确缩放
+            .setImageAcceptedSize(screenW, screenH)
             .build()
 
-        Log.d(TAG, "loadSplashAd start codeId=104086778")
+        Log.d(TAG, "loadSplashAd start codeId=104086778 size=${screenW}x${screenH}")
         adNativeLoader.loadSplashAd(adSlot, object : TTAdNative.CSJSplashAdListener {
             override fun onSplashLoadSuccess(p0: CSJSplashAd?) {
                 Log.d(TAG, "onSplashLoadSuccess, waiting render...")
@@ -183,7 +199,10 @@ class SplashActivity : AppCompatActivity() {
             navigateToDestination()
             return
         }
-        Log.d(TAG, "showSplashAd: setting listener and showing")
+        // 用真实物理屏幕像素强制覆盖容器尺寸，绕过任何 insets 导致的缩减
+        val (w, h) = realScreenSize()
+        splashContainer.layoutParams = FrameLayout.LayoutParams(w, h)
+        Log.d(TAG, "showSplashAd: container forced to ${w}x${h}, setting listener and showing")
         ad.setSplashAdListener(object : CSJSplashAd.SplashAdListener {
             override fun onSplashAdShow(ad: CSJSplashAd?) {
                 Log.d(TAG, "onSplashAdShow")
@@ -199,6 +218,21 @@ class SplashActivity : AppCompatActivity() {
             }
         })
         ad.showSplashView(splashContainer)
+    }
+
+    // ─────────────────────── 工具 ───────────────────────
+
+    /** 返回真实物理屏幕尺寸（含状态栏、导航栏、刘海区域），不受 window insets 影响 */
+    private fun realScreenSize(): Pair<Int, Int> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val bounds = windowManager.currentWindowMetrics.bounds
+            Pair(bounds.width(), bounds.height())
+        } else {
+            val dm = DisplayMetrics()
+            @Suppress("DEPRECATION")
+            windowManager.defaultDisplay.getRealMetrics(dm)
+            Pair(dm.widthPixels, dm.heightPixels)
+        }
     }
 
     // ─────────────────────── 跳转主页 ───────────────────────

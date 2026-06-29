@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.data.aigc.AigcMetadataWriter
+import ai.cjym.agentclaw.data.repository.TodayHotspotService
 import ai.cjym.agentclaw.databinding.FragmentShellChatBinding
 import ai.cjym.agentclaw.domain.model.GeneratingPhase
 import ai.cjym.agentclaw.ui.chat.ChatMessageItem
@@ -91,6 +92,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
     private var lastRenderedSessionId: String? = null
     private var activeRenderTrace: RenderTrace? = null
     private val imageDownloadClient by lazy { OkHttpClient() }
+    private val todayHotspotService by lazy { TodayHotspotService(requireContext()) }
 
     private var cameraImageUri: Uri? = null
     private var pendingImageUri: Uri? = null
@@ -152,6 +154,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         binding.quickPromptRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.quickPromptRecycler.adapter = quickPromptAdapter
         quickPromptAdapter.submitList(ShellSeedData.ideaTemplates())
+        loadTodayHotspots()
 
         viewLifecycleOwner.lifecycleScope.launch {
             chatViewModel.state.collectLatest(::renderUiState)
@@ -443,11 +446,35 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             }
             refreshComposerActionButton()
         }
-        binding.imageChatEntryButton.setOnClickListener { shellViewModel.launchImageChat() }
-        binding.videoChatEntryButton.setOnClickListener { shellViewModel.launchVideoChat() }
+        binding.imageChatEntryButton.setOnClickListener {
+            if (currentEntryMode == ChatEntryMode.IMAGE) {
+                shellViewModel.launchDefaultChat()
+            } else {
+                shellViewModel.launchImageChat()
+            }
+        }
+        binding.videoChatEntryButton.setOnClickListener {
+            if (currentEntryMode == ChatEntryMode.VIDEO) {
+                shellViewModel.launchDefaultChat()
+            } else {
+                shellViewModel.launchVideoChat()
+            }
+        }
 
         binding.attachButton.setOnClickListener { showImagePickerSheet() }
         binding.removeThumbnailButton.setOnClickListener { clearComposerImage() }
+    }
+
+    private fun loadTodayHotspots() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            todayHotspotService.loadTemplates()
+                .onSuccess { templates ->
+                    if (templates.isNotEmpty()) quickPromptAdapter.submitList(templates)
+                }
+                .onFailure { error ->
+                    Logger.w(TAG, "loadTodayHotspots fallback to local seed: ${error.message}")
+                }
+        }
     }
 
     override fun onPause() {
