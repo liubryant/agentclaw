@@ -35,6 +35,7 @@ import ai.cjym.agentclaw.ui.shell.PresetConversation
 import ai.cjym.agentclaw.ui.shell.ShellSeedData
 import ai.cjym.agentclaw.ui.shell.ShellSharedViewModel
 import ai.cjym.agentclaw.util.hideKeyboard
+import ai.cjym.agentclaw.util.requireView
 import android.app.DownloadManager
 import android.content.Intent
 import android.net.Uri
@@ -436,6 +437,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
             chatViewModel.retryMessage(messageId)
         }
         quickPromptAdapter.onItemClick = { idea ->
+            resetCurrentSessionToTextMode()
             suppressDraftSync = true
             binding.composerInput.setText(idea.promptTemplate)
             binding.composerInput.setSelection(binding.composerInput.text?.length ?: 0)
@@ -463,6 +465,17 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
 
         binding.attachButton.setOnClickListener { showImagePickerSheet() }
         binding.removeThumbnailButton.setOnClickListener { clearComposerImage() }
+    }
+
+    private fun resetCurrentSessionToTextMode() {
+        clearComposerImage()
+        val currentSessionId = chatViewModel.state.value.selectedSessionId.orEmpty()
+        if (currentSessionId.isNotBlank()) {
+            shellViewModel.bindSessionEntryMode(currentSessionId, ChatEntryMode.DEFAULT)
+            chatViewModel.bindSessionEntryMode(currentSessionId, ChatEntryMode.DEFAULT)
+        }
+        updateComposerHint(ChatEntryMode.DEFAULT)
+        updateEntryModeButtons(ChatEntryMode.DEFAULT)
     }
 
     private fun loadTodayHotspots() {
@@ -1001,7 +1014,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         val dialog = BottomSheetDialog(requireContext())
         val sheetView = LayoutInflater.from(requireContext())
             .inflate(R.layout.bottom_sheet_image_picker, null)
-        sheetView.findViewById<View>(R.id.optionCamera).setOnClickListener {
+        sheetView.requireView<View>(R.id.optionCamera).setOnClickListener {
             dialog.dismiss()
             if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -1010,7 +1023,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
                 requestCameraPermission.launch(android.Manifest.permission.CAMERA)
             }
         }
-        sheetView.findViewById<View>(R.id.optionGallery).setOnClickListener {
+        sheetView.requireView<View>(R.id.optionGallery).setOnClickListener {
             dialog.dismiss()
             galleryLauncher.launch("image/*")
         }

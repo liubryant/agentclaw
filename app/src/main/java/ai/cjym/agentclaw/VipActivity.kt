@@ -10,6 +10,7 @@ import ai.cjym.agentclaw.pay.VipProduct
 import ai.cjym.agentclaw.pay.WeChatPayManager
 import ai.cjym.agentclaw.pay.WeChatPayParams
 import ai.cjym.agentclaw.quota.QuotaManager
+import ai.cjym.agentclaw.util.requireView
 import ai.cjym.agentclaw.ui.legal.LegalWebActivity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -456,25 +457,25 @@ class VipActivity : AppCompatActivity() {
         val content = LayoutInflater.from(this).inflate(R.layout.dialog_vip_upgrade, null, false)
         dialog.setContentView(content)
 
-        content.findViewById<TextView>(R.id.upgrade_title).text = "会员套餐详情"
-        content.findViewById<TextView>(R.id.upgrade_subtitle).text = "开通会员，解锁更多 AI 创作能力"
-        content.findViewById<View>(R.id.vip_detail_package_section).visibility = View.VISIBLE
+        content.requireView<TextView>(R.id.upgrade_title).text = "会员套餐详情"
+        content.requireView<TextView>(R.id.upgrade_subtitle).text = "开通会员，解锁更多 AI 创作能力"
+        content.requireView<View>(R.id.vip_detail_package_section).visibility = View.VISIBLE
 
         val videoUsed = QuotaManager.todayVideoCount(this)
         val imageUsed = QuotaManager.todayImageCount(this)
         val videoFree = QuotaManager.freeVideoLimit(this)
         val imageFree = QuotaManager.freeImageLimit(this)
-        content.findViewById<TextView>(R.id.quota_video_text).text = "$videoUsed/$videoFree"
-        content.findViewById<TextView>(R.id.quota_image_text).text = "$imageUsed/$imageFree"
-        content.findViewById<TextView>(R.id.quota_video_free_limit).text = "${videoFree}次/天"
-        content.findViewById<TextView>(R.id.quota_video_vip_limit).text = "${QuotaManager.vipVideoLimit(this)}次/天"
-        content.findViewById<TextView>(R.id.quota_image_free_limit).text = "${imageFree}张/天"
-        content.findViewById<TextView>(R.id.quota_image_vip_limit).text = "${QuotaManager.vipImageLimit(this)}张/天"
-        setDetailQuotaBar(content.findViewById(R.id.quota_video_bar), videoUsed, videoFree)
-        setDetailQuotaBar(content.findViewById(R.id.quota_image_bar), imageUsed, imageFree)
+        content.requireView<TextView>(R.id.quota_video_text).text = "$videoUsed/$videoFree"
+        content.requireView<TextView>(R.id.quota_image_text).text = "$imageUsed/$imageFree"
+        content.requireView<TextView>(R.id.quota_video_free_limit).text = "${videoFree}次/天"
+        content.requireView<TextView>(R.id.quota_video_vip_limit).text = "${QuotaManager.vipVideoLimit(this)}次/天"
+        content.requireView<TextView>(R.id.quota_image_free_limit).text = "${imageFree}张/天"
+        content.requireView<TextView>(R.id.quota_image_vip_limit).text = "${QuotaManager.vipImageLimit(this)}张/天"
+        setDetailQuotaBar(content.requireView(R.id.quota_video_bar), videoUsed, videoFree)
+        setDetailQuotaBar(content.requireView(R.id.quota_image_bar), imageUsed, imageFree)
 
-        val productsContainer = content.findViewById<LinearLayout>(R.id.vip_detail_products)
-        val purchaseButton = content.findViewById<Button>(R.id.upgrade_button)
+        val productsContainer = content.requireView<LinearLayout>(R.id.vip_detail_products)
+        val purchaseButton = content.requireView<Button>(R.id.upgrade_button)
         val detailCards = mutableListOf<LinearLayout>()
         val detailChecks = mutableListOf<TextView>()
         val dp = resources.displayMetrics.density
@@ -567,7 +568,7 @@ class VipActivity : AppCompatActivity() {
             dialog.dismiss()
             binding.vipPayButton.post { startPayment() }
         }
-        content.findViewById<TextView>(R.id.upgrade_cancel).apply {
+        content.requireView<TextView>(R.id.upgrade_cancel).apply {
             text = "关闭"
             setOnClickListener { dialog.dismiss() }
         }

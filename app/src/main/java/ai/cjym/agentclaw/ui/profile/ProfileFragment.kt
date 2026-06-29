@@ -8,6 +8,7 @@ import ai.cjym.agentclaw.di.AppGraph
 import ai.cjym.agentclaw.ui.common.BaseBindingFragment
 import ai.cjym.agentclaw.ui.legal.LegalWebActivity
 import ai.cjym.agentclaw.ui.shell.ShellProfileActions
+import ai.cjym.agentclaw.util.requireView
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -33,16 +34,16 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(FragmentProf
         binding.loginCard.setOnClickListener { actions?.openProfileLogin() }
         binding.loginAction.setOnClickListener { actions?.openProfileLogin() }
         binding.vipCard.setOnClickListener { actions?.openProfileMembership() }
-        binding.root.findViewById<View>(R.id.documentsRow).setOnClickListener { actions?.openProfileDocuments() }
-        binding.root.findViewById<View>(R.id.settingsRow).setOnClickListener { actions?.openProfileSettings() }
-        binding.root.findViewById<View>(R.id.userAgreementRow).setOnClickListener {
+        binding.root.requireView<View>(R.id.documentsRow).setOnClickListener { actions?.openProfileDocuments() }
+        binding.root.requireView<View>(R.id.settingsRow).setOnClickListener { actions?.openProfileSettings() }
+        binding.root.requireView<View>(R.id.userAgreementRow).setOnClickListener {
             startActivity(LegalWebActivity.createIntent(
                 requireContext(),
                 getString(R.string.setting_user_agreement),
                 AppConstants.USER_AGREEMENT_URL
             ))
         }
-        binding.root.findViewById<View>(R.id.privacyPolicyRow).setOnClickListener {
+        binding.root.requireView<View>(R.id.privacyPolicyRow).setOnClickListener {
             startActivity(LegalWebActivity.createIntent(
                 requireContext(),
                 getString(R.string.setting_privacy_policy),
@@ -50,8 +51,8 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(FragmentProf
             ))
         }
         binding.logoutCard.setOnClickListener { confirmLogout() }
-        binding.root.findViewById<View>(R.id.feedbackRow).setOnClickListener { openFeedback() }
-        binding.root.findViewById<View>(R.id.ratingRow).setOnClickListener { openAppStore() }
+        binding.root.requireView<View>(R.id.feedbackRow).setOnClickListener { openFeedback() }
+        binding.root.requireView<View>(R.id.ratingRow).setOnClickListener { openAppStore() }
     }
 
     private fun openFeedback() {

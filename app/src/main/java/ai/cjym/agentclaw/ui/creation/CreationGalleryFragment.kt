@@ -5,6 +5,7 @@ import ai.cjym.agentclaw.databinding.FragmentCreationGalleryBinding
 import ai.cjym.agentclaw.pay.PaymentApi
 import ai.cjym.agentclaw.quota.QuotaManager
 import ai.cjym.agentclaw.ui.common.BaseBindingFragment
+import ai.cjym.agentclaw.util.requireView
 import ai.cjym.agentclaw.ui.shell.ShellSharedViewModel
 import ai.cjym.agentclaw.ui.vip.VipUpgradeBottomSheet
 import android.app.Activity
@@ -146,30 +147,30 @@ class CreationGalleryFragment :
     }
 
     private fun setupPage(page: View, isVideo: Boolean, items: List<CreationMedia>) {
-        page.findViewById<TextView>(R.id.primaryFeatureTitle).setText(
+        page.requireView<TextView>(R.id.primaryFeatureTitle).setText(
             if (isVideo) R.string.creation_text_to_video else R.string.creation_text_to_image
         )
-        page.findViewById<TextView>(R.id.primaryFeatureHint).setText(
+        page.requireView<TextView>(R.id.primaryFeatureHint).setText(
             if (isVideo) R.string.creation_text_to_video_hint else R.string.creation_text_to_image_hint
         )
-        page.findViewById<TextView>(R.id.secondaryFeatureTitle).setText(
+        page.requireView<TextView>(R.id.secondaryFeatureTitle).setText(
             if (isVideo) R.string.creation_image_to_video else R.string.creation_image_to_image
         )
-        page.findViewById<TextView>(R.id.secondaryFeatureHint).setText(
+        page.requireView<TextView>(R.id.secondaryFeatureHint).setText(
             if (isVideo) R.string.creation_image_to_video_hint else R.string.creation_image_to_image_hint
         )
 
         val launchCreation = {
             if (isVideo) tryLaunchVideoChat() else tryLaunchImageChat()
         }
-        page.findViewById<View>(R.id.primaryFeatureCard).setOnClickListener { view ->
+        page.requireView<View>(R.id.primaryFeatureCard).setOnClickListener { view ->
             animateCardPress(view, launchCreation)
         }
-        page.findViewById<View>(R.id.secondaryFeatureCard).setOnClickListener { view ->
+        page.requireView<View>(R.id.secondaryFeatureCard).setOnClickListener { view ->
             animateCardPress(view, launchCreation)
         }
 
-        page.findViewById<RecyclerView>(R.id.mediaRecycler).apply {
+        page.requireView<RecyclerView>(R.id.mediaRecycler).apply {
             layoutManager = if (isVideo) {
                 GridLayoutManager(requireContext(), 2)
             } else {
