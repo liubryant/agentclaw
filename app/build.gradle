@@ -197,6 +197,9 @@ dependencies {
     implementation libs.concurrent.futures
     implementation 'com.github.felHR85:UsbSerial:6.1.0'
 
+    // Pinch-to-zoom image viewer
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
     // Markdown rendering
     implementation libs.markwon.core
     implementation libs.markwon.strikethrough

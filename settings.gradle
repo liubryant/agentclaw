@@ -35,6 +35,7 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
         maven { url 'https://gitee.com/lijianwen_zy/InmoCommonLibs/raw/master' }
         maven { url 'https://artifact.bytedance.com/repository/pangle' } // 穿山甲融合SDK
+        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/' } // WeChat/Alipay SDKs
 
     }
 }
