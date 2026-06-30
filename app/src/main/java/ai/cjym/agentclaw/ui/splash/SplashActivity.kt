@@ -17,6 +17,8 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import com.bytedance.sdk.openadsdk.AdSlot
 import com.bytedance.sdk.openadsdk.CSJAdError
@@ -47,6 +49,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // 内容延伸到系统栏背后（edge-to-edge）
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        hideStatusBar()
         // 刘海屏/打孔屏：允许内容延伸到凹口区域
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.attributes = window.attributes.also {
@@ -78,10 +81,19 @@ class SplashActivity : AppCompatActivity() {
     // 注意事项⑦：onResume 判断是否强制跳主页
     override fun onResume() {
         super.onResume()
+        hideStatusBar()
         Log.d(TAG, "onResume forceGoMain=$forceGoMain hasNavigated=$hasNavigated")
         if (forceGoMain) {
             Log.d(TAG, "onResume: forceGoMain=true, navigating immediately")
             navigateToDestination()
+        }
+    }
+
+    private fun hideStatusBar() {
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            hide(WindowInsetsCompat.Type.statusBars())
+            systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 

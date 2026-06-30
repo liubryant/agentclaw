@@ -168,6 +168,15 @@
     <string name="chat_streaming">正在生成...</string>
     <string name="chat_thinking">思考中…</string>
     <string name="chat_calling_tool">調用工具中…</string>
+    <string name="chat_agent_understanding">正在理解你的需求…</string>
+    <string name="chat_agent_planning">正在規劃任務步驟…</string>
+    <string name="chat_agent_calling_skill">正在調用合適的 Skill…</string>
+    <string name="chat_agent_selecting_tool">正在選擇最佳工具…</string>
+    <string name="chat_agent_searching">正在搜索相關信息…</string>
+    <string name="chat_agent_querying">正在查詢可用結果…</string>
+    <string name="chat_agent_analyzing">正在分析關鍵信息…</string>
+    <string name="chat_agent_verifying">正在驗證查詢結果…</string>
+    <string name="chat_agent_generating">正在生成回答…</string>
     <string name="chat_tool_calls">工具調用</string>
     <string name="chat_tool_running">運行中</string>
     <string name="chat_tool_done">完成</string>

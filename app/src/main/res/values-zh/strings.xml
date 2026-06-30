@@ -185,6 +185,15 @@
     <string name="chat_streaming">正在生成...</string>
     <string name="chat_thinking">思考中…</string>
     <string name="chat_calling_tool">调用工具中…</string>
+    <string name="chat_agent_understanding">正在理解你的需求…</string>
+    <string name="chat_agent_planning">正在规划任务步骤…</string>
+    <string name="chat_agent_calling_skill">正在调用Search Skill…</string>
+    <string name="chat_agent_selecting_tool">选择工具…</string>
+    <string name="chat_agent_searching">搜索相关信息…</string>
+    <string name="chat_agent_querying">正在查询可用结果…</string>
+    <string name="chat_agent_analyzing">正在分析关键信息…</string>
+    <string name="chat_agent_verifying">正在验证查询结果…</string>
+    <string name="chat_agent_generating">正在生成回答…</string>
     <string name="chat_tool_calls">工具调用</string>
     <string name="chat_tool_running">运行中</string>
     <string name="chat_tool_done">完成</string>

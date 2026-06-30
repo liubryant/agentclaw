@@ -175,6 +175,35 @@
     <string name="chat_streaming">Streaming...</string>
     <string name="chat_thinking">Thinking…</string>
     <string name="chat_calling_tool">Calling tool…</string>
+    <string name="chat_agent_understanding">Understanding your request…</string>
+    <string name="chat_agent_planning">Planning the next steps…</string>
+    <string name="chat_agent_calling_skill">Calling the right Skill…</string>
+    <string name="chat_agent_selecting_tool">Selecting the best tool…</string>
+    <string name="chat_agent_searching">Searching for relevant information…</string>
+    <string name="chat_agent_querying">Querying available results…</string>
+    <string name="chat_agent_analyzing">Analyzing key findings…</string>
+    <string name="chat_agent_verifying">Verifying the results…</string>
+    <string name="chat_agent_generating">Generating the response…</string>
+    <string-array name="chat_agent_thinking_statuses">
+        <item>@string/chat_thinking</item>
+        <item>@string/chat_agent_understanding</item>
+        <item>@string/chat_agent_planning</item>
+        <item>@string/chat_agent_calling_skill</item>
+        <item>@string/chat_agent_searching</item>
+        <item>@string/chat_agent_querying</item>
+        <item>@string/chat_agent_analyzing</item>
+        <item>@string/chat_agent_generating</item>
+    </string-array>
+    <string-array name="chat_agent_tool_statuses">
+        <item>@string/chat_calling_tool</item>
+        <item>@string/chat_agent_calling_skill</item>
+        <item>@string/chat_agent_selecting_tool</item>
+        <item>@string/chat_agent_searching</item>
+        <item>@string/chat_agent_querying</item>
+        <item>@string/chat_agent_analyzing</item>
+        <item>@string/chat_agent_verifying</item>
+        <item>@string/chat_agent_generating</item>
+    </string-array>
     <string name="chat_tool_calls">Tool Calls</string>
     <string name="chat_tool_running">Running</string>
     <string name="chat_tool_done">Done</string>

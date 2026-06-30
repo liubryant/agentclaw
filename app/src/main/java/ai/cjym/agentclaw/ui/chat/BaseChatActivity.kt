@@ -4,6 +4,7 @@ import ai.inmo.core_common.ui.activity.BaseBindingActivity
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.databinding.ActivityChatBinding
 import ai.cjym.agentclaw.domain.model.GeneratingPhase
+import ai.cjym.agentclaw.ui.widget.AgentStatusRotator
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -36,6 +37,7 @@ abstract class BaseChatActivity :
     private var pendingScroll = false
     private var lastMessageCount = 0
     private var lastTailMessageId: String? = null
+    private lateinit var agentStatusRotator: AgentStatusRotator
 
     override fun initData() {
         onScreenStart()
@@ -50,6 +52,11 @@ abstract class BaseChatActivity :
         binding.messagesRecycler.layoutManager = LinearLayoutManager(this).apply { stackFromEnd = true }
         binding.messagesRecycler.itemAnimator = null
         binding.messagesRecycler.adapter = messageAdapter
+        agentStatusRotator = AgentStatusRotator(
+            container = binding.thinkingIndicator,
+            label = binding.thinkingLabel,
+            scope = lifecycleScope
+        )
 
         if (resources.configuration.smallestScreenWidthDp >= 600) {
             binding.drawerLayout.setDrawerLockMode(androidx.drawerlayout.widget.DrawerLayout.LOCK_MODE_LOCKED_OPEN)
@@ -111,20 +118,7 @@ abstract class BaseChatActivity :
         binding.composerInput.isEnabled = state.canSend
         binding.emptyView.visibility = if (state.messages.isEmpty() && !state.isLoading) View.VISIBLE else View.GONE
 
-        // Thinking / calling tool indicator
-        when (state.generatingPhase) {
-            GeneratingPhase.THINKING -> {
-                binding.thinkingIndicator.visibility = View.VISIBLE
-                binding.thinkingLabel.setText(R.string.chat_thinking)
-            }
-            GeneratingPhase.CALLING_TOOL -> {
-                binding.thinkingIndicator.visibility = View.VISIBLE
-                binding.thinkingLabel.setText(R.string.chat_calling_tool)
-            }
-            GeneratingPhase.NONE -> {
-                binding.thinkingIndicator.visibility = View.GONE
-            }
-        }
+        renderAgentStatus(state)
 
         sessionAdapter.submitList(
             state.sessions.map(ChatSessionListItem::Session),
@@ -139,6 +133,23 @@ abstract class BaseChatActivity :
             lastMessageCount = state.messages.size
             lastTailMessageId = newTailMessageId
         }
+    }
+
+    private fun renderAgentStatus(state: ChatScreenState) {
+        if (!state.isGenerating || state.hasVisibleResponseTextForCurrentTurn()) {
+            agentStatusRotator.hide()
+            return
+        }
+        when (state.generatingPhase) {
+            GeneratingPhase.THINKING -> agentStatusRotator.show(R.array.chat_agent_thinking_statuses)
+            GeneratingPhase.CALLING_TOOL -> agentStatusRotator.show(R.array.chat_agent_tool_statuses)
+            GeneratingPhase.NONE -> agentStatusRotator.hide()
+        }
+    }
+
+    override fun onDestroy() {
+        if (::agentStatusRotator.isInitialized) agentStatusRotator.hide()
+        super.onDestroy()
     }
 
     private fun scrollMessagesToBottom() {

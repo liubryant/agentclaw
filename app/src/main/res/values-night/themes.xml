@@ -20,11 +20,16 @@
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
         <item name="windowSplashScreenAnimationDuration">0</item>
-        <item name="postSplashScreenTheme">@style/Theme.AgentClaw</item>
+        <item name="postSplashScreenTheme">@style/Theme.AgentClaw.SplashContent</item>
+        <item name="android:windowFullscreen">true</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+    </style>
+
+    <style name="Theme.AgentClaw.SplashContent" parent="Theme.AgentClaw">
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="Theme.AgentClaw.Startup" parent="Theme.AgentClaw">

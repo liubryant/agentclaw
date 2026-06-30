@@ -235,3 +235,16 @@ data class ChatScreenState(
     val generatingPhase: GeneratingPhase = GeneratingPhase.NONE,
     val showExportSessionFilesButton: Boolean = false
 )
+
+/** True as soon as this turn has visible assistant/tool text, so wait animations can stop. */
+fun ChatScreenState.hasVisibleResponseTextForCurrentTurn(): Boolean {
+    val lastUserIndex = messages.indexOfLast { it is ChatMessageItem.UserMessageItem }
+    if (lastUserIndex < 0) return false
+    return messages.drop(lastUserIndex + 1).any { item ->
+        when (item) {
+            is ChatMessageItem.AssistantMessageItem -> item.content.isNotBlank()
+            is ChatMessageItem.ToolTextMessageItem -> item.content.isNotBlank()
+            else -> false
+        }
+    }
+}

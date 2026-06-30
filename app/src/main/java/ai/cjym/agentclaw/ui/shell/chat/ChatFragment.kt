@@ -26,6 +26,7 @@ import ai.cjym.agentclaw.domain.model.GeneratingPhase
 import ai.cjym.agentclaw.ui.chat.ChatMessageItem
 import ai.cjym.agentclaw.ui.chat.ChatMessageAdapter
 import ai.cjym.agentclaw.ui.chat.ChatScreenState
+import ai.cjym.agentclaw.ui.chat.hasVisibleResponseTextForCurrentTurn
 import ai.cjym.agentclaw.ui.common.BaseBindingFragment
 import ai.cjym.agentclaw.ui.shell.ChatEntryMode
 import ai.cjym.agentclaw.ui.shell.ShellChatViewModel
@@ -34,6 +35,7 @@ import ai.cjym.agentclaw.ui.shell.ShellEvent
 import ai.cjym.agentclaw.ui.shell.PresetConversation
 import ai.cjym.agentclaw.ui.shell.ShellSeedData
 import ai.cjym.agentclaw.ui.shell.ShellSharedViewModel
+import ai.cjym.agentclaw.ui.widget.AgentStatusRotator
 import ai.cjym.agentclaw.util.hideKeyboard
 import ai.cjym.agentclaw.util.requireView
 import android.app.DownloadManager
@@ -98,6 +100,7 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
     private var cameraImageUri: Uri? = null
     private var pendingImageUri: Uri? = null
     private var currentEntryMode: ChatEntryMode = ChatEntryMode.DEFAULT
+    private var agentStatusRotator: AgentStatusRotator? = null
 
     private data class DownloadedGeneratedFile(
         val uriOrPath: String,
@@ -142,6 +145,11 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         binding.messagesRecycler.recycledViewPool.setMaxRecycledViews(3, 12)
         binding.messagesRecycler.recycledViewPool.setMaxRecycledViews(4, 12)
         binding.messagesRecycler.adapter = messageAdapter
+        agentStatusRotator = AgentStatusRotator(
+            container = binding.thinkingIndicator,
+            label = binding.thinkingLabel,
+            scope = viewLifecycleOwner.lifecycleScope
+        )
         binding.messagesRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
@@ -923,26 +931,25 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
         binding.messagesRecycler.visibility = if (showEmptyState) android.view.View.GONE else android.view.View.VISIBLE
 //        binding.disclaimerView.visibility = if (showEmptyState) android.view.View.VISIBLE else android.view.View.GONE
 
-        when (state.generatingPhase) {
-            GeneratingPhase.THINKING -> {
-                binding.thinkingIndicator.visibility = android.view.View.VISIBLE
-                binding.thinkingLabel.setText(R.string.chat_thinking)
-            }
-
-            GeneratingPhase.CALLING_TOOL -> {
-                binding.thinkingIndicator.visibility = android.view.View.VISIBLE
-                binding.thinkingLabel.setText(R.string.chat_calling_tool)
-            }
-
-            GeneratingPhase.NONE -> {
-                binding.thinkingIndicator.visibility = android.view.View.GONE
-            }
-        }
+        renderAgentStatus(state)
 
         binding.exportSessionFilesButton.visibility = if (state.showExportSessionFilesButton) {
             android.view.View.VISIBLE
         } else {
             android.view.View.GONE
+        }
+    }
+
+    private fun renderAgentStatus(state: ChatScreenState) {
+        val rotator = agentStatusRotator ?: return
+        if (!state.isGenerating || state.hasVisibleResponseTextForCurrentTurn()) {
+            rotator.hide()
+            return
+        }
+        when (state.generatingPhase) {
+            GeneratingPhase.THINKING -> rotator.show(R.array.chat_agent_thinking_statuses)
+            GeneratingPhase.CALLING_TOOL -> rotator.show(R.array.chat_agent_tool_statuses)
+            GeneratingPhase.NONE -> rotator.hide()
         }
     }
 
@@ -1084,6 +1091,8 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
     }
 
     override fun onDestroyView() {
+        agentStatusRotator?.hide()
+        agentStatusRotator = null
         (activity as? ShellChromeController)?.setTopBarVisible(false)
         super.onDestroyView()
     }
