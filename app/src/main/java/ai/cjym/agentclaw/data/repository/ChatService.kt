@@ -141,12 +141,12 @@ class ChatService(private val context: Context) {
                 val response = call.execute()
                 response.use {
                     if (!it.isSuccessful) {
-                        val errBody = runCatching { it.body?.string() }.getOrNull().orEmpty().take(400)
+1                        val errBody = runCatching { it.body?.string() }.getOrNull().orEmpty()
                         Logger.e(
                             TAG,
-                            "agentclaw RESP_CHAT_COMPLETIONS_FAIL code=${it.code}, message=${it.message}, url=$url, body=$errBody"
+                            "agentclaw RESP_CHAT_COMPLETIONS_FAIL code=${it.code}, message=${it.message}, url=$url, body=${errBody.take(2000)}"
                         )
-                        throw IOException("Gateway returned HTTP ${it.code}")
+                        throw IOException(resolveGatewayErrorMessage(errBody, it.code))
                     }
                     Logger.d(TAG, "agentclaw RESP_CHAT_COMPLETIONS_OK code=${it.code}, url=$url")
                     val bodyText = it.body?.string() ?: throw IOException("Empty response body")
@@ -176,6 +176,39 @@ class ChatService(private val context: Context) {
     fun cancelGeneration() {
         activeCall?.cancel()
         activeCall = null
+    }
+
+    /**
+     * Gateway errors may contain another JSON response encoded in error.upstream.
+     * Prefer that upstream business message, while keeping malformed responses safe.
+     */
+    private fun resolveGatewayErrorMessage(body: String, httpCode: Int): String {
+        val parsedMessage = runCatching {
+            extractErrorMessage(JSONObject(body))
+        }.getOrNull()?.trim()?.takeIf { it.isNotEmpty() }
+
+        return parsedMessage?.take(1_000) ?: "Gateway returned HTTP $httpCode"
+    }
+
+    private fun extractErrorMessage(value: Any?): String? {
+        return when (value) {
+            is JSONObject -> {
+                // The upstream field is often a JSON string and contains the useful provider message.
+                extractErrorMessage(value.opt("upstream"))
+                    ?: extractErrorMessage(value.opt("error"))
+                    ?: value.optString("message").takeIf { it.isNotBlank() }
+            }
+            is String -> {
+                val text = value.trim()
+                if (text.startsWith("{") && text.endsWith("}")) {
+                    runCatching { extractErrorMessage(JSONObject(text)) }.getOrNull()
+                        ?: text.takeIf { it.isNotBlank() }
+                } else {
+                    text.takeIf { it.isNotBlank() }
+                }
+            }
+            else -> null
+        }
     }
 
     suspend fun generateVideo(

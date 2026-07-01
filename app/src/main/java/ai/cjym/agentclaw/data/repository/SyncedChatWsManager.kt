@@ -661,7 +661,11 @@ class SyncedChatWsManager(
                     "请求失败（${t.message}），请检查 Token 配置"
                 else -> t.message ?: "请求失败，请重试"
             }
-            finishRunWithError(userMsg)
+            finishRunWithSyntheticAssistantReply(
+                sessionKey = sessionKey,
+                errorMessage = userMsg,
+                assistantText = userMsg
+            )
         }
     }
 
