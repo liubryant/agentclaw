@@ -18,6 +18,7 @@ import ai.cjym.agentclaw.domain.model.SyncedMessage
 import ai.cjym.agentclaw.domain.model.SyncedSession
 import ai.cjym.agentclaw.domain.model.TimelineEntry
 import ai.cjym.agentclaw.domain.model.ToolCallUiModel
+import ai.cjym.agentclaw.safety.ContentSafetyGuard
 import ai.cjym.agentclaw.ui.shell.ChatEntryMode
 import android.content.Context
 import android.net.ConnectivityManager
@@ -281,6 +282,8 @@ class SyncedChatWsManager(
         draftSessionKeys.remove(sessionKey)
         val now = System.currentTimeMillis()
         val messageContent = text.trim()
+        val shouldRevealImageAfterSuccess =
+            resolveSessionEntryMode(sessionKey) == ChatEntryMode.IMAGE && !imageBase64.isNullOrBlank()
         val localUserMessage = SyncedMessage(
             id = UUID.randomUUID().toString(),
             role = "user",
@@ -292,7 +295,7 @@ class SyncedChatWsManager(
                 MessageSendStatus.PENDING_RETRY_OFFLINE
             },
             segments = listOf(ContentSegment.Text(messageContent)),
-            imageBase64 = imageBase64
+            imageBase64 = if (shouldRevealImageAfterSuccess) null else imageBase64
         )
         appendLocalUserMessage(sessionKey, localUserMessage)
 
@@ -384,6 +387,23 @@ class SyncedChatWsManager(
     ) {
         val assistantId = UUID.randomUUID().toString()
         val entryMode = resolveSessionEntryMode(sessionKey)
+        val safety = evaluateSafety(text, entryMode)
+        if (!safety.allowed) {
+            Logger.w(
+                TAG,
+                "Blocked unsafe local chat request session=$sessionKey, messageId=$uiMessageId, reason=${safety.reason}"
+            )
+            updateUserMessageSendStatus(
+                messageId = uiMessageId,
+                sendStatus = MessageSendStatus.SENT
+            )
+            appendLocalSafetyAssistantReply(
+                sessionKey = sessionKey,
+                assistantId = assistantId,
+                assistantText = safety.userMessage
+            )
+            return
+        }
         if (entryMode == ChatEntryMode.VIDEO) {
             sendVideoGenerationMessage(
                 sessionKey = sessionKey,
@@ -469,6 +489,38 @@ class SyncedChatWsManager(
                 stopRunLocally(emitReplyFinished = false)
             }
         }
+    }
+
+    private fun evaluateSafety(
+        text: String,
+        entryMode: ChatEntryMode
+    ): ContentSafetyGuard.Result {
+        val surface = when (entryMode) {
+            ChatEntryMode.IMAGE -> ContentSafetyGuard.Surface.IMAGE_PROMPT
+            ChatEntryMode.VIDEO -> ContentSafetyGuard.Surface.VIDEO_PROMPT
+            ChatEntryMode.DEFAULT -> ContentSafetyGuard.Surface.CHAT
+        }
+        return ContentSafetyGuard.evaluate(text, surface)
+    }
+
+    private suspend fun appendLocalSafetyAssistantReply(
+        sessionKey: String,
+        assistantId: String,
+        assistantText: String
+    ) {
+        val assistantMessage = SyncedMessage(
+            id = assistantId,
+            role = "assistant",
+            content = assistantText,
+            createdAt = System.currentTimeMillis(),
+            messageIndex = _messages.value.size,
+            isStreaming = false,
+            sendStatus = MessageSendStatus.SENT,
+            segments = listOf(ContentSegment.Text(assistantText))
+        )
+        _messages.value = _messages.value + assistantMessage
+        cacheRepo.appendMessage(sessionKey, assistantMessage)
+        _replyFinished.tryEmit(Unit)
     }
 
     private suspend fun sendVideoGenerationMessage(
@@ -561,6 +613,7 @@ class SyncedChatWsManager(
                     }
                 }
                 .getOrThrow()
+            revealUserMessageImage(uiMessageId, imageBase64)
             val now = System.currentTimeMillis()
             val assistantMessage = SyncedMessage(
                 id = assistantId,
@@ -595,6 +648,18 @@ class SyncedChatWsManager(
             }
             finishRunWithError(userMsg)
         }
+    }
+
+    private fun revealUserMessageImage(messageId: String, imageBase64: String) {
+        if (imageBase64.isBlank()) return
+        val nextMessages = _messages.value.map { message ->
+            if (message.id == messageId && message.role.equals("user", ignoreCase = true)) {
+                message.copy(imageBase64 = imageBase64)
+            } else {
+                message
+            }
+        }
+        _messages.value = nextMessages
     }
 
     private suspend fun sendViaRestFallback(

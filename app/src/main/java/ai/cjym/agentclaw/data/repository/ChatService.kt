@@ -3,6 +3,8 @@
 import ai.cjym.agentclaw.data.local.prefs.PreferencesManager
 import ai.cjym.agentclaw.data.remote.api.NetworkModule
 import ai.cjym.agentclaw.domain.model.ChatMessage
+import ai.cjym.agentclaw.domain.model.ChatRole
+import ai.cjym.agentclaw.safety.ContentSafetyGuard
 import ai.inmo.core_common.utils.Logger
 import android.content.Context
 import kotlinx.coroutines.delay
@@ -63,6 +65,12 @@ class ChatService(private val context: Context) {
         messages: List<ChatMessage>,
         model: String = "glm-4.7"
     ): Flow<String> = callbackFlow {
+        val lastUserText = messages.lastOrNull { it.role == ChatRole.USER }?.content.orEmpty()
+        val textSafety = ContentSafetyGuard.evaluate(lastUserText, ContentSafetyGuard.Surface.CHAT)
+        if (!textSafety.allowed) {
+            close(IOException(textSafety.userMessage))
+            return@callbackFlow
+        }
         val hasImageModeMarker = messages.any { it.content.contains(IMAGE_MODE_MARKER) }
         val hasVideoModeMarker = messages.any { it.content.contains(VIDEO_MODE_MARKER) }
         val requestModel = if (hasImageModeMarker) {
@@ -141,7 +149,7 @@ class ChatService(private val context: Context) {
                 val response = call.execute()
                 response.use {
                     if (!it.isSuccessful) {
-1                        val errBody = runCatching { it.body?.string() }.getOrNull().orEmpty()
+                        val errBody = runCatching { it.body?.string() }.getOrNull().orEmpty()
                         Logger.e(
                             TAG,
                             "agentclaw RESP_CHAT_COMPLETIONS_FAIL code=${it.code}, message=${it.message}, url=$url, body=${errBody.take(2000)}"
@@ -219,6 +227,10 @@ class ChatService(private val context: Context) {
         if (cleanPrompt.isBlank()) {
             throw IOException("视频描述不能为空")
         }
+        val safety = ContentSafetyGuard.evaluate(cleanPrompt, ContentSafetyGuard.Surface.VIDEO_PROMPT)
+        if (!safety.allowed) {
+            throw IOException(safety.userMessage)
+        }
 
         val submitted = executeJson(
             request = Request.Builder()
@@ -280,6 +292,10 @@ class ChatService(private val context: Context) {
         val cleanPrompt = prompt.trim()
         if (cleanPrompt.isBlank()) throw IOException("图片编辑描述不能为空")
         if (imageBase64.isBlank()) throw IOException("请选择要编辑的图片")
+        val safety = ContentSafetyGuard.evaluate(cleanPrompt, ContentSafetyGuard.Surface.IMAGE_PROMPT)
+        if (!safety.allowed) {
+            throw IOException(safety.userMessage)
+        }
 
         val token = PreferencesManager.resolveGatewayToken(context)
         val baseUrl = PreferencesManager(context).agentclawBaseUrl.trimEnd('/')

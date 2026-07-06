@@ -7,6 +7,7 @@ import ai.cjym.agentclaw.di.AppGraph
 import ai.cjym.agentclaw.domain.model.ChatMessage
 import ai.cjym.agentclaw.domain.model.ChatRole
 import ai.cjym.agentclaw.domain.model.GeneratingPhase
+import ai.cjym.agentclaw.safety.ContentSafetyGuard
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -97,6 +98,22 @@ class ChatViewModel : BaseViewModel() {
                 )
             )
             repository.updateSessionTitleFromFirstUserMessage(selected, trimmed)
+            val safety = ContentSafetyGuard.evaluate(trimmed, ContentSafetyGuard.Surface.CHAT)
+            if (!safety.allowed) {
+                repository.upsertAssistantMessage(
+                    id = UUID.randomUUID().toString(),
+                    sessionId = selected,
+                    content = safety.userMessage,
+                    createdAt = System.currentTimeMillis()
+                )
+                _state.value = _state.value.copy(
+                    isGenerating = false,
+                    generatingPhase = GeneratingPhase.NONE,
+                    errorMessage = null,
+                    messages = repository.loadMessages(selected).map(ChatMessageItem::fromLocal)
+                )
+                return@launchIo
+            }
             val persisted = repository.loadMessages(selected)
             val assistantId = UUID.randomUUID().toString()
             streamingAssistant = ChatMessageItem.AssistantMessageItem(
