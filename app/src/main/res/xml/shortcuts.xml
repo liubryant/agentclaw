@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="cloud_panorama"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_panorama"
+        android:shortcutShortLabel="@string/shortcut_cloud_panorama_short"
+        android:shortcutLongLabel="@string/shortcut_cloud_panorama_long">
+        <intent
+            android:action="ai.cjym.agentclaw.action.CLOUD_PANORAMA"
+            android:targetPackage="ai.cjym.agentclaw"
+            android:targetClass="ai.cjym.agentclaw.ui.splash.SplashActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="navigate_last_destination"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_navigation"
+        android:shortcutShortLabel="@string/shortcut_navigation_short"
+        android:shortcutLongLabel="@string/shortcut_navigation_long">
+        <intent
+            android:action="ai.cjym.agentclaw.action.NAVIGATE_LAST_DESTINATION"
+            android:targetPackage="ai.cjym.agentclaw"
+            android:targetClass="ai.cjym.agentclaw.ui.splash.SplashActivity" />
+    </shortcut>
+</shortcuts>

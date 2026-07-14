@@ -96,12 +96,13 @@
         <LinearLayout
             android:id="@+id/vipCard"
             android:layout_width="match_parent"
-            android:layout_height="134dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_profile_vip_card"
             android:clickable="true"
             android:elevation="2dp"
             android:focusable="true"
+            android:minHeight="134dp"
             android:orientation="vertical"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
@@ -111,8 +112,7 @@
             <!-- Top row: icon + title/subtitle + action button -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -136,6 +136,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/misans_demibold"
+                        android:maxLines="2"
                         android:text="@string/profile_vip_title"
                         android:textColor="#FFF2D2"
                         android:textSize="17sp" />
@@ -145,6 +146,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:maxLines="2"
                         android:textColor="#C8A97E"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -154,6 +156,8 @@
                     android:layout_height="34dp"
                     android:background="@drawable/bg_profile_vip_action"
                     android:gravity="center"
+                    android:maxLines="1"
+                    android:minWidth="92dp"
                     android:paddingHorizontal="15dp"
                     android:text="@string/profile_vip_action"
                     android:textColor="#4F2D16"
@@ -261,20 +265,21 @@
             <include android:id="@+id/feedbackRow" layout="@layout/item_profile_entry_feedback" />
             <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="54dp" android:background="#0F000000" />
             <include android:id="@+id/ratingRow" layout="@layout/item_profile_entry_rating" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginStart="54dp" android:background="#0F000000" />
+            <include android:id="@+id/deleteAccountRow" layout="@layout/item_profile_entry_delete_account" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/logoutCard"
+            android:id="@+id/accountActionsCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:background="@drawable/bg_profile_section"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
             android:orientation="vertical">
 
-            <include android:id="@+id/logoutRow" layout="@layout/item_profile_entry_logout" />
+            <include
+                android:id="@+id/logoutRow"
+                layout="@layout/item_profile_entry_logout" />
         </LinearLayout>
 
         <TextView

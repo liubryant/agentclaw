@@ -311,6 +311,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         renderBottomNavigation(state.currentDestination)
 //        binding.navSchedule.isSelected = state.currentDestination == ShellDestination.SCHEDULE
         val isChatDestination = state.currentDestination == ShellDestination.CHAT
+        binding.sidebarButton.visibility = if (isChatDestination) View.VISIBLE else View.GONE
         when (state.currentDestination) {
             ShellDestination.IDEAS, ShellDestination.SCHEDULE -> setSidebarVisible(true)
             ShellDestination.CREATE, ShellDestination.PROFILE -> binding.sidebarContainer.visibility = View.GONE
@@ -342,11 +343,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         binding.bottomConversationText.isSelected = isConversation
         binding.bottomCreationText.isSelected = isCreation
         binding.bottomProfileText.isSelected = isProfile
-        binding.bottomConversationTab.visibility = if (destination == ShellDestination.CHAT) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+        binding.bottomConversationTab.visibility = View.VISIBLE
 
         val conversationScale = if (isConversation) 1f else 0.94f
         val creationScale = if (isCreation) 1f else 0.94f
@@ -450,6 +447,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
     }
 
     override fun toggleSidebar() {
+        if (latestShellState.currentDestination != ShellDestination.CHAT) return
         setSidebarVisible(binding.sidebarContainer.visibility != View.VISIBLE)
     }
 

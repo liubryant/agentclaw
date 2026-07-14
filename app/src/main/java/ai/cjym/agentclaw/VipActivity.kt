@@ -21,6 +21,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
 import android.text.InputFilter
 import android.text.InputType
 import android.text.SpannableString
@@ -92,16 +93,16 @@ class VipActivity : AppCompatActivity() {
             val errCode = intent.getIntExtra(EXTRA_WX_ERROR_CODE, -1)
             when (errCode) {
                 0 -> {
-                    binding.vipStatus.text = "支付结果确认中…"
+                    binding.vipStatus.setText(R.string.vip_status_confirming_payment)
                     startOrderPolling()
                 }
                 -2 -> {
                     setPayEnabled(true)
-                    binding.vipStatus.text = "已取消支付"
+                    binding.vipStatus.setText(R.string.vip_status_payment_cancelled)
                 }
                 else -> {
                     setPayEnabled(true)
-                    binding.vipStatus.text = "支付未完成，请稍后重试"
+                    binding.vipStatus.setText(R.string.vip_status_payment_incomplete)
                 }
             }
         }
@@ -184,7 +185,7 @@ class VipActivity : AppCompatActivity() {
         } else {
             memberActive = false
             memberStatusLoaded = true
-            binding.vipPhone.text = "登录后开通会员"
+            binding.vipPhone.setText(R.string.vip_login_required_title)
             binding.vipLoginButton.visibility = View.VISIBLE
             binding.vipLoginButton.setOnClickListener { showLoginDialog { refreshUserInfo() } }
             showPayBottomState()
@@ -207,26 +208,30 @@ class VipActivity : AppCompatActivity() {
                 memberActive = isVip
                 memberStatusLoaded = true
                 if (isVip && expireDate != null) {
-                    binding.vipMemberSubtitle.text = "尊贵会员 · 有效期至 $expireDate"
+                    binding.vipMemberSubtitle.text = getString(R.string.vip_member_active_until, expireDate)
                     binding.vipMemberSubtitle.setTextColor(Color.parseColor("#FFEDBD"))
-                    binding.vipStatus.text = "会员已开通，可继续续费"
+                    binding.vipStatus.setText(R.string.vip_status_active_can_renew)
                     showPaidBottomState()
                 } else {
-                    binding.vipMemberSubtitle.text = "开通会员，解锁AI助手全部功能"
+                    binding.vipMemberSubtitle.setText(R.string.vip_member_subtitle)
                     binding.vipMemberSubtitle.setTextColor(Color.parseColor("#CDAF7A"))
-                    binding.vipStatus.text = if (selectedProduct == null) "请先选择会员套餐" else "请选择套餐并支付"
+                    binding.vipStatus.setText(if (selectedProduct == null) R.string.vip_status_select_package_first else R.string.vip_status_choose_package)
                     showPayBottomState()
                 }
             }.onFailure { e ->
                 memberStatusLoaded = true
-                binding.vipStatus.text = if (selectedProduct == null) (e.message ?: "加载失败") else "请选择套餐并支付"
+                binding.vipStatus.text = if (selectedProduct == null) {
+                    e.message ?: getString(R.string.vip_status_load_failed)
+                } else {
+                    getString(R.string.vip_status_choose_package)
+                }
                 showPayBottomState()
             }
         }
     }
 
     private fun loadProducts() {
-        binding.vipStatus.text = "正在加载会员套餐…"
+        binding.vipStatus.setText(R.string.vip_status_loading_packages)
         setPayEnabled(false)
         binding.vipProducts.removeAllViews()
         productViews.clear()
@@ -236,14 +241,14 @@ class VipActivity : AppCompatActivity() {
             }.onSuccess { list ->
                 if (list.isEmpty()) {
                     showProductPlaceholder()
-                    binding.vipStatus.text = "暂无可购买的会员套餐"
+                    binding.vipStatus.setText(R.string.vip_status_no_packages)
                 } else {
                     products = list
                     renderProducts(list)
                 }
             }.onFailure { e ->
                 showProductPlaceholder()
-                binding.vipStatus.text = "${e.message ?: "加载失败"} · 点击重试"
+                binding.vipStatus.text = getString(R.string.vip_status_tap_retry, e.message ?: getString(R.string.vip_status_load_failed))
                 binding.vipProducts.getChildAt(0)?.setOnClickListener { loadProducts() }
             }
         }
@@ -258,7 +263,7 @@ class VipActivity : AppCompatActivity() {
         productDescViews.clear()
         val dp = resources.displayMetrics.density
         val tv = TextView(this).apply {
-            text = "会员套餐\n\n加载中…"
+            text = getString(R.string.vip_product_loading)
             gravity = Gravity.CENTER
             setTextColor(Color.parseColor("#9C8A75"))
             textSize = 14f
@@ -267,8 +272,8 @@ class VipActivity : AppCompatActivity() {
         val params = LinearLayout.LayoutParams((140 * dp).toInt(), (148 * dp).toInt())
         params.setMargins((6 * dp).toInt(), (16 * dp).toInt(), (6 * dp).toInt(), 0)
         binding.vipProducts.addView(tv, params)
-        binding.vipBottomPrice.text = "￥--"
-        binding.vipBottomHint.text = "立即开通"
+        binding.vipBottomPrice.setText(R.string.vip_price_placeholder)
+        binding.vipBottomHint.setText(R.string.vip_open_now)
     }
 
     private fun renderProducts(list: List<VipProduct>) {
@@ -304,10 +309,10 @@ class VipActivity : AppCompatActivity() {
             if (!memberStatusLoaded) {
                 setPayEnabled(false)
             } else if (memberActive) {
-                binding.vipStatus.text = "会员已开通，可继续续费"
+                binding.vipStatus.setText(R.string.vip_status_active_can_renew)
                 showPaidBottomState()
             } else {
-                binding.vipStatus.text = if (AppGraph.preferences.isLoggedIn) "请选择套餐并支付" else "支付前需要先登录"
+                binding.vipStatus.setText(if (AppGraph.preferences.isLoggedIn) R.string.vip_status_choose_package else R.string.vip_status_login_required)
             }
         }
     }
@@ -345,6 +350,8 @@ class VipActivity : AppCompatActivity() {
             text = product.name
             textSize = 12f
             gravity = Gravity.CENTER
+            maxLines = 2
+            ellipsize = TextUtils.TruncateAt.END
             setTextColor(Color.parseColor("#B6A58E"))
             LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
@@ -361,6 +368,7 @@ class VipActivity : AppCompatActivity() {
                 textSize = 10f
                 gravity = Gravity.CENTER
                 maxLines = 2
+                ellipsize = TextUtils.TruncateAt.END
                 setTextColor(Color.parseColor("#7A6B58"))
                 LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).also {
@@ -430,8 +438,8 @@ class VipActivity : AppCompatActivity() {
         } else if (memberActive) {
             showPaidBottomState()
         } else {
-            binding.vipBottomPrice.text = selectedProduct?.let { "￥${it.price}" } ?: "￥--"
-            binding.vipBottomHint.text = "立即开通"
+            binding.vipBottomPrice.text = selectedProduct?.let { "¥${it.price}" } ?: getString(R.string.vip_price_placeholder)
+            binding.vipBottomHint.setText(R.string.vip_open_now)
             setPayEnabled(selectedProduct != null)
         }
     }
@@ -441,14 +449,14 @@ class VipActivity : AppCompatActivity() {
     }
 
     private fun showPaidBottomState() {
-        binding.vipBottomPrice.text = selectedProduct?.let { "￥${it.price}" } ?: "￥--"
-        binding.vipBottomHint.text = "立即续费"
+        binding.vipBottomPrice.text = selectedProduct?.let { "¥${it.price}" } ?: getString(R.string.vip_price_placeholder)
+        binding.vipBottomHint.setText(R.string.vip_renew_now)
         setPayEnabled(selectedProduct != null)
     }
 
     private fun showPayBottomState() {
-        binding.vipBottomPrice.text = selectedProduct?.let { "￥${it.price}" } ?: "￥--"
-        binding.vipBottomHint.text = "立即开通"
+        binding.vipBottomPrice.text = selectedProduct?.let { "¥${it.price}" } ?: getString(R.string.vip_price_placeholder)
+        binding.vipBottomHint.setText(R.string.vip_open_now)
         setPayEnabled(selectedProduct != null)
     }
 
@@ -457,8 +465,8 @@ class VipActivity : AppCompatActivity() {
         val content = LayoutInflater.from(this).inflate(R.layout.dialog_vip_upgrade, null, false)
         dialog.setContentView(content)
 
-        content.requireView<TextView>(R.id.upgrade_title).text = "会员套餐详情"
-        content.requireView<TextView>(R.id.upgrade_subtitle).text = "开通会员，解锁更多 AI 创作能力"
+        content.requireView<TextView>(R.id.upgrade_title).setText(R.string.vip_detail_title)
+        content.requireView<TextView>(R.id.upgrade_subtitle).setText(R.string.vip_detail_subtitle)
         content.requireView<View>(R.id.vip_detail_package_section).visibility = View.VISIBLE
 
         val videoUsed = QuotaManager.todayVideoCount(this)
@@ -467,10 +475,10 @@ class VipActivity : AppCompatActivity() {
         val imageFree = QuotaManager.freeImageLimit(this)
         content.requireView<TextView>(R.id.quota_video_text).text = "$videoUsed/$videoFree"
         content.requireView<TextView>(R.id.quota_image_text).text = "$imageUsed/$imageFree"
-        content.requireView<TextView>(R.id.quota_video_free_limit).text = "${videoFree}次/天"
-        content.requireView<TextView>(R.id.quota_video_vip_limit).text = "${QuotaManager.vipVideoLimit(this)}次/天"
-        content.requireView<TextView>(R.id.quota_image_free_limit).text = "${imageFree}张/天"
-        content.requireView<TextView>(R.id.quota_image_vip_limit).text = "${QuotaManager.vipImageLimit(this)}张/天"
+        content.requireView<TextView>(R.id.quota_video_free_limit).text = getString(R.string.vip_quota_video_per_day, videoFree)
+        content.requireView<TextView>(R.id.quota_video_vip_limit).text = getString(R.string.vip_quota_video_per_day, QuotaManager.vipVideoLimit(this))
+        content.requireView<TextView>(R.id.quota_image_free_limit).text = getString(R.string.vip_quota_image_per_day, imageFree)
+        content.requireView<TextView>(R.id.quota_image_vip_limit).text = getString(R.string.vip_quota_image_per_day, QuotaManager.vipImageLimit(this))
         setDetailQuotaBar(content.requireView(R.id.quota_video_bar), videoUsed, videoFree)
         setDetailQuotaBar(content.requireView(R.id.quota_image_bar), imageUsed, imageFree)
 
@@ -493,13 +501,13 @@ class VipActivity : AppCompatActivity() {
             purchaseButton.isEnabled = selectedProduct != null
             purchaseButton.alpha = if (selectedProduct != null) 1f else 0.5f
             purchaseButton.text = selectedProduct?.let {
-                "￥${it.price}  ${if (memberActive) "立即续费" else "立即开通会员"}"
-            } ?: "请选择会员套餐"
+                getString(R.string.vip_detail_purchase, it.price, getString(if (memberActive) R.string.vip_renew_now else R.string.vip_open_now))
+            } ?: getString(R.string.vip_select_package)
         }
 
         if (products.isEmpty()) {
             productsContainer.addView(TextView(this).apply {
-                text = "暂无可购买的会员套餐"
+                setText(R.string.vip_detail_no_packages)
                 textSize = 12f
                 gravity = Gravity.CENTER
                 setTextColor(Color.parseColor("#988571"))
@@ -532,7 +540,7 @@ class VipActivity : AppCompatActivity() {
                 card.addView(topRow, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
                 val price = TextView(this).apply {
-                    text = "￥${product.price}"
+                    text = "¥${product.price}"
                     textSize = 18f
                     setTypeface(typeface, Typeface.BOLD)
                     setTextColor(Color.parseColor("#F6D28F"))
@@ -541,10 +549,11 @@ class VipActivity : AppCompatActivity() {
                 card.addView(price, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                 if (product.description.isNotBlank()) {
                     card.addView(TextView(this).apply {
-                        text = product.description
-                        textSize = 10f
-                        maxLines = 1
-                        setTextColor(Color.parseColor("#988571"))
+                    text = product.description
+                    textSize = 10f
+                    maxLines = 1
+                    ellipsize = TextUtils.TruncateAt.END
+                    setTextColor(Color.parseColor("#988571"))
                         setPadding((31 * dp).toInt(), (2 * dp).toInt(), 0, 0)
                     }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                 }
@@ -569,7 +578,7 @@ class VipActivity : AppCompatActivity() {
             binding.vipPayButton.post { startPayment() }
         }
         content.requireView<TextView>(R.id.upgrade_cancel).apply {
-            text = "关闭"
+            setText(R.string.vip_detail_close)
             setOnClickListener { dialog.dismiss() }
         }
 
@@ -605,8 +614,9 @@ class VipActivity : AppCompatActivity() {
     }
 
     private fun setupAgreementText() {
-        val full = "请阅读并同意《会员服务协议》"
-        val start = full.indexOf("《")
+        val full = getString(R.string.vip_agreement_hint)
+        val agreementName = getString(R.string.vip_agreement_name)
+        val start = full.indexOf(agreementName).takeIf { it >= 0 } ?: 0
         val end = full.length
         val span = SpannableString(full)
         val gold = Color.parseColor("#C87830")
@@ -615,7 +625,7 @@ class VipActivity : AppCompatActivity() {
         span.setSpan(object : ClickableSpan() {
             override fun onClick(widget: android.view.View) {
                 startActivity(LegalWebActivity.createIntent(
-                    this@VipActivity, "会员服务协议", AppConstants.VIP_AGREEMENT_URL))
+                    this@VipActivity, agreementName, AppConstants.VIP_AGREEMENT_URL))
             }
             override fun updateDrawState(ds: TextPaint) {
                 ds.color = gold
@@ -630,15 +640,15 @@ class VipActivity : AppCompatActivity() {
     private fun startPayment() {
         if (!binding.vipAgreementCheck.isSelected) {
             AlertDialog.Builder(this)
-                .setTitle("请同意服务协议")
-                .setMessage("开通会员前，请先阅读并同意《会员服务协议》。")
-                .setPositiveButton("同意并继续") { _, _ ->
+                .setTitle(R.string.vip_agreement_name)
+                .setMessage(R.string.vip_agreement_hint)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
                     binding.vipAgreementCheck.isSelected = true
                     startPayment()
                 }
-                .setNegativeButton("去查看") { _, _ ->
+                .setNegativeButton(R.string.vip_view_agreement) { _, _ ->
                     startActivity(LegalWebActivity.createIntent(
-                        this, "会员服务协议", AppConstants.VIP_AGREEMENT_URL))
+                        this, getString(R.string.vip_agreement_name), AppConstants.VIP_AGREEMENT_URL))
                 }
                 .show()
             return
@@ -654,17 +664,17 @@ class VipActivity : AppCompatActivity() {
             return
         }
         if (memberActive) {
-            binding.vipStatus.text = "会员已开通，可继续续费"
+            binding.vipStatus.setText(R.string.vip_status_active_can_renew)
             showPaidBottomState()
         }
         if (!memberStatusLoaded) {
-            binding.vipStatus.text = "正在确认会员状态…"
+            binding.vipStatus.setText(R.string.vip_status_confirming_member)
             setPayEnabled(false)
             return
         }
         val product = selectedProduct
         if (product == null) {
-            Toast.makeText(this, "请先选择会员套餐", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.vip_status_select_package_first), Toast.LENGTH_SHORT).show()
             return
         }
         createOrder(token, product)
@@ -672,7 +682,7 @@ class VipActivity : AppCompatActivity() {
 
     private fun createOrder(token: String, product: VipProduct) {
         setPayEnabled(false)
-        binding.vipStatus.text = "正在创建安全支付订单…"
+        binding.vipStatus.setText(R.string.vip_status_creating_order)
         scope.launch {
             runCatching {
                 withContext(Dispatchers.IO) { paymentApi.createOrder(token, product.id, selectedChannel) }
@@ -681,12 +691,12 @@ class VipActivity : AppCompatActivity() {
                     ?: data.optString("id").takeIf { it.isNotEmpty() }
                 if (orderId == null) {
                     setPayEnabled(true)
-                    binding.vipStatus.text = "订单创建失败，请重试"
+                    binding.vipStatus.setText(R.string.vip_status_order_failed)
                     return@onSuccess
                 }
                 currentOrderId = orderId
                 if (data.optBoolean("mock")) {
-                    binding.vipStatus.text = "本地模拟支付完成，正在确认会员状态…"
+                    binding.vipStatus.setText(R.string.vip_status_mock_paid)
                     startOrderPolling()
                     return@onSuccess
                 }
@@ -705,19 +715,19 @@ class VipActivity : AppCompatActivity() {
         val payParams = runCatching { WeChatPayParams.from(orderData) }.getOrNull()
         if (payParams == null || !payParams.isValid()) {
             setPayEnabled(true)
-            binding.vipStatus.text = "微信支付参数错误"
+            binding.vipStatus.setText(R.string.vip_status_wechat_error)
             return
         }
         if (!WeChatPayManager.isWeChatInstalled()) {
             setPayEnabled(true)
-            binding.vipStatus.text = "请先安装微信"
+            binding.vipStatus.setText(R.string.vip_status_wechat_missing)
             return
         }
         if (!WeChatPayManager.pay(this, payParams)) {
             setPayEnabled(true)
-            binding.vipStatus.text = "微信支付未能启动，请重试"
+            binding.vipStatus.setText(R.string.vip_status_wechat_launch_failed)
         } else {
-            binding.vipStatus.text = "请在微信中完成支付"
+            binding.vipStatus.setText(R.string.vip_status_wechat_complete)
         }
     }
 
@@ -727,21 +737,21 @@ class VipActivity : AppCompatActivity() {
             ?: orderData.optString("alipayOrderString").takeIf { it.isNotEmpty() }
         if (orderString.isNullOrEmpty()) {
             setPayEnabled(true)
-            binding.vipStatus.text = "支付宝参数错误"
+            binding.vipStatus.setText(R.string.vip_status_alipay_error)
             return
         }
         AlipayManager.pay(this, orderString, object : AlipayManager.PayResultCallback {
             override fun onSuccess() {
-                binding.vipStatus.text = "支付结果确认中…"
+                binding.vipStatus.setText(R.string.vip_status_confirming_payment)
                 startOrderPolling()
             }
             override fun onProcessing() {
-                binding.vipStatus.text = "支付结果确认中…"
+                binding.vipStatus.setText(R.string.vip_status_confirming_payment)
                 startOrderPolling()
             }
             override fun onCancelled() {
                 setPayEnabled(true)
-                binding.vipStatus.text = "已取消支付"
+                binding.vipStatus.setText(R.string.vip_status_payment_cancelled)
             }
             override fun onFailed(msg: String) {
                 setPayEnabled(true)
@@ -763,7 +773,7 @@ class VipActivity : AppCompatActivity() {
                     val status = data.optString("status")
                     if (status.equals("paid", ignoreCase = true) || status.equals("success", ignoreCase = true)) {
                         memberActive = true
-                        binding.vipStatus.text = "支付成功，会员已开通"
+                        binding.vipStatus.setText(R.string.vip_status_paid_success)
                         showPaidBottomState()
                         loadMembershipStatus()
                         orderQueryJob?.cancel()
@@ -771,12 +781,12 @@ class VipActivity : AppCompatActivity() {
                     }
                     if (attempt == 5) {
                         setPayEnabled(true)
-                        binding.vipStatus.text = "订单处理中，请稍后重新进入页面查看"
+                        binding.vipStatus.setText(R.string.vip_status_order_processing)
                     }
                 }.onFailure {
                     if (attempt == 5) {
                         setPayEnabled(true)
-                        binding.vipStatus.text = "暂时无法确认订单，请稍后查看"
+                        binding.vipStatus.setText(R.string.vip_status_order_unknown)
                     }
                 }
             }
@@ -790,7 +800,7 @@ class VipActivity : AppCompatActivity() {
             setPadding((20 * dp).toInt(), (8 * dp).toInt(), (20 * dp).toInt(), (4 * dp).toInt())
         }
         val phoneInput = EditText(this).apply {
-            hint = "手机号"
+            hint = getString(R.string.vip_login_phone_hint)
             inputType = InputType.TYPE_CLASS_PHONE
             filters = arrayOf(InputFilter.LengthFilter(11))
             setTextColor(Color.BLACK)
@@ -800,13 +810,13 @@ class VipActivity : AppCompatActivity() {
             gravity = Gravity.CENTER_VERTICAL
         }
         val codeInput = EditText(this).apply {
-            hint = "验证码"
+            hint = getString(R.string.vip_login_code_hint)
             inputType = InputType.TYPE_CLASS_NUMBER
             filters = arrayOf(InputFilter.LengthFilter(6))
             setTextColor(Color.BLACK)
         }
         val sendCodeBtn = Button(this).apply {
-            text = "获取验证码"
+            setText(R.string.vip_login_get_code)
             textSize = 13f
         }
         codeRow.addView(codeInput, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
@@ -821,28 +831,28 @@ class VipActivity : AppCompatActivity() {
             if (isSendingCode) return@setOnClickListener
             val phone = phoneInput.text?.toString()?.trim().orEmpty()
             if (phone.length != 11) {
-                Toast.makeText(this, "请输入正确的手机号", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.vip_login_invalid_phone), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             isSendingCode = true
             scope.launch {
                 AppGraph.authService.sendSmsCode(phone)
                     .onSuccess {
-                        Toast.makeText(this@VipActivity, "验证码已发送", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@VipActivity, getString(R.string.vip_login_code_sent), Toast.LENGTH_SHORT).show()
                         startCodeCountdown(sendCodeBtn)
                     }
                     .onFailure { e ->
                         isSendingCode = false
-                        Toast.makeText(this@VipActivity, e.message ?: "发送失败", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@VipActivity, e.message ?: getString(R.string.vip_login_send_failed), Toast.LENGTH_SHORT).show()
                     }
             }
         }
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("登录")
+            .setTitle(R.string.login_title)
             .setView(contentView)
-            .setPositiveButton("登录", null)
-            .setNegativeButton("取消", null)
+            .setPositiveButton(R.string.login_title, null)
+            .setNegativeButton(R.string.setting_cancel, null)
             .create()
 
         dialog.setOnShowListener {
@@ -850,11 +860,11 @@ class VipActivity : AppCompatActivity() {
                 val phone = phoneInput.text?.toString()?.trim().orEmpty()
                 val code = codeInput.text?.toString()?.trim().orEmpty()
                 if (phone.length != 11) {
-                    Toast.makeText(this, "请输入正确的手机号", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.vip_login_invalid_phone), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
                 if (code.length != 6) {
-                    Toast.makeText(this, "请输入6位验证码", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.vip_login_invalid_code), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
                 scope.launch {
@@ -869,7 +879,7 @@ class VipActivity : AppCompatActivity() {
                             onLoggedIn()
                         }
                         .onFailure { e ->
-                            Toast.makeText(this@VipActivity, e.message ?: "登录失败", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@VipActivity, e.message ?: getString(R.string.vip_login_failed), Toast.LENGTH_SHORT).show()
                         }
                 }
             }
@@ -885,7 +895,7 @@ class VipActivity : AppCompatActivity() {
                 button.isEnabled = false
                 delay(1000L)
             }
-            button.text = "获取验证码"
+            button.setText(R.string.vip_login_get_code)
             button.isEnabled = true
         }
     }

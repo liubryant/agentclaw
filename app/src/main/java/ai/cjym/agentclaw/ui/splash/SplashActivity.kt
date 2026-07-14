@@ -4,6 +4,7 @@ import ai.inmo.core_common.ui.dialog.CommonMessageDialog
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.di.AppGraph
 import ai.cjym.agentclaw.ui.chat.ChatMarkdownProvider
+import ai.cjym.agentclaw.ui.placeholder.FeaturePlaceholderActivity
 import ai.cjym.agentclaw.ui.shell.ShellActivity
 import ai.cjym.agentclaw.ui.startup.StartupActivity
 import ai.cjym.agentclaw.ui.widget.TermsDialog
@@ -35,6 +36,10 @@ class SplashActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "agentad"
+        private const val ACTION_NAVIGATE_LAST_DESTINATION =
+            "ai.cjym.agentclaw.action.NAVIGATE_LAST_DESTINATION"
+        private const val ACTION_CLOUD_PANORAMA =
+            "ai.cjym.agentclaw.action.CLOUD_PANORAMA"
     }
 
     private val viewModel = SplashViewModel()
@@ -254,6 +259,12 @@ class SplashActivity : AppCompatActivity() {
         if (hasNavigated || isFinishing || isDestroyed) return
         hasNavigated = true
         Log.d(TAG, "navigateToDestination: actually navigating")
+        val shortcutIntent = shortcutDestinationIntent()
+        if (shortcutIntent != null) {
+            startActivity(shortcutIntent)
+            finish()
+            return
+        }
         viewModel.resolveDestination { destination ->
             runOnUiThread {
                 val intent = when (destination) {
@@ -265,6 +276,32 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
+        }
+    }
+
+    private fun shortcutDestinationIntent(): Intent? {
+        return when (intent?.action) {
+            ACTION_NAVIGATE_LAST_DESTINATION -> Intent(this, FeaturePlaceholderActivity::class.java).apply {
+                putExtra(
+                    FeaturePlaceholderActivity.EXTRA_TITLE,
+                    getString(R.string.shortcut_navigation_placeholder_title)
+                )
+                putExtra(
+                    FeaturePlaceholderActivity.EXTRA_MESSAGE,
+                    getString(R.string.shortcut_navigation_placeholder_message)
+                )
+            }
+            ACTION_CLOUD_PANORAMA -> Intent(this, FeaturePlaceholderActivity::class.java).apply {
+                putExtra(
+                    FeaturePlaceholderActivity.EXTRA_TITLE,
+                    getString(R.string.shortcut_panorama_placeholder_title)
+                )
+                putExtra(
+                    FeaturePlaceholderActivity.EXTRA_MESSAGE,
+                    getString(R.string.shortcut_panorama_placeholder_message)
+                )
+            }
+            else -> null
         }
     }
 }

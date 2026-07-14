@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="VIP 会员"
+            android:text="@string/vip_title"
             android:textColor="#FFEDBD"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -79,24 +79,30 @@
 
                 <TextView
                     android:id="@+id/vip_phone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
-                    android:text="登录后开通会员"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/vip_login_required_title"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/vip_login_button"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintStart_toEndOf="@+id/vip_avatar"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/vip_member_subtitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="开通会员，解锁AI助手全部功能"
+                    android:maxLines="2"
+                    android:text="@string/vip_member_subtitle"
                     android:textColor="#FFEDBD"
                     android:textSize="13sp"
+                    app:layout_constraintEnd_toStartOf="@+id/vip_login_button"
                     app:layout_constraintStart_toStartOf="@+id/vip_phone"
                     app:layout_constraintTop_toBottomOf="@+id/vip_phone" />
 
@@ -106,9 +112,11 @@
                     android:layout_height="28dp"
                     android:background="@drawable/bg_vip_login_button"
                     android:gravity="center"
+                    android:maxLines="1"
+                    android:minWidth="72dp"
                     android:paddingLeft="18dp"
                     android:paddingRight="18dp"
-                    android:text="去登录"
+                    android:text="@string/vip_login_button"
                     android:textColor="#864F2D"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -139,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp"
-                    android:text="会员权益"
+                    android:text="@string/vip_benefits_title"
                     android:textColor="#FFEDBD"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -149,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
-                    android:text="查看套餐详情  ›"
+                    android:text="@string/vip_view_package_detail"
                     android:textColor="#CDAF7A"
                     android:textSize="11sp" />
 
@@ -166,7 +174,7 @@
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageView android:layout_width="36dp" android:layout_height="36dp" android:src="@mipmap/icon_vip_rights_no_ad" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="无限对话" android:textColor="#FFFFFF" android:textSize="12sp" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center" android:maxLines="2" android:text="@string/vip_benefit_unlimited_chat" android:textColor="#FFFFFF" android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -176,7 +184,7 @@
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageView android:layout_width="36dp" android:layout_height="36dp" android:src="@mipmap/icon_vip_rights_watch_all" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="专属功能" android:textColor="#FFFFFF" android:textSize="12sp" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center" android:maxLines="2" android:text="@string/vip_benefit_exclusive" android:textColor="#FFFFFF" android:textSize="12sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -186,7 +194,7 @@
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageView android:layout_width="36dp" android:layout_height="36dp" android:src="@mipmap/icon_vip_rights_new" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="优先体验" android:textColor="#FFFFFF" android:textSize="12sp" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center" android:maxLines="2" android:text="@string/vip_benefit_early_access" android:textColor="#FFFFFF" android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -239,7 +247,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="支付方式"
+                    android:text="@string/vip_payment_method"
                     android:textColor="#999999"
                     android:textSize="12sp" />
 
@@ -289,7 +297,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:text="微信支付"
+                            android:text="@string/vip_wechat_pay"
                             android:textColor="#FEEBB9"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -333,7 +341,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:text="支付宝支付"
+                            android:text="@string/vip_alipay_pay"
                             android:textColor="#FEEBB9"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -353,7 +361,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="12dp"
-                android:text="温馨提示"
+                android:text="@string/vip_notice_title"
                 android:textColor="#999999"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -366,7 +374,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="18dp"
                 android:lineSpacingExtra="3dp"
-                android:text="1. 会员服务开通后立即生效。\n2. 支付完成后以服务端订单状态为准。\n3. 如遇支付异常，请稍后重新进入会员页查看。"
+                android:text="@string/vip_notice_body"
                 android:textColor="#666666"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -413,14 +421,14 @@
             android:id="@+id/vip_bottom_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥--"
+            android:text="@string/vip_price_placeholder"
             android:textColor="#864F2D"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/vip_pay_button"
             app:layout_constraintEnd_toStartOf="@+id/vip_bottom_hint"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/vip_pay_button"
             app:layout_constraintTop_toTopOf="@+id/vip_pay_button" />
 
         <TextView
@@ -428,12 +436,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:text="立即开通"
+            android:maxLines="1"
+            android:text="@string/vip_open_now"
             android:textColor="#864F2D"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/vip_bottom_price"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/vip_pay_button"
             app:layout_constraintStart_toEndOf="@+id/vip_bottom_price"
             app:layout_constraintTop_toTopOf="@+id/vip_bottom_price" />
 
@@ -454,11 +463,11 @@
 
         <TextView
             android:id="@+id/vip_agreement_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="8dp"
-            android:text="点击开通按钮即代表同意《会员服务协议》"
+            android:text="@string/vip_agreement_hint"
             android:textColor="#999999"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"

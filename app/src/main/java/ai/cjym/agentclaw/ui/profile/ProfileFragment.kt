@@ -5,6 +5,7 @@ import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.constants.AppConstants
 import ai.cjym.agentclaw.databinding.FragmentProfileBinding
 import ai.cjym.agentclaw.di.AppGraph
+import ai.cjym.agentclaw.ui.account.DeleteAccountDialogController
 import ai.cjym.agentclaw.ui.common.BaseBindingFragment
 import ai.cjym.agentclaw.ui.legal.LegalWebActivity
 import ai.cjym.agentclaw.ui.shell.ShellProfileActions
@@ -15,10 +16,17 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 
 class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
+    private var deleteAccountDialogController: DeleteAccountDialogController? = null
 
     override fun initView(savedInstanceState: Bundle?) {
+        deleteAccountDialogController = DeleteAccountDialogController(
+            context = requireContext(),
+            scope = viewLifecycleOwner.lifecycleScope,
+            onDeleted = { refreshUserState() }
+        )
         refreshUserState()
         binding.versionText.text = getString(
             R.string.profile_version,
@@ -50,7 +58,10 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(FragmentProf
                 AppConstants.PRIVACY_POLICY_URL
             ))
         }
-        binding.logoutCard.setOnClickListener { confirmLogout() }
+        binding.root.requireView<View>(R.id.logoutRow).setOnClickListener { confirmLogout() }
+        binding.root.requireView<View>(R.id.deleteAccountRow).setOnClickListener {
+            deleteAccountDialogController?.show()
+        }
         binding.root.requireView<View>(R.id.feedbackRow).setOnClickListener { openFeedback() }
         binding.root.requireView<View>(R.id.ratingRow).setOnClickListener { openAppStore() }
     }
@@ -149,5 +160,11 @@ class ProfileFragment : BaseBindingFragment<FragmentProfileBinding>(FragmentProf
 
     private fun maskPhone(phone: String): String {
         return if (phone.length >= 7) phone.take(3) + "****" + phone.takeLast(4) else phone
+    }
+
+    override fun onDestroyView() {
+        deleteAccountDialogController?.release()
+        deleteAccountDialogController = null
+        super.onDestroyView()
     }
 }

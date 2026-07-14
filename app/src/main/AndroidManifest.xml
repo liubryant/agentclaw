@@ -150,6 +150,9 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AgentClaw.Splash">
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
