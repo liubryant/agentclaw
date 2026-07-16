@@ -64,6 +64,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
     companion object {
         private const val TAG = "ShellActivity"
         const val EXTRA_INITIAL_CHAT_DRAFT = "extra_initial_chat_draft"
+        const val EXTRA_INITIAL_CHAT_ENTRY_MODE = "extra_initial_chat_entry_mode"
         const val EXTRA_TARGET_SESSION_KEY = "extra_target_session_key"
         const val EXTRA_TARGET_MESSAGE_INDEX = "extra_target_message_index"
     }
@@ -127,6 +128,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         if (shellViewModel.uiState.value.topBarTitle.isBlank()) {
             navigateTo(ShellDestination.CREATE)
         }
+        handleShortcutLaunchIntent(intent)
         handleInitialDraftFromIntent()
         handleSearchNavigationIntent(intent)
     }
@@ -463,6 +465,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
+        handleShortcutLaunchIntent(intent)
         handleSearchNavigationIntent(intent)
         handleInitialDraftFromIntent()
     }
@@ -681,6 +684,24 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             shellViewModel.updateChatDraft(currentSessionId, initialDraft)
         }
         intent?.removeExtra(EXTRA_INITIAL_CHAT_DRAFT)
+    }
+
+    private fun handleShortcutLaunchIntent(intent: Intent?) {
+        val entryModeName = intent
+            ?.getStringExtra(EXTRA_INITIAL_CHAT_ENTRY_MODE)
+            ?.trim()
+            .orEmpty()
+        if (entryModeName.isBlank()) return
+
+        intent?.removeExtra(EXTRA_INITIAL_CHAT_ENTRY_MODE)
+        navigateTo(ShellDestination.CHAT)
+        binding.root.post {
+            if (isFinishing || isDestroyed) return@post
+            when (entryModeName) {
+                ChatEntryMode.IMAGE.name -> shellViewModel.launchImageChat()
+                else -> shellViewModel.launchDefaultChat()
+            }
+        }
     }
 
     private fun handleSearchNavigationIntent(intent: Intent?) {

@@ -4,7 +4,7 @@ import ai.inmo.core_common.ui.dialog.CommonMessageDialog
 import ai.cjym.agentclaw.R
 import ai.cjym.agentclaw.di.AppGraph
 import ai.cjym.agentclaw.ui.chat.ChatMarkdownProvider
-import ai.cjym.agentclaw.ui.placeholder.FeaturePlaceholderActivity
+import ai.cjym.agentclaw.ui.shell.ChatEntryMode
 import ai.cjym.agentclaw.ui.shell.ShellActivity
 import ai.cjym.agentclaw.ui.startup.StartupActivity
 import ai.cjym.agentclaw.ui.widget.TermsDialog
@@ -36,10 +36,10 @@ class SplashActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "agentad"
-        private const val ACTION_NAVIGATE_LAST_DESTINATION =
-            "ai.cjym.agentclaw.action.NAVIGATE_LAST_DESTINATION"
-        private const val ACTION_CLOUD_PANORAMA =
-            "ai.cjym.agentclaw.action.CLOUD_PANORAMA"
+        private const val ACTION_INSTANT_CHAT =
+            "ai.cjym.agentclaw.action.INSTANT_CHAT"
+        private const val ACTION_AI_IMAGE_GENERATION =
+            "ai.cjym.agentclaw.action.AI_IMAGE_GENERATION"
     }
 
     private val viewModel = SplashViewModel()
@@ -281,24 +281,18 @@ class SplashActivity : AppCompatActivity() {
 
     private fun shortcutDestinationIntent(): Intent? {
         return when (intent?.action) {
-            ACTION_NAVIGATE_LAST_DESTINATION -> Intent(this, FeaturePlaceholderActivity::class.java).apply {
+            ACTION_INSTANT_CHAT -> Intent(this, ShellActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 putExtra(
-                    FeaturePlaceholderActivity.EXTRA_TITLE,
-                    getString(R.string.shortcut_navigation_placeholder_title)
-                )
-                putExtra(
-                    FeaturePlaceholderActivity.EXTRA_MESSAGE,
-                    getString(R.string.shortcut_navigation_placeholder_message)
+                    ShellActivity.EXTRA_INITIAL_CHAT_ENTRY_MODE,
+                    ChatEntryMode.DEFAULT.name
                 )
             }
-            ACTION_CLOUD_PANORAMA -> Intent(this, FeaturePlaceholderActivity::class.java).apply {
+            ACTION_AI_IMAGE_GENERATION -> Intent(this, ShellActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 putExtra(
-                    FeaturePlaceholderActivity.EXTRA_TITLE,
-                    getString(R.string.shortcut_panorama_placeholder_title)
-                )
-                putExtra(
-                    FeaturePlaceholderActivity.EXTRA_MESSAGE,
-                    getString(R.string.shortcut_panorama_placeholder_message)
+                    ShellActivity.EXTRA_INITIAL_CHAT_ENTRY_MODE,
+                    ChatEntryMode.IMAGE.name
                 )
             }
             else -> null

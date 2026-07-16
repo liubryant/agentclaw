@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
-        android:shortcutId="cloud_panorama"
+        android:shortcutId="instant_chat"
         android:enabled="true"
-        android:icon="@drawable/ic_shortcut_panorama"
-        android:shortcutShortLabel="@string/shortcut_cloud_panorama_short"
-        android:shortcutLongLabel="@string/shortcut_cloud_panorama_long">
+        android:icon="@drawable/ic_shortcut_instant_chat"
+        android:shortcutShortLabel="@string/shortcut_instant_chat_short"
+        android:shortcutLongLabel="@string/shortcut_instant_chat_long">
         <intent
-            android:action="ai.cjym.agentclaw.action.CLOUD_PANORAMA"
+            android:action="ai.cjym.agentclaw.action.INSTANT_CHAT"
             android:targetPackage="ai.cjym.agentclaw"
             android:targetClass="ai.cjym.agentclaw.ui.splash.SplashActivity" />
     </shortcut>
 
     <shortcut
-        android:shortcutId="navigate_last_destination"
+        android:shortcutId="ai_image_generation"
         android:enabled="true"
-        android:icon="@drawable/ic_shortcut_navigation"
-        android:shortcutShortLabel="@string/shortcut_navigation_short"
-        android:shortcutLongLabel="@string/shortcut_navigation_long">
+        android:icon="@drawable/ic_shortcut_ai_image"
+        android:shortcutShortLabel="@string/shortcut_ai_image_short"
+        android:shortcutLongLabel="@string/shortcut_ai_image_long">
         <intent
-            android:action="ai.cjym.agentclaw.action.NAVIGATE_LAST_DESTINATION"
+            android:action="ai.cjym.agentclaw.action.AI_IMAGE_GENERATION"
             android:targetPackage="ai.cjym.agentclaw"
             android:targetClass="ai.cjym.agentclaw.ui.splash.SplashActivity" />
     </shortcut>

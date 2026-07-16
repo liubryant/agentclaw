@@ -1,13 +1,9 @@
 <resources>
     <string name="app_name">Agent智能体生活助手</string>
-    <string name="shortcut_navigation_short">一键导航</string>
-    <string name="shortcut_navigation_long">一键导航到上次目的地</string>
-    <string name="shortcut_cloud_panorama_short">720景区</string>
-    <string name="shortcut_cloud_panorama_long">打开720景区</string>
-    <string name="shortcut_navigation_placeholder_title">卫星地图导航</string>
-    <string name="shortcut_navigation_placeholder_message">当前 Android 项目还没有接入卫星地图导航页面和上次目的地数据。快捷菜单入口已接入，补齐地图导航模块后可在这里直接发起上次目的地导航。</string>
-    <string name="shortcut_panorama_placeholder_title">720景区</string>
-    <string name="shortcut_panorama_placeholder_message">当前 Android 项目还没有接入720景区页面。快捷菜单入口已接入，补齐景区页面后可在这里直达720景区列表。</string>
+    <string name="shortcut_instant_chat_short">即刻对话</string>
+    <string name="shortcut_instant_chat_long">即刻对话</string>
+    <string name="shortcut_ai_image_short">一键AI生图</string>
+    <string name="shortcut_ai_image_long">一键AI生图</string>
     <string name="login_code_hint">请输入验证码</string>
     <string name="login_get_code">获取验证码</string>
     <string name="login_sending_code">发送中…</string>
