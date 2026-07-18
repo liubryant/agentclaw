@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 
 class CreationGalleryFragment :
     BaseBindingFragment<FragmentCreationGalleryBinding>(FragmentCreationGalleryBinding::inflate) {
@@ -45,7 +46,9 @@ class CreationGalleryFragment :
         if (result.resultCode != Activity.RESULT_OK) return@registerForActivityResult
         when (result.data?.getStringExtra(CreationViewerActivity.EXTRA_MEDIA_TYPE)) {
             CreationMedia.Type.VIDEO.name -> tryLaunchVideoChat()
-            else -> tryLaunchImageChat()
+            else -> tryLaunchImageChat(
+                result.data?.getStringExtra(CreationViewerActivity.EXTRA_PROMPT_ZH).orEmpty()
+            )
         }
     }
 
@@ -93,14 +96,14 @@ class CreationGalleryFragment :
         shellViewModel.launchVideoChat()
     }
 
-    private fun tryLaunchImageChat() {
+    private fun tryLaunchImageChat(prompt: String = "") {
         val ctx = requireContext()
         if (!QuotaManager.canGenerateImage(ctx)) {
             VipUpgradeBottomSheet.forImage()
                 .show(parentFragmentManager, "vip_upgrade_image")
             return
         }
-        shellViewModel.launchImageChat()
+        shellViewModel.launchImageChat(prompt)
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -110,10 +113,17 @@ class CreationGalleryFragment :
         binding.pageFlipper.addView(imagePage)
         binding.pageFlipper.addView(videoPage)
 
+        val promptsByImage = loadImagePrompts()
         imageItems = requireContext().assets.list(IMAGE_ASSET_DIR).orEmpty()
             .filter { it.endsWith(".png", true) || it.endsWith(".jpg", true) || it.endsWith(".jpeg", true) }
             .sorted()
-            .map { CreationMedia("$IMAGE_ASSET_DIR/$it", CreationMedia.Type.IMAGE) }
+            .map { filename ->
+                CreationMedia(
+                    assetPath = "$IMAGE_ASSET_DIR/$filename",
+                    type = CreationMedia.Type.IMAGE,
+                    promptZh = promptsByImage[filename].orEmpty()
+                )
+            }
         videoItems = requireContext().assets.list(VIDEO_ASSET_DIR).orEmpty()
             .filter { it.endsWith(".mp4", true) }
             .sorted()
@@ -126,6 +136,22 @@ class CreationGalleryFragment :
 
         binding.root.alpha = 0f
         binding.root.animate().alpha(1f).setDuration(260L).start()
+    }
+
+    private fun loadImagePrompts(): Map<String, String> {
+        return runCatching {
+            val json = requireContext().assets.open(IMAGE_PROMPTS_ASSET).bufferedReader().use { it.readText() }
+            val array = JSONArray(json)
+            buildMap {
+                for (index in 0 until array.length()) {
+                    val item = array.optJSONObject(index) ?: continue
+                    val image = item.optString("image").trim()
+                    if (image.isNotBlank()) {
+                        put(image, item.optString("prompt_zh").trim())
+                    }
+                }
+            }
+        }.getOrElse { emptyMap() }
     }
 
     override fun initEvent() {
@@ -251,5 +277,6 @@ class CreationGalleryFragment :
         const val PAGE_VIDEO = 1
         const val IMAGE_ASSET_DIR = "creation/images"
         const val VIDEO_ASSET_DIR = "creation/videos"
+        const val IMAGE_PROMPTS_ASSET = "creation/image_prompts_zh.json"
     }
 }

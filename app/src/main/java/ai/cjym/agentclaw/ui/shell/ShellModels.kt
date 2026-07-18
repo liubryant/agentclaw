@@ -35,7 +35,8 @@ sealed interface ShellEvent {
     data class OpenChatInNewSession(
         val draft: String,
         val sourceId: String,
-        val entryMode: ChatEntryMode = ChatEntryMode.DEFAULT
+        val entryMode: ChatEntryMode = ChatEntryMode.DEFAULT,
+        val prefillOnly: Boolean = false
     ) : ShellEvent
 
     data class OpenChatInNewSessionWithPresetConversation(

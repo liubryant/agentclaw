@@ -316,7 +316,11 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
                     }
 
                     is ShellEvent.OpenChatInNewSession -> {
-                        openDraftInNewSession(draft = event.draft, entryMode = event.entryMode)
+                        openDraftInNewSession(
+                            draft = event.draft,
+                            entryMode = event.entryMode,
+                            prefillOnly = event.prefillOnly
+                        )
                     }
                     is ShellEvent.OpenChatInNewSessionWithPresetConversation -> {
                         openPresetConversationInNewSession(event.conversation)
@@ -527,14 +531,18 @@ class ChatFragment : BaseBindingFragment<FragmentShellChatBinding>(FragmentShell
 
     private fun openDraftInNewSession(
         draft: String,
-        entryMode: ChatEntryMode = ChatEntryMode.DEFAULT
+        entryMode: ChatEntryMode = ChatEntryMode.DEFAULT,
+        prefillOnly: Boolean = false
     ) {
         val proceed: (Boolean) -> Unit = { abortCurrent ->
             viewLifecycleOwner.lifecycleScope.launch {
                 val sessionId = chatViewModel.createPersistentSession(abortCurrent = abortCurrent)
                 shellViewModel.bindSessionEntryMode(sessionId, entryMode)
                 chatViewModel.bindSessionEntryMode(sessionId, entryMode)
-                if (draft.isNotBlank()) {
+                if (draft.isNotBlank() && prefillOnly) {
+                    shellViewModel.updateChatDraft(sessionId, draft)
+                    binding.composerInput.requestFocus()
+                } else if (draft.isNotBlank()) {
                     chatViewModel.sendMessage(draft)
                 }
             }

@@ -71,8 +71,12 @@ class ShellSharedViewModel : BaseViewModel() {
         }
     }
 
-    fun launchImageChat() {
-        navigateToChatInNewSession(draft = "", entryMode = ChatEntryMode.IMAGE)
+    fun launchImageChat(prompt: String = "") {
+        navigateToChatInNewSession(
+            draft = prompt,
+            entryMode = ChatEntryMode.IMAGE,
+            prefillOnly = prompt.isNotBlank()
+        )
     }
 
     fun launchVideoChat() {
@@ -181,7 +185,8 @@ class ShellSharedViewModel : BaseViewModel() {
         draft: String,
         ideaId: String? = null,
         taskId: String? = null,
-        entryMode: ChatEntryMode = ChatEntryMode.DEFAULT
+        entryMode: ChatEntryMode = ChatEntryMode.DEFAULT,
+        prefillOnly: Boolean = false
     ) {
         _uiState.update {
             it.copy(
@@ -194,7 +199,8 @@ class ShellSharedViewModel : BaseViewModel() {
             ShellEvent.OpenChatInNewSession(
                 draft = draft,
                 sourceId = ideaId ?: taskId.orEmpty(),
-                entryMode = entryMode
+                entryMode = entryMode,
+                prefillOnly = prefillOnly
             )
         )
     }

@@ -39,14 +39,23 @@ class CreationViewerActivity : AppCompatActivity() {
             finish()
             return
         }
-        media = CreationMedia(path, type)
+        media = CreationMedia(
+            assetPath = path,
+            type = type,
+            promptZh = intent.getStringExtra(EXTRA_PROMPT_ZH).orEmpty()
+        )
         setupVideoGestures()
         renderMedia()
 
         binding.closeButton.setOnClickListener { finishViewer() }
         binding.playPauseButton.setOnClickListener { binding.videoPlayer.toggle() }
         binding.createSameButton.setOnClickListener {
-            setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_MEDIA_TYPE, media.type.name))
+            setResult(
+                Activity.RESULT_OK,
+                Intent()
+                    .putExtra(EXTRA_MEDIA_TYPE, media.type.name)
+                    .putExtra(EXTRA_PROMPT_ZH, media.promptZh)
+            )
             finishViewer()
         }
     }
@@ -182,11 +191,13 @@ class CreationViewerActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_ASSET_PATH = "creation_asset_path"
         const val EXTRA_MEDIA_TYPE = "creation_media_type"
+        const val EXTRA_PROMPT_ZH = "creation_prompt_zh"
 
         fun createIntent(context: Context, media: CreationMedia): Intent {
             return Intent(context, CreationViewerActivity::class.java)
                 .putExtra(EXTRA_ASSET_PATH, media.assetPath)
                 .putExtra(EXTRA_MEDIA_TYPE, media.type.name)
+                .putExtra(EXTRA_PROMPT_ZH, media.promptZh)
         }
     }
 }
