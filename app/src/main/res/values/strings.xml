@@ -1,7 +1,10 @@
 <resources>
+    <string name="avatar_title">AI数字人 SOFIA</string>
+    <string name="avatar_subtitle">和 Sofia 自然对话</string>
+    <string name="bottom_avatar">智能体</string>
     <string name="app_name">Agent智能体生活助手</string>
-    <string name="shortcut_instant_chat_short">即刻对话</string>
-    <string name="shortcut_instant_chat_long">即刻对话</string>
+    <string name="shortcut_instant_chat_short">对话数字人AI</string>
+    <string name="shortcut_instant_chat_long">对话数字人AI</string>
     <string name="shortcut_ai_image_short">一键AI生图</string>
     <string name="shortcut_ai_image_long">一键AI生图</string>
     <string name="login_code_hint">请输入验证码</string>
@@ -344,6 +347,7 @@
 
     <string name="login_title">登录</string>
     <string name="nav_login_subtitle">登录解锁</string>
+    <string name="nav_account_subtitle">账号管理</string>
     <string name="common_close">关闭</string>
     <string name="login_dialog_subtitle">使用手机号和密码登录</string>
     <string name="login_phone_hint">请输入手机号</string>
@@ -500,9 +504,9 @@
     <string name="vip_login_button">Sign in</string>
     <string name="vip_benefits_title">Membership Benefits</string>
     <string name="vip_view_package_detail">View package details ›</string>
-    <string name="vip_benefit_unlimited_chat">Unlimited chat</string>
-    <string name="vip_benefit_exclusive">Exclusive features</string>
-    <string name="vip_benefit_early_access">Early access</string>
+    <string name="vip_benefit_unlimited_chat">Unlimited AI agent chat</string>
+    <string name="vip_benefit_exclusive">More image generations</string>
+    <string name="vip_benefit_early_access">More video generations</string>
     <string name="vip_payment_method">Payment method</string>
     <string name="vip_wechat_pay">WeChat Pay</string>
     <string name="vip_alipay_pay">Alipay</string>
@@ -537,7 +541,7 @@
     <string name="vip_agreement_name">Membership Service Agreement</string>
     <string name="vip_view_agreement">View agreement</string>
     <string name="vip_detail_title">Membership package details</string>
-    <string name="vip_detail_subtitle">Subscribe to unlock more AI creation features</string>
+    <string name="vip_detail_subtitle">Subscribe for unlimited AI agent chat and more creation features</string>
     <string name="vip_detail_no_packages">No membership packages available.</string>
     <string name="vip_detail_close">Close</string>
     <string name="vip_detail_purchase">¥%1$s  %2$s</string>

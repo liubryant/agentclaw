@@ -209,12 +209,14 @@
 
 
     <FrameLayout
+        android:id="@+id/mainPanelFrame"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2.5"
         android:layout_margin="3dp">
 
         <LinearLayout
+            android:id="@+id/mainPanelSurface"
             android:clipToOutline="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -297,6 +299,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/chatHeaderDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/stroke_soft" />
@@ -431,6 +434,38 @@
                 android:layout_marginTop="3dp"
                 android:fontFamily="@font/misans_demibold"
                 android:text="@string/bottom_conversation"
+                android:textColor="@color/creation_bottom_item_color"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottomAvatarTab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_creation_bottom_item"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ai.cjym.agentclaw.ui.avatar.CircularBorderImageView
+                android:id="@+id/bottomAvatarIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/sofia_avatar" />
+
+            <TextView
+                android:id="@+id/bottomAvatarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:fontFamily="@font/misans_demibold"
+                android:text="@string/bottom_avatar"
                 android:textColor="@color/creation_bottom_item_color"
                 android:textSize="11sp" />
         </LinearLayout>

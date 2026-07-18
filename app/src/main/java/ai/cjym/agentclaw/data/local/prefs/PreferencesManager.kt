@@ -138,6 +138,10 @@ class PreferencesManager(context: Context) {
         get() = prefs.decodeInt(KEY_QUOTA_IMAGE_COUNT, 0)
         set(value) { prefs.encode(KEY_QUOTA_IMAGE_COUNT, value) }
 
+    var freeAgentQuestionCount: Int
+        get() = prefs.decodeInt(KEY_FREE_AGENT_QUESTION_COUNT, 0)
+        set(value) { prefs.encode(KEY_FREE_AGENT_QUESTION_COUNT, value.coerceAtLeast(0)) }
+
     // Server-configured quota limits (refreshed from /membership API)
     var serverFreeVideoDaily: Int
         get() = prefs.decodeInt(KEY_SERVER_FREE_VIDEO_DAILY, -1)
@@ -222,6 +226,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_QUOTA_VIDEO_COUNT = "quota_video_count"
         private const val KEY_QUOTA_IMAGE_DATE = "quota_image_date"
         private const val KEY_QUOTA_IMAGE_COUNT = "quota_image_count"
+        private const val KEY_FREE_AGENT_QUESTION_COUNT = "free_agent_question_count"
         private const val KEY_SERVER_FREE_VIDEO_DAILY = "server_free_video_daily"
         private const val KEY_SERVER_FREE_IMAGE_DAILY = "server_free_image_daily"
         private const val KEY_SERVER_VIP_VIDEO_DAILY = "server_vip_video_daily"

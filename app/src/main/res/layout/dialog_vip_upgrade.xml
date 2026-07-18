@@ -53,6 +53,7 @@
 
     <!-- Quota cards -->
     <LinearLayout
+        android:id="@+id/quota_cards_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -289,8 +290,9 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="✦" android:textColor="#CDAF7A" android:textSize="18sp" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginTop="6dp" android:text="无限对话" android:textColor="#B8A48A"
-                android:textSize="12sp" />
+                android:layout_marginTop="6dp" android:gravity="center" android:maxLines="2"
+                android:text="AI智能体\n无限畅聊" android:textColor="#B8A48A"
+                android:textSize="11sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -302,8 +304,9 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="◈" android:textColor="#CDAF7A" android:textSize="18sp" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginTop="6dp" android:text="优先生成" android:textColor="#B8A48A"
-                android:textSize="12sp" />
+                android:layout_marginTop="6dp" android:gravity="center" android:maxLines="2"
+                android:text="更多图片\n生成" android:textColor="#B8A48A"
+                android:textSize="11sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -315,8 +318,9 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="⬡" android:textColor="#CDAF7A" android:textSize="18sp" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginTop="6dp" android:text="专属功能" android:textColor="#B8A48A"
-                android:textSize="12sp" />
+                android:layout_marginTop="6dp" android:gravity="center" android:maxLines="2"
+                android:text="更多视频\n生成" android:textColor="#B8A48A"
+                android:textSize="11sp" />
         </LinearLayout>
     </LinearLayout>
 

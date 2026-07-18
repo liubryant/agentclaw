@@ -18,7 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class VipUpgradeBottomSheet : BottomSheetDialogFragment() {
 
-    enum class QuotaType { VIDEO, IMAGE }
+    enum class QuotaType { VIDEO, IMAGE, AGENT_CHAT }
 
     private var quotaType: QuotaType = QuotaType.VIDEO
 
@@ -37,6 +37,12 @@ class VipUpgradeBottomSheet : BottomSheetDialogFragment() {
         view.requireView<TextView>(R.id.upgrade_title).text = when (quotaType) {
             QuotaType.VIDEO -> "今日视频次数已用完"
             QuotaType.IMAGE -> "今日图片次数已用完"
+            QuotaType.AGENT_CHAT -> "免费问答次数已用完"
+        }
+        if (quotaType == QuotaType.AGENT_CHAT) {
+            view.requireView<TextView>(R.id.upgrade_subtitle).text =
+                "开通会员，和 AI 智能体无限畅聊"
+            view.requireView<View>(R.id.quota_cards_container).visibility = View.GONE
         }
 
         // Quota bar & text for video
@@ -86,5 +92,6 @@ class VipUpgradeBottomSheet : BottomSheetDialogFragment() {
     companion object {
         fun forVideo() = VipUpgradeBottomSheet().apply { quotaType = QuotaType.VIDEO }
         fun forImage() = VipUpgradeBottomSheet().apply { quotaType = QuotaType.IMAGE }
+        fun forAgentChat() = VipUpgradeBottomSheet().apply { quotaType = QuotaType.AGENT_CHAT }
     }
 }

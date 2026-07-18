@@ -20,6 +20,7 @@ import ai.cjym.agentclaw.ui.fancyideas.FancyIdeasFragment
 import ai.cjym.agentclaw.ui.search.ChatSearchActivity
 import ai.cjym.agentclaw.ui.shell.chat.ChatFragment
 import ai.cjym.agentclaw.ui.creation.CreationGalleryFragment
+import ai.cjym.agentclaw.ui.avatar.AvatarFragment
 import ai.cjym.agentclaw.ui.profile.ProfileFragment
 import ai.cjym.agentclaw.ui.shell.schedule.ScheduleFragment
 import android.app.Dialog
@@ -65,6 +66,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         private const val TAG = "ShellActivity"
         const val EXTRA_INITIAL_CHAT_DRAFT = "extra_initial_chat_draft"
         const val EXTRA_INITIAL_CHAT_ENTRY_MODE = "extra_initial_chat_entry_mode"
+        const val EXTRA_INITIAL_DESTINATION = "extra_initial_destination"
         const val EXTRA_TARGET_SESSION_KEY = "extra_target_session_key"
         const val EXTRA_TARGET_MESSAGE_INDEX = "extra_target_message_index"
     }
@@ -128,9 +130,11 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         if (shellViewModel.uiState.value.topBarTitle.isBlank()) {
             navigateTo(ShellDestination.CREATE)
         }
+        handleInitialDestinationIntent(intent)
         handleShortcutLaunchIntent(intent)
         handleInitialDraftFromIntent()
         handleSearchNavigationIntent(intent)
+        refreshSidebarLoginItem()
     }
 
     override fun initEvent() {
@@ -155,6 +159,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
 
         binding.navIdeas.setOnClickListener { navigateTo(ShellDestination.IDEAS) }
         binding.bottomConversationTab.setOnClickListener { navigateTo(ShellDestination.CHAT) }
+        binding.bottomAvatarTab.setOnClickListener { navigateTo(ShellDestination.AVATAR) }
         binding.bottomCreationTab.setOnClickListener {
             navigateTo(ShellDestination.CREATE)
             (supportFragmentManager.findFragmentByTag(ShellDestination.CREATE.name) as? CreationGalleryFragment)
@@ -292,6 +297,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         val titleRes = when (destination) {
             ShellDestination.CHAT -> R.string.chat_title
             ShellDestination.CREATE -> R.string.creation_title
+            ShellDestination.AVATAR -> R.string.avatar_title
             ShellDestination.PROFILE -> R.string.profile_title
             ShellDestination.IDEAS -> R.string.ideas_title
             ShellDestination.SCHEDULE -> R.string.schedule_title
@@ -299,6 +305,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         val subtitleRes = when (destination) {
             ShellDestination.CHAT -> R.string.chat_shell_subtitle
             ShellDestination.CREATE -> R.string.creation_subtitle
+            ShellDestination.AVATAR -> R.string.avatar_subtitle
             ShellDestination.PROFILE -> R.string.profile_subtitle
             ShellDestination.IDEAS -> R.string.ideas_subtitle
             ShellDestination.SCHEDULE -> R.string.schedule_subtitle
@@ -313,10 +320,22 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         renderBottomNavigation(state.currentDestination)
 //        binding.navSchedule.isSelected = state.currentDestination == ShellDestination.SCHEDULE
         val isChatDestination = state.currentDestination == ShellDestination.CHAT
+        val isAvatarDestination = state.currentDestination == ShellDestination.AVATAR
         binding.sidebarButton.visibility = if (isChatDestination) View.VISIBLE else View.GONE
+        binding.chatHeader.visibility = if (isAvatarDestination) View.GONE else View.VISIBLE
+        binding.chatHeaderDivider.visibility = if (isAvatarDestination) View.GONE else View.VISIBLE
+        (binding.mainPanelFrame.layoutParams as ViewGroup.MarginLayoutParams).apply {
+            val margin = if (isAvatarDestination) 0 else dpToPx(3)
+            setMargins(margin, margin, margin, margin)
+            binding.mainPanelFrame.layoutParams = this
+        }
+        binding.mainPanelSurface.setBackgroundResource(
+            if (isAvatarDestination) android.R.color.transparent else R.drawable.bg_chat_screen_surface
+        )
+        setAvatarImmersive(isAvatarDestination)
         when (state.currentDestination) {
             ShellDestination.IDEAS, ShellDestination.SCHEDULE -> setSidebarVisible(true)
-            ShellDestination.CREATE, ShellDestination.PROFILE -> binding.sidebarContainer.visibility = View.GONE
+            ShellDestination.CREATE, ShellDestination.AVATAR, ShellDestination.PROFILE -> binding.sidebarContainer.visibility = View.GONE
             ShellDestination.CHAT -> {
                 binding.sidebarContainer.visibility = if (AppGraph.preferences.sidebarVisible) {
                     View.VISIBLE
@@ -334,24 +353,30 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
 
     private fun renderBottomNavigation(destination: ShellDestination) {
         val isCreation = destination == ShellDestination.CREATE
+        val isAvatar = destination == ShellDestination.AVATAR
         val isProfile = destination == ShellDestination.PROFILE
-        val isConversation = !isCreation && !isProfile
+        val isConversation = !isCreation && !isAvatar && !isProfile
         binding.bottomConversationTab.isSelected = isConversation
         binding.bottomCreationTab.isSelected = isCreation
+        binding.bottomAvatarTab.isSelected = isAvatar
         binding.bottomProfileTab.isSelected = isProfile
         binding.bottomConversationIcon.isSelected = isConversation
         binding.bottomCreationIcon.isSelected = isCreation
+        binding.bottomAvatarIcon.isSelected = isAvatar
         binding.bottomProfileIcon.isSelected = isProfile
         binding.bottomConversationText.isSelected = isConversation
         binding.bottomCreationText.isSelected = isCreation
+        binding.bottomAvatarText.isSelected = isAvatar
         binding.bottomProfileText.isSelected = isProfile
         binding.bottomConversationTab.visibility = View.VISIBLE
 
         val conversationScale = if (isConversation) 1f else 0.94f
         val creationScale = if (isCreation) 1f else 0.94f
         val profileScale = if (isProfile) 1f else 0.94f
+        val avatarScale = if (isAvatar) 1f else 0.94f
         binding.bottomConversationTab.animate().scaleX(conversationScale).scaleY(conversationScale).setDuration(180L).start()
         binding.bottomCreationTab.animate().scaleX(creationScale).scaleY(creationScale).setDuration(180L).start()
+        binding.bottomAvatarTab.animate().scaleX(avatarScale).scaleY(avatarScale).setDuration(180L).start()
         binding.bottomProfileTab.animate().scaleX(profileScale).scaleY(profileScale).setDuration(180L).start()
     }
 
@@ -370,6 +395,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         val activeDestination = shellViewModel.uiState.value.currentDestination
         addIfMissing(ShellDestination.CHAT, ::ChatFragment, hidden = activeDestination != ShellDestination.CHAT)
         addIfMissing(ShellDestination.CREATE, ::CreationGalleryFragment, hidden = activeDestination != ShellDestination.CREATE)
+        addIfMissing(ShellDestination.AVATAR, ::AvatarFragment, hidden = activeDestination != ShellDestination.AVATAR)
         addIfMissing(ShellDestination.PROFILE, ::ProfileFragment, hidden = activeDestination != ShellDestination.PROFILE)
         addIfMissing(ShellDestination.IDEAS, ::FancyIdeasFragment, hidden = true)
         addIfMissing(ShellDestination.SCHEDULE, ::ScheduleFragment, hidden = true)
@@ -462,9 +488,22 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         //binding.topBarContainer.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    @Suppress("DEPRECATION")
+    private fun setAvatarImmersive(enabled: Boolean) {
+        window.statusBarColor = if (enabled) Color.TRANSPARENT else Color.WHITE
+        window.decorView.systemUiVisibility = if (enabled) {
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        } else {
+            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
+    }
+
+    private fun dpToPx(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
+        handleInitialDestinationIntent(intent)
         handleShortcutLaunchIntent(intent)
         handleSearchNavigationIntent(intent)
         handleInitialDraftFromIntent()
@@ -490,6 +529,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
 
     override fun onResume() {
         super.onResume()
+        refreshSidebarLoginItem()
         enforceLoginGate()
     }
 
@@ -704,6 +744,15 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         }
     }
 
+    private fun handleInitialDestinationIntent(intent: Intent?) {
+        val destination = intent
+            ?.getStringExtra(EXTRA_INITIAL_DESTINATION)
+            ?.let { value -> ShellDestination.entries.firstOrNull { it.name == value } }
+            ?: return
+        intent.removeExtra(EXTRA_INITIAL_DESTINATION)
+        navigateTo(destination)
+    }
+
     private fun handleSearchNavigationIntent(intent: Intent?) {
         val targetSessionKey = intent?.getStringExtra(EXTRA_TARGET_SESSION_KEY)?.trim().orEmpty()
         if (targetSessionKey.isBlank()) return
@@ -815,6 +864,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
             dialogBinding.logoutButton.setOnClickListener {
                 AppGraph.preferences.isLoggedIn = false
                 AppGraph.preferences.userPhone = null
+                refreshSidebarLoginItem()
                 dialog.dismiss()
                 Toast.makeText(this, getString(R.string.login_logout), Toast.LENGTH_SHORT).show()
                 showLoginDialog(forceLogin = true)
@@ -999,6 +1049,7 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
                     if (loginResult.accessToken.isNotEmpty()) {
                         AppGraph.preferences.userAccessToken = loginResult.accessToken
                     }
+                    refreshSidebarLoginItem()
                     setLoading(false)
                     dialog.dismiss()
                     Toast.makeText(this@ShellActivity, getString(R.string.login_success), Toast.LENGTH_SHORT).show()
@@ -1060,6 +1111,27 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         if (!opened) {
             Toast.makeText(this, "未找到可用的文件管理器", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun refreshSidebarLoginItem() {
+        val phone = AppGraph.preferences.userPhone.orEmpty().trim()
+        if (AppGraph.preferences.isLoggedIn && phone.isNotBlank()) {
+            binding.navLogin.setText(maskPhone(phone))
+            binding.navLogin.setTextSizeSp(8f)
+            binding.navLogin.setSubtitle(R.string.nav_account_subtitle)
+        } else {
+            binding.navLogin.setText(R.string.login_title)
+            binding.navLogin.setTextSizeSp(11f)
+            binding.navLogin.setSubtitle(R.string.nav_login_subtitle)
+        }
+    }
+
+    private fun maskPhone(phone: String): String {
+        val digits = phone.filter(Char::isDigit)
+        if (digits.length < 7) return phone
+        val localNumber = digits.takeLast(11)
+        val masked = "${localNumber.take(3)}****${localNumber.takeLast(4)}"
+        return if (digits.length > 11) "+${digits.dropLast(11)} $masked" else masked
     }
 
     private fun tryStartActivity(intent: Intent): Boolean {

@@ -39,8 +39,8 @@ android {
         applicationId "ai.cjym.agentclaw"
         minSdk 24
         targetSdk 34
-        versionCode 7
-        versionName "1.1.0"
+        versionCode 8
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -208,6 +208,7 @@ dependencies {
 
     // Project modules
     implementation project(':core:core_common')
+    implementation project(':duix-sdk')
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit

@@ -17,4 +17,5 @@
 .cxx
 local.properties
 app/src/main/assets/rootfs-arm64.tar.gz.bin
+app/src/main/assets/duix/
 keystore.properties

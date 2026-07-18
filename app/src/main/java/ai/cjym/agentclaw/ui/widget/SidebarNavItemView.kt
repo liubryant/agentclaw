@@ -71,6 +71,10 @@ class SidebarNavItemView @JvmOverloads constructor(
         textView.setText(textResId)
     }
 
+    fun setTextSizeSp(size: Float) {
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
+    }
+
     fun setSubtitle(subtitle: CharSequence) {
         subtitleView.text = subtitle
     }

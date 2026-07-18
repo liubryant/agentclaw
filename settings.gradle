@@ -43,3 +43,4 @@ dependencyResolutionManagement {
 rootProject.name = "AgentClaw"
 include ':app'
 include ':core:core_common'
+include ':duix-sdk'

@@ -156,3 +156,6 @@
 -dontwarn javax.annotation.**
 -dontwarn sun.misc.Unsafe
 -dontwarn java.lang.invoke.*
+-keep class ai.guiji.duix.** { *; }
+-keep class com.guiji.** { *; }
+-keepclasseswithmembernames class * { native <methods>; }

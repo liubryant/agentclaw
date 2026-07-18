@@ -10,16 +10,16 @@
 
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="18dp" />
+            <corners android:radius="10dp" />
             <solid android:color="@color/white" />
         </shape>
     </item>
 
     <item
-        android:drawable="@mipmap/ic_launcher_foreground"
-        android:top="85dp"
-        android:bottom="85dp"
-        android:left="85dp"
-        android:right="85dp" />
+        android:drawable="@drawable/ic_splash_opaque"
+        android:top="84dp"
+        android:bottom="84dp"
+        android:left="84dp"
+        android:right="84dp" />
 
 </layer-list>

@@ -6,6 +6,7 @@ import ai.cjym.agentclaw.di.AppGraph
 import ai.cjym.agentclaw.ui.chat.ChatMarkdownProvider
 import ai.cjym.agentclaw.ui.shell.ChatEntryMode
 import ai.cjym.agentclaw.ui.shell.ShellActivity
+import ai.cjym.agentclaw.ui.shell.ShellDestination
 import ai.cjym.agentclaw.ui.startup.StartupActivity
 import ai.cjym.agentclaw.ui.widget.TermsDialog
 import android.content.Intent
@@ -259,7 +260,7 @@ class SplashActivity : AppCompatActivity() {
         if (hasNavigated || isFinishing || isDestroyed) return
         hasNavigated = true
         Log.d(TAG, "navigateToDestination: actually navigating")
-        val shortcutIntent = shortcutDestinationIntent()
+        val shortcutIntent = if (AppGraph.preferences.isFirstRun) null else shortcutDestinationIntent()
         if (shortcutIntent != null) {
             startActivity(shortcutIntent)
             finish()
@@ -284,8 +285,8 @@ class SplashActivity : AppCompatActivity() {
             ACTION_INSTANT_CHAT -> Intent(this, ShellActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 putExtra(
-                    ShellActivity.EXTRA_INITIAL_CHAT_ENTRY_MODE,
-                    ChatEntryMode.DEFAULT.name
+                    ShellActivity.EXTRA_INITIAL_DESTINATION,
+                    ShellDestination.AVATAR.name
                 )
             }
             ACTION_AI_IMAGE_GENERATION -> Intent(this, ShellActivity::class.java).apply {

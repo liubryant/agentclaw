@@ -41,6 +41,19 @@ class ChatRepository(context: Context) {
         return session
     }
 
+    suspend fun ensureSession(sessionId: String, title: String): ChatSession {
+        getSession(sessionId)?.let { return it }
+        val now = System.currentTimeMillis()
+        val session = ChatSession(
+            id = sessionId,
+            title = title,
+            createdAt = now,
+            updatedAt = now
+        )
+        sessionDao.insert(ChatSessionEntity.fromDomain(session))
+        return session
+    }
+
     suspend fun loadMessages(sessionId: String): List<ChatMessage> {
         return messageDao.getMessagesList(sessionId).map(ChatMessageEntity::toDomain)
     }

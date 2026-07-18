@@ -478,9 +478,9 @@
     <string name="vip_login_button">去登录</string>
     <string name="vip_benefits_title">会员权益</string>
     <string name="vip_view_package_detail">查看套餐详情 ›</string>
-    <string name="vip_benefit_unlimited_chat">无限对话</string>
-    <string name="vip_benefit_exclusive">专属功能</string>
-    <string name="vip_benefit_early_access">优先体验</string>
+    <string name="vip_benefit_unlimited_chat">AI 智能体无限畅聊</string>
+    <string name="vip_benefit_exclusive">更多图片生成</string>
+    <string name="vip_benefit_early_access">更多视频生成</string>
     <string name="vip_payment_method">支付方式</string>
     <string name="vip_wechat_pay">微信支付</string>
     <string name="vip_alipay_pay">支付宝支付</string>
@@ -515,7 +515,7 @@
     <string name="vip_agreement_name">会员服务协议</string>
     <string name="vip_view_agreement">查看协议</string>
     <string name="vip_detail_title">会员套餐详情</string>
-    <string name="vip_detail_subtitle">开通会员，解锁更多 AI 创作能力</string>
+    <string name="vip_detail_subtitle">开通会员，AI 智能体无限畅聊，解锁更多创作能力</string>
     <string name="vip_detail_no_packages">暂无可购买的会员套餐</string>
     <string name="vip_detail_close">关闭</string>
     <string name="vip_detail_purchase">￥%1$s  %2$s</string>
