@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.resume
 import kotlin.math.roundToInt
 
-class SofiaSpeechController(
+class LilySpeechController(
     private val context: Context,
     private val duixProvider: () -> DUIX?,
     private val onSentence: (IntRange?) -> Unit,
@@ -47,9 +47,9 @@ class SofiaSpeechController(
             for ((index, sentence) in sentences.withIndex()) {
                 if (playbackGeneration.get() != generation) break
                 onSentence(sentence.second)
-                val wav = File(context.cacheDir, "sofia_tts_${UUID.randomUUID()}.wav")
+                val wav = File(context.cacheDir, "lily_tts_${UUID.randomUUID()}.wav")
                 try {
-                    synthesize(engine, sentence.first, wav, "sofia-$index-${System.nanoTime()}")
+                    synthesize(engine, sentence.first, wav, "lily-$index-${System.nanoTime()}")
                     val pcm = withContext(Dispatchers.IO) { readAndResampleWav(wav) }
                     playPcm(pcm, generation, lipLeadMs)
                 } finally {
@@ -107,7 +107,7 @@ class SofiaSpeechController(
                     created?.voice = maleVoice
                 }
                 Log.i(
-                    "SofiaSpeech",
+                    "LilySpeech",
                     "systemEngine=${created?.defaultEngine}, selectedMale=${maleVoice?.name}, " +
                         "voice=${created?.voice?.name}, locale=${created?.voice?.locale}, " +
                         "availableVoices=${chineseVoices.joinToString { it.name }}"

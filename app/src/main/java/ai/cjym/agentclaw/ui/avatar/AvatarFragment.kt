@@ -16,12 +16,17 @@ import ai.guiji.duix.sdk.client.loader.ModelInfo
 import ai.guiji.duix.sdk.client.render.DUIXRenderer
 import android.Manifest
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.opengl.GLSurfaceView
 import android.os.Build
 import android.os.Bundle
@@ -38,6 +43,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,7 +66,7 @@ class AvatarFragment : Fragment() {
     private var renderer: DUIXRenderer? = null
     private var speechRecognizer: SpeechRecognizer? = null
     private var isListening = false
-    private var speechController: SofiaSpeechController? = null
+    private var speechController: LilySpeechController? = null
     private var requestJob: Job? = null
     private var statusRotator: AgentStatusRotator? = null
     private var activeAssistantView: TextView? = null
@@ -98,6 +104,12 @@ class AvatarFragment : Fragment() {
         restoreConversation()
         binding.messageInput.addTextChangedListener(SimpleTextWatcher { binding.sendButton.isEnabled = it.trim().isNotEmpty() })
         binding.sendButton.setOnClickListener { sendInput(hideKeyboard = true) }
+        binding.stopCurrentSession.setOnClickListener {
+            requestJob?.cancel()
+            speechController?.stop()
+            highlightSentence(null)
+            setSpeaking(false)
+        }
         binding.messageInput.setOnEditorActionListener { _, action, event ->
             val confirmed = action == EditorInfo.IME_ACTION_SEND ||
                 action == EditorInfo.IME_ACTION_DONE ||
@@ -120,7 +132,7 @@ class AvatarFragment : Fragment() {
         binding.avatarVipCard.setOnClickListener {
             startActivity(VipActivity.createIntent(requireContext()))
         }
-        speechController = SofiaSpeechController(requireContext().applicationContext, { duix }, ::highlightSentence, ::setSpeaking)
+        speechController = LilySpeechController(requireContext().applicationContext, { duix }, ::highlightSentence, ::setSpeaking)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             binding.modelLoadingText.text = "AI 数字人需要 Android 10 或更高版本"
         } else installAndStartDuix()
@@ -150,10 +162,10 @@ class AvatarFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             runCatching {
                 DuixAssetInstaller.install(requireContext()) { progress ->
-                    _binding?.root?.post { if (_binding != null) binding.modelLoadingText.text = "首次准备 Sofia… $progress%" }
+                    _binding?.root?.post { if (_binding != null) binding.modelLoadingText.text = "首次准备 Lily… $progress%" }
                 }
             }.onSuccess { initializeDuix() }
-                .onFailure { showModelError("Sofia 资源准备失败：${it.message}") }
+                .onFailure { showModelError("Lily 资源准备失败：${it.message}") }
         }
     }
 
@@ -166,7 +178,7 @@ class AvatarFragment : Fragment() {
         binding.avatarTexture.setRenderer(renderer)
         binding.avatarTexture.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
         binding.avatarTexture.visibility = View.VISIBLE
-        duix = DUIX(requireContext().applicationContext, "Sofia", renderer) { event, message, info ->
+        duix = DUIX(requireContext().applicationContext, "Lily", renderer) { event, message, info ->
             _binding?.root?.post {
                 if (_binding == null) return@post
                 when (event) {
@@ -175,7 +187,7 @@ class AvatarFragment : Fragment() {
                         binding.modelLoading.visibility = View.GONE
                         binding.avatarPoster.visibility = View.GONE
                     }
-                    Constant.CALLBACK_EVENT_INIT_ERROR -> showModelError("Sofia 初始化失败：$message")
+                    Constant.CALLBACK_EVENT_INIT_ERROR -> showModelError("Lily 初始化失败：$message")
                 }
             }
         }
@@ -204,7 +216,7 @@ class AvatarFragment : Fragment() {
             return
         }
         if (duix == null) {
-            toast("Sofia 正在准备，请稍候")
+            toast("Lily 正在准备，请稍候")
             return
         }
         speechController?.stop()
@@ -215,7 +227,7 @@ class AvatarFragment : Fragment() {
         val greeting = AVATAR_GREETINGS[greetingIndex % AVATAR_GREETINGS.size]
         greetingIndex = (greetingIndex + 1) % AVATAR_GREETINGS.size
         viewLifecycleOwner.lifecycleScope.launch {
-            speechController?.speak(greeting, lipLeadMs = GREETING_LIP_LEAD_MS)
+            speechController?.speak(greeting, lipLeadMs = SPEECH_LIP_LEAD_MS)
         }
     }
 
@@ -268,7 +280,7 @@ class AvatarFragment : Fragment() {
                 chatRepository.touchSession(AVATAR_SESSION_ID)
                 activeAssistantText = reply
                 activeAssistantView = addMessage(reply, false)
-                speechController?.speak(reply)
+                speechController?.speak(reply, lipLeadMs = SPEECH_LIP_LEAD_MS)
             }
         }
     }
@@ -293,6 +305,7 @@ class AvatarFragment : Fragment() {
             binding.voiceWave.setActive(speaking)
             binding.voiceWave.setListening(false)
             binding.waveContainer.visibility = if (speaking) View.VISIBLE else View.GONE
+            binding.stopCurrentSession.visibility = if (speaking) View.VISIBLE else View.GONE
             updateGreetingAvailability()
         }
     }
@@ -440,6 +453,10 @@ class AvatarFragment : Fragment() {
             setLineSpacing(dp(3f), 1f)
             setPadding(dp(14f).toInt(), dp(10f).toInt(), dp(14f).toInt(), dp(10f).toInt())
             setBackgroundResource(if (user) R.drawable.bg_avatar_message_user else R.drawable.bg_avatar_message_assistant)
+            setOnLongClickListener {
+                showMessageActions(this, text)
+                true
+            }
         }
         val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             gravity = if (user) Gravity.END else Gravity.START
@@ -451,6 +468,51 @@ class AvatarFragment : Fragment() {
         binding.messageList.addView(view, indicatorIndex, params)
         if (scroll) binding.messageScroll.post { binding.messageScroll.smoothScrollTo(0, binding.messageList.height) }
         return view
+    }
+
+    private fun showMessageActions(anchor: TextView, text: String) {
+        val context = requireContext()
+        val content = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(6f).toInt(), dp(6f).toInt(), dp(6f).toInt(), dp(6f).toInt())
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = dp(12f)
+                setColor(Color.WHITE)
+                setStroke(dp(1f).toInt(), Color.rgb(232, 234, 241))
+            }
+        }
+        val popup = PopupWindow(content, dp(164f).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT, true).apply {
+            isOutsideTouchable = true
+            elevation = dp(8f)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+        fun action(textValue: String, iconRes: Int, onClick: () -> Unit) = TextView(context).apply {
+            this.text = textValue
+            textSize = 15f
+            gravity = Gravity.CENTER_VERTICAL
+            setTextColor(Color.rgb(42, 44, 54))
+            setPadding(dp(14f).toInt(), dp(11f).toInt(), dp(12f).toInt(), dp(11f).toInt())
+            compoundDrawablePadding = dp(10f).toInt()
+            setCompoundDrawablesRelativeWithIntrinsicBounds(iconRes, 0, 0, 0)
+            compoundDrawableTintList = android.content.res.ColorStateList.valueOf(Color.rgb(91, 101, 128))
+            setOnClickListener { popup.dismiss(); onClick() }
+        }
+        content.addView(action("复制", R.drawable.ic_avatar_action_copy) {
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.setPrimaryClip(ClipData.newPlainText("智能体对话", text))
+            toast("已复制全文")
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        content.addView(action("朗读全文", R.drawable.ic_avatar_action_speak) {
+            requestJob?.cancel()
+            speechController?.stop()
+            activeAssistantText = text
+            activeAssistantView = anchor
+            viewLifecycleOwner.lifecycleScope.launch {
+                speechController?.speak(text, lipLeadMs = SPEECH_LIP_LEAD_MS)
+            }
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        popup.showAsDropDown(anchor, 0, -anchor.height)
     }
 
     private fun applyGradientTitle() {
@@ -518,22 +580,22 @@ class AvatarFragment : Fragment() {
     private companion object {
         const val SHELL_BOTTOM_NAV_HEIGHT_DP = 68f
         const val AVATAR_SESSION_ID = "avatar-sofia"
-        const val AVATAR_SESSION_TITLE = "AI数字人 Sofia"
-        const val WELCOME_MESSAGE = "你好，我是你的 AI 数字人 Sofia。你可以直接说话，也可以输入文字。"
+        const val AVATAR_SESSION_TITLE = "AI数字人 Lily"
+        const val WELCOME_MESSAGE = "你好，我是你的 AI 数字人 Lily。你可以直接说话，也可以输入文字。"
         val AVATAR_GREETINGS = listOf(
-            "你好，我是 Sofia，很高兴认识你。",
+            "你好，我是 Lily，很高兴认识你。",
             "嗨，见到你真开心，今天想聊点什么？",
             "你好呀，我一直在这里等你。",
-            "欢迎回来，我是你的数字人伙伴 Sofia。",
+            "欢迎回来，我是你的数字人伙伴 Lily。",
             "很高兴和你见面，有什么可以帮你的吗？",
-            "嗨，我是 Sofia，愿你今天有个好心情。",
+            "嗨，我是 Lily，愿你今天有个好心情。",
             "你好，轻松一点，我们慢慢聊。",
             "见到你真好，我已经准备好听你说啦。",
             "你好呀，今天也让我陪在你身边吧。",
             "嗨，朋友，又到了我们打招呼的时间。"
         )
-        const val SYSTEM_PROMPT = "你是 AgentClaw 中的 AI 数字人 Sofia。请用自然、友好、简洁的中文直接回答用户，优先帮助用户完成任务。不要使用 Markdown 表格，朗读内容应口语化。"
-        const val GREETING_LIP_LEAD_MS = 520
+        const val SYSTEM_PROMPT = "你是 AgentClaw 中的 AI 数字人 Lily。请用自然、友好、简洁的中文直接回答用户，优先帮助用户完成任务。不要使用 Markdown 表格，朗读内容应口语化。"
+        const val SPEECH_LIP_LEAD_MS = 400
         const val FREE_AGENT_QUESTION_LIMIT = 3
         const val AGENT_VIP_DIALOG_TAG = "agent_vip_upgrade"
     }

@@ -1,6 +1,6 @@
 <resources>
-    <string name="avatar_title">AI数字人 SOFIA</string>
-    <string name="avatar_subtitle">和 Sofia 自然对话</string>
+    <string name="avatar_title">AI数字人 LILY</string>
+    <string name="avatar_subtitle">和 Lily 自然对话</string>
     <string name="bottom_avatar">智能体</string>
     <string name="app_name">Agent智能体生活助手</string>
     <string name="shortcut_instant_chat_short">对话数字人AI</string>

@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 object DuixAssetInstaller {
-    private const val VERSION = "sofia-1"
+    private const val VERSION = "lily-1"
 
     suspend fun install(context: Context, onProgress: (Int) -> Unit): File = withContext(Dispatchers.IO) {
         val duixRoot = requireNotNull(context.getExternalFilesDir("duix"))
@@ -14,13 +14,15 @@ object DuixAssetInstaller {
         val markerRoot = File(modelRoot, "tmp")
         val versionFile = File(markerRoot, ".bundled-version")
         val baseTarget = File(modelRoot, "gj_dh_res")
-        val sofiaTarget = File(modelRoot, "Sofia")
+        val lilyTarget = File(modelRoot, "Lily")
         // Remove the model used by older app versions from app-private storage.
         File(modelRoot, "Leo").deleteRecursively()
         File(markerRoot, "Leo").deleteRecursively()
-        if (versionFile.readTextOrEmpty() == VERSION && baseTarget.isDirectory && sofiaTarget.isDirectory) {
+        File(modelRoot, "Sofia").deleteRecursively()
+        File(markerRoot, "Sofia").deleteRecursively()
+        if (versionFile.readTextOrEmpty() == VERSION && baseTarget.isDirectory && lilyTarget.isDirectory) {
             onProgress(100)
-            return@withContext sofiaTarget
+            return@withContext lilyTarget
         }
 
         modelRoot.mkdirs()
@@ -28,16 +30,16 @@ object DuixAssetInstaller {
         val assets = context.assets
         val files = mutableListOf<Pair<String, File>>()
         collectAssets(context, "duix/gj_dh_res", baseTarget, files)
-        collectAssets(context, "duix/Sofia", sofiaTarget, files)
+        collectAssets(context, "duix/Lily", lilyTarget, files)
         files.forEachIndexed { index, (assetPath, destination) ->
             destination.parentFile?.mkdirs()
             assets.open(assetPath).use { input -> destination.outputStream().use(input::copyTo) }
             onProgress(((index + 1) * 100 / files.size.coerceAtLeast(1)))
         }
         File(markerRoot, "gj_dh_res").mkdirs()
-        File(markerRoot, "Sofia").mkdirs()
+        File(markerRoot, "Lily").mkdirs()
         versionFile.writeText(VERSION)
-        sofiaTarget
+        lilyTarget
     }
 
     private fun collectAssets(context: Context, path: String, target: File, out: MutableList<Pair<String, File>>) {

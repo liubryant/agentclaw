@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/sofia_avatar" />
+            android:src="@drawable/lily_avatar" />
 
         <ai.guiji.duix.sdk.client.render.DUIXTextureView
             android:id="@+id/avatarTexture"
@@ -67,7 +67,7 @@
                 android:paddingTop="3dp"
                 android:paddingEnd="7dp"
                 android:paddingBottom="3dp"
-                android:text="SOFIA"
+                android:text="LILY"
                 android:textColor="#EBFFFFFF"
                 android:textSize="9sp"
                 android:textStyle="bold" />
@@ -178,7 +178,7 @@
             android:padding="16dp">
 
             <ProgressBar android:layout_width="28dp" android:layout_height="28dp" android:indeterminateTint="#FFFFFFFF" />
-            <TextView android:id="@+id/modelLoadingText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="正在准备 Sofia…" android:textColor="#FFFFFFFF" android:textSize="13sp" />
+            <TextView android:id="@+id/modelLoadingText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="正在准备 Lily…" android:textColor="#FFFFFFFF" android:textSize="13sp" />
         </LinearLayout>
     </FrameLayout>
 
@@ -235,52 +235,76 @@
     <LinearLayout
         android:id="@+id/composer"
         android:layout_width="0dp"
-        android:layout_height="62dp"
+        android:layout_height="wrap_content"
         android:background="#FFFFFFFF"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
-            android:id="@+id/micButton"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/bg_avatar_mic_button"
-            android:contentDescription="开始语音对话"
-            android:padding="9dp"
-            android:src="@drawable/ic_avatar_mic"
-            android:tint="#FFFFFFFF" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
 
-        <EditText
-            android:id="@+id/messageInput"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_avatar_input"
-            android:hint="和智能体说点什么"
-            android:imeOptions="actionSend"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:textColor="#FF242735"
-            android:textColorHint="#FFADB1BE"
-            android:textSize="15sp" />
+            <ImageButton
+                android:id="@+id/micButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/bg_avatar_mic_button"
+                android:contentDescription="开始语音对话"
+                android:padding="9dp"
+                android:src="@drawable/ic_avatar_mic"
+                android:tint="#FFFFFFFF" />
 
-        <ImageButton
-            android:id="@+id/sendButton"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_avatar_send_button"
-            android:contentDescription="发送"
-            android:padding="11dp"
-            android:src="@drawable/ic_avatar_send"
-            android:tint="#FFFFFFFF" />
+            <EditText
+                android:id="@+id/messageInput"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_avatar_input"
+                android:hint="和智能体说点什么"
+                android:imeOptions="actionSend"
+                android:maxLines="1"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:singleLine="true"
+                android:textColor="#FF242735"
+                android:textColorHint="#FFADB1BE"
+                android:textSize="15sp" />
+
+            <ImageButton
+                android:id="@+id/sendButton"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_avatar_send_button"
+                android:contentDescription="发送"
+                android:padding="11dp"
+                android:src="@drawable/ic_avatar_send"
+                android:tint="#FFFFFFFF" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/stopCurrentSession"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/misans_normal"
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_avatar_stop_session"
+            android:drawablePadding="2dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="停止当前会话"
+            android:textColor="#FF8D919D"
+            android:textSize="13sp"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
