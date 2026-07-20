@@ -35,8 +35,75 @@ class ContentSafetyGuardTest {
 
     @Test
     fun evaluate_blocksConfiguredProhibitedTerms() {
-        listOf("肢解", "坦克人", "割手腕", "抽烟打架").forEach { term ->
+        listOf(
+            "肢解", "坦克人", "割手腕", "抽烟打架",
+            "学生谈恋爱", "流血断肢", "色情片", "天安门事件"
+        ).forEach { term ->
             assertFalse(ContentSafetyGuard.evaluate(term).allowed)
+        }
+    }
+
+    @Test
+    fun evaluate_blocksNewTermsForTextAndImageGeneration() {
+        val prompts = listOf(
+            "学生谈恋爱", "流血断肢", "色情片", "天安门事件",
+            "学生 谈恋爱", "流血-断肢", "色情 片", "天安门-事件"
+        )
+
+        prompts.forEach { prompt ->
+            assertFalse(ContentSafetyGuard.evaluate(prompt, ContentSafetyGuard.Surface.CHAT).allowed)
+            assertFalse(ContentSafetyGuard.evaluate(prompt, ContentSafetyGuard.Surface.IMAGE_PROMPT).allowed)
+        }
+    }
+
+    @Test
+    fun evaluate_blocksBombPromptInImageGeneration() {
+        listOf("炸弹", "爆炸物", "燃烧瓶", "bomb").forEach { prompt ->
+            assertFalse(
+                ContentSafetyGuard.evaluate(
+                    prompt,
+                    ContentSafetyGuard.Surface.IMAGE_PROMPT
+                ).allowed
+            )
+        }
+    }
+
+    @Test
+    fun evaluate_blocksAgeBasedStudentRomancePrompts() {
+        val prompts = listOf(
+            "12岁谈恋爱",
+            "12岁学生谈恋爱",
+            "xx岁学生谈恋爱",
+            "十二岁谈恋爱",
+            "16 岁的学生恋爱"
+        )
+
+        prompts.forEach { prompt ->
+            assertFalse(ContentSafetyGuard.evaluate(prompt, ContentSafetyGuard.Surface.CHAT).allowed)
+            assertFalse(ContentSafetyGuard.evaluate(prompt, ContentSafetyGuard.Surface.IMAGE_PROMPT).allowed)
+        }
+    }
+
+    @Test
+    fun evaluate_usesSameBlockingRulesForTextImageAndVideo() {
+        val blockedPrompts = listOf(
+            "12岁谈恋爱",
+            "炸弹",
+            "流血断肢",
+            "色情片",
+            "天安门事件",
+            "斩首"
+        )
+        val surfaces = listOf(
+            ContentSafetyGuard.Surface.CHAT,
+            ContentSafetyGuard.Surface.IMAGE_PROMPT,
+            ContentSafetyGuard.Surface.VIDEO_PROMPT
+        )
+
+        blockedPrompts.forEach { prompt ->
+            surfaces.forEach { surface ->
+                assertFalse("$surface should block: $prompt", ContentSafetyGuard.evaluate(prompt, surface).allowed)
+            }
         }
     }
 

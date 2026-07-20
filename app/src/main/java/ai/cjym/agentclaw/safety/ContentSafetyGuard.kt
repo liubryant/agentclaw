@@ -19,16 +19,25 @@ object ContentSafetyGuard {
     fun evaluate(text: String, surface: Surface = Surface.CHAT): Result {
         val normalized = normalize(text)
         if (normalized.isBlank()) return Result(allowed = true)
+        val compact = normalized.replace(Regex("[\\s\\p{P}\\p{S}]+"), "")
 
-        val prohibitedTerm = PROHIBITED_TERMS.firstOrNull { normalized.contains(it) }
+        val prohibitedTerm = PROHIBITED_TERMS.firstOrNull { term ->
+            normalized.contains(term) || compact.contains(term.replace(Regex("[\\s\\p{P}\\p{S}]+"), ""))
+        }
+        val minorRomance = MINOR_ROMANCE_PATTERNS.any { it.containsMatchIn(compact) }
         val political = POLITICAL_CONTEXT.any { normalized.contains(it) }
         val violent = VIOLENCE_TERMS.any { normalized.contains(it) }
         val facilitation = FACILITATION_TERMS.any { normalized.contains(it) }
         val target = TARGETING_TERMS.any { normalized.contains(it) }
-        val mediaDepiction = surface != Surface.CHAT && MEDIA_VIOLENCE_TERMS.any { normalized.contains(it) }
+        // All generation surfaces share the same blocking policy. Do not allow
+        // text chat to bypass terms that are blocked for image/video prompts.
+        val mediaDepiction = MEDIA_VIOLENCE_TERMS.any {
+            normalized.contains(it) || compact.contains(it.replace(Regex("[\\s\\p{P}\\p{S}]+"), ""))
+        }
         val directViolentRequest = DIRECT_VIOLENT_PATTERNS.any { it.containsMatchIn(normalized) }
 
         val blocked = prohibitedTerm != null ||
+            minorRomance ||
             directViolentRequest ||
             mediaDepiction ||
             (political && violent && (facilitation || target)) ||
@@ -39,6 +48,7 @@ object ContentSafetyGuard {
                 allowed = false,
                 reason = when {
                     prohibitedTerm != null -> "prohibited_term"
+                    minorRomance -> "minor_romance"
                     directViolentRequest -> "direct_violent_facilitation"
                     mediaDepiction -> "media_violent_prompt"
                     else -> "political_violence"
@@ -57,7 +67,19 @@ object ContentSafetyGuard {
     }
 
     private val PROHIBITED_TERMS = listOf(
-        "肢解", "坦克人", "割手腕", "抽烟打架"
+        // 未成年人及不适宜校园内容
+        "学生谈恋爱", "未成年谈恋爱", "校园早恋", "学生早恋", "早恋",
+        // 血腥、伤害及残肢内容
+        "流血断肢", "流血", "断肢", "残肢", "断手", "断脚", "血肉模糊",
+        "肢解", "割手腕", "抽烟打架",
+        // 爆炸物及危险武器内容（单独输入同样直接拦截）
+        "炸弹", "爆炸物", "燃烧瓶", "自制炸药", "土制炸弹",
+        "bomb", "explosive device", "molotov cocktail",
+        // 色情及露骨成人内容
+        "色情片", "色情影片", "成人视频", "成人影片", "成人片", "情色片",
+        "黄片", "porn", "pornography", "adult film",
+        // 明确禁止生成的敏感事件内容
+        "天安门事件", "六四事件", "六四天安门", "1989天安门", "坦克人"
     )
 
     private val POLITICAL_CONTEXT = listOf(
@@ -65,6 +87,15 @@ object ContentSafetyGuard {
         "抗议", "示威", "游行", "革命", "政变", "恐怖主义", "极端组织", "分裂主义",
         "politic", "government", "election", "president", "prime minister", "minister",
         "official", "protest", "riot", "revolution", "coup", "terror", "extremist"
+    )
+
+    private val MINOR_ROMANCE_PATTERNS = listOf(
+        // 0-17 岁未成年人恋爱内容，例如“12岁谈恋爱”“16岁的学生恋爱”。
+        Regex("(?:[0-9]|1[0-7])岁(?:的?学生)?(?:谈恋爱|恋爱|早恋)"),
+        // 中文年龄表达，例如“十二岁谈恋爱”“十六岁学生早恋”。
+        Regex("(?:零|一|二|三|四|五|六|七|八|九|十|十一|十二|十三|十四|十五|十六|十七)岁(?:的?学生)?(?:谈恋爱|恋爱|早恋)"),
+        // 任意年龄占位或数字与“学生”组合，例如“xx岁学生谈恋爱”。
+        Regex("(?:xx|\\d{1,3}|[零一二三四五六七八九十两]{1,3})岁(?:的)?学生(?:谈恋爱|恋爱|早恋)")
     )
 
     private val VIOLENCE_TERMS = listOf(
