@@ -114,9 +114,13 @@ class CreationGalleryFragment :
         binding.pageFlipper.addView(videoPage)
 
         val promptsByImage = loadImagePrompts()
-        imageItems = requireContext().assets.list(IMAGE_ASSET_DIR).orEmpty()
+        val availableImageFiles = requireContext().assets.list(IMAGE_ASSET_DIR).orEmpty()
             .filter { it.endsWith(".png", true) || it.endsWith(".jpg", true) || it.endsWith(".jpeg", true) }
             .sorted()
+        val launchImageFiles = coldStartImageOrder ?: availableImageFiles.shuffled().also {
+            coldStartImageOrder = it
+        }
+        imageItems = launchImageFiles
             .map { filename ->
                 CreationMedia(
                     assetPath = "$IMAGE_ASSET_DIR/$filename",
@@ -278,5 +282,9 @@ class CreationGalleryFragment :
         const val IMAGE_ASSET_DIR = "creation/images"
         const val VIDEO_ASSET_DIR = "creation/videos"
         const val IMAGE_PROMPTS_ASSET = "creation/image_prompts_zh.json"
+
+        // Process-lifetime order: randomized once on a cold launch, then reused
+        // across tab switches and Activity/Fragment recreation.
+        private var coldStartImageOrder: List<String>? = null
     }
 }

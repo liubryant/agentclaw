@@ -161,9 +161,9 @@ class ShellActivity : BaseBindingActivity<ActivityShellBinding>(ActivityShellBin
         binding.bottomConversationTab.setOnClickListener { navigateTo(ShellDestination.CHAT) }
         binding.bottomAvatarTab.setOnClickListener { navigateTo(ShellDestination.AVATAR) }
         binding.bottomCreationTab.setOnClickListener {
+            // CreationGalleryFragment is kept alive by show/hide. Do not reshuffle
+            // or reset its RecyclerViews when returning to the creation tab.
             navigateTo(ShellDestination.CREATE)
-            (supportFragmentManager.findFragmentByTag(ShellDestination.CREATE.name) as? CreationGalleryFragment)
-                ?.shuffleMedia()
         }
         binding.bottomProfileTab.setOnClickListener { navigateTo(ShellDestination.PROFILE) }
 //        binding.navSchedule.setOnClickListener { navigateTo(ShellDestination.SCHEDULE) }
